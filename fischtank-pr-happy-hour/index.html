@@ -54,10 +54,10 @@
     border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600;
   }
   .starred-toggle {
-    display: flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     font-size: 13px; color: #555; cursor: pointer; white-space: nowrap;
   }
-  .starred-toggle input[type=checkbox] { cursor: pointer; }
+  .starred-toggle input[type=checkbox] { cursor: pointer; width: 14px; height: 14px; accent-color: #f59e0b; flex-shrink: 0; }
 
   /* ── Batch buttons ── */
   .batch-buttons {
@@ -85,6 +85,8 @@
     font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase;
     letter-spacing: 0.05em; cursor: pointer; user-select: none;
     border-bottom: 2px solid #e8ecff; white-space: nowrap;
+    position: sticky; top: 0; z-index: 10;
+    box-shadow: 0 2px 0 #e8ecff;
   }
   thead th:hover { background: #eef0ff; }
   thead th .sort-arrow { margin-left: 4px; opacity: 0.4; }
@@ -102,15 +104,22 @@
     padding: 6px 16px; border-bottom: 1px solid #e8ecff;
   }
 
-  /* ── Star ── */
-  .td-star { width: 36px; text-align: center; }
-  .star-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 18px; line-height: 1; padding: 2px 4px;
-    color: #ddd; transition: color 0.15s, transform 0.1s;
+  /* ── Expand arrow ── */
+  .td-expand { width: 28px; text-align: center; padding: 0 4px !important; }
+  .expand-btn {
+    background: none; border: none; cursor: pointer; padding: 4px;
+    color: #bbb; font-size: 11px; line-height: 1;
+    transition: color 0.15s, transform 0.2s; display: inline-block;
   }
-  .star-btn:hover { color: #f59e0b; transform: scale(1.2); }
-  .star-btn.starred { color: #f59e0b; }
+  .expand-btn:hover { color: #0f3460; }
+  .expand-btn.open { transform: rotate(90deg); color: #0f3460; }
+
+  /* ── Shortlist checkbox ── */
+  .td-cb { width: 36px; text-align: center; }
+  .shortlist-cb {
+    width: 16px; height: 16px; cursor: pointer; accent-color: #f59e0b;
+    flex-shrink: 0;
+  }
 
   /* ── Photo / Avatar ── */
   .td-photo { width: 60px; }
@@ -161,7 +170,8 @@
 
   /* ── About ── */
   .td-about { min-width: 200px; max-width: 300px; color: #555; font-size: 12px; line-height: 1.4; }
-  .about-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: help; }
+  .about-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .about-text.expanded { -webkit-line-clamp: unset; display: block; }
 
   .td-status { width: 36px; text-align: center; }
   .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
@@ -193,7 +203,7 @@
     <option value="N/A">No LI</option>
   </select>
   <label class="starred-toggle">
-    <input type="checkbox" id="filterStarred"> &#9733; Starred only
+    <input type="checkbox" id="filterStarred"> Shortlisted only
   </label>
   <span class="count-badge" id="countBadge">61 of 61</span>
 </div>
@@ -206,7 +216,8 @@
 <table id="mainTable">
 <thead>
   <tr>
-    <th class="td-star" style="cursor:default" title="Star/shortlist">&#9733;</th>
+    <th class="td-expand" style="cursor:default"></th>
+    <th class="td-cb" style="cursor:default" title="Shortlist">&#9711;</th>
     <th class="td-photo" style="cursor:default"></th>
     <th class="td-li" style="cursor:default">LI</th>
     <th onclick="sortBy('name')">Name <span class="sort-arrow">&#8597;</span></th>
@@ -332,7 +343,24 @@ function isWorthMeeting(seg) {
   return seg === 'Investor/VC' || seg === 'Founder';
 }
 
-// ── Starred (localStorage) ──────────────────────────────────────────────────
+// ── Expanded rows ────────────────────────────────────────────────────────────
+
+const expandedRows = new Set();
+
+function toggleExpand(name) {
+  if (expandedRows.has(name)) expandedRows.delete(name); else expandedRows.add(name);
+  // Update just the affected row in-place (no full re-render)
+  document.querySelectorAll('tr[data-name]').forEach(tr => {
+    if (tr.dataset.name !== name) return;
+    const expanded = expandedRows.has(name);
+    const aboutDiv = tr.querySelector('.about-text');
+    const btn = tr.querySelector('.expand-btn');
+    if (aboutDiv) aboutDiv.classList.toggle('expanded', expanded);
+    if (btn) btn.classList.toggle('open', expanded);
+  });
+}
+
+// ── Shortlist (localStorage) ─────────────────────────────────────────────────
 
 const STORE_KEY = 'fischtank_starred';
 function getStarred() {
@@ -341,12 +369,13 @@ function getStarred() {
 function saveStarred(set) {
   localStorage.setItem(STORE_KEY, JSON.stringify([...set]));
 }
-function toggleStar(name) {
+function toggleStar(name, cb) {
   const s = getStarred();
-  if (s.has(name)) s.delete(name); else s.add(name);
+  if (cb.checked) s.add(name); else s.delete(name);
   saveStarred(s);
-  renderTable();
   updateOpenStarredBtn();
+  // Only full re-render if "shortlisted only" filter is active
+  if (document.getElementById('filterStarred').checked) renderTable();
 }
 
 // ── LI icons ───────────────────────────────────────────────────────────────
@@ -453,22 +482,24 @@ function renderTable() {
   filtered.forEach((r, i) => {
     if (i % 10 === 0) {
       const d = tbody.insertRow(); d.className = 'batch-divider';
-      const c = d.insertCell(); c.colSpan = 8;
+      const c = d.insertCell(); c.colSpan = 9;
       c.textContent = 'Batch ' + (Math.floor(i/10)+1) + ' \u00B7 rows ' + (i+1) + '\u2013' + Math.min(i+10, filtered.length);
     }
 
-    const seg      = getSegment(r);
+    const seg       = getSegment(r);
     const seniority = getSeniority(r[2]);
-    const worth    = isWorthMeeting(seg);
+    const worth     = isWorthMeeting(seg);
     const isStarred = starred.has(r[1]);
+    const isExpanded = expandedRows.has(r[1]);
 
     const tr = tbody.insertRow();
+    tr.dataset.name = r[1];
     if (worth) tr.classList.add('worth-meeting');
 
     const logo = r[4] ? 'https://www.google.com/s2/favicons?domain=' + r[4] + '&sz=64' : null;
     const about = r[7] || '';
     const aboutHtml = about
-      ? '<div class="about-text" title="' + about.replace(/"/g,'&quot;') + '">' + about + '</div>'
+      ? '<div class="about-text' + (isExpanded ? ' expanded' : '') + '">' + about + '</div>'
       : '<span style="color:#ccc">\u2014</span>';
 
     const liSvg   = r[6] === 'Guessed' ? LI_SVG_YELLOW : r[6] === 'Confirmed' ? LI_SVG : LI_SVG_GREY;
@@ -483,8 +514,13 @@ function renderTable() {
     const badgeClass = { 'C-Suite': 'badge-csuite', 'VP/Dir': 'badge-vpdir', 'Senior': 'badge-senior', 'Associate': 'badge-associate' }[seniority] || '';
     const badgeHtml = seniority ? '<span class="badge ' + badgeClass + '">' + seniority + '</span>' : '';
 
+    const expandBtn = about
+      ? '<button class="expand-btn' + (isExpanded ? ' open' : '') + '" onclick="toggleExpand(' + JSON.stringify(r[1]) + ')" title="Expand / collapse bio">&#9654;</button>'
+      : '';
+
     tr.innerHTML =
-      '<td class="td-star"><button class="star-btn' + (isStarred ? ' starred' : '') + '" onclick="toggleStar(' + JSON.stringify(r[1]) + ')" title="' + (isStarred ? 'Remove from shortlist' : 'Add to shortlist') + '">' + (isStarred ? '&#9733;' : '&#9734;') + '</button></td>' +
+      '<td class="td-expand">' + expandBtn + '</td>' +
+      '<td class="td-cb"><input type="checkbox" class="shortlist-cb" ' + (isStarred ? 'checked' : '') + ' onchange="toggleStar(' + JSON.stringify(r[1]) + ', this)" title="Shortlist"></td>' +
       '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + r[1] + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
       '<td class="td-li">' + (r[5] ? '<a class="li-link" href="' + r[5] + '" target="_blank" rel="noopener" title="' + liTitle + '">' + liSvg + '</a>' : '<span class="li-link grey" title="' + liTitle + '">' + liSvg + '</span>') + '</td>' +
       '<td class="td-name"><span class="name-text">' + r[1] + '</span><div class="tags-row">' + tagsHtml + '</div></td>' +
@@ -537,7 +573,7 @@ function sortBy(col) {
     const sa = th.querySelector('.sort-arrow');
     if (sa) sa.innerHTML = '&#8597;';
   });
-  const colNames = [null, null, null, 'name', 'title', 'company', 'about'];
+  const colNames = [null, null, null, null, 'name', 'title', 'company', 'about'];
   document.querySelectorAll('thead th').forEach((th, i) => {
     if (colNames[i] === col) {
       th.classList.add('sorted');
