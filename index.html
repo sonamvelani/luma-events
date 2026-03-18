@@ -231,7 +231,7 @@ function render() {
     const btn = document.createElement('button');
     btn.className = 'batch-btn';
     btn.textContent = `Batch ${batchNum} (${urls.length} LI)`;
-    btn.onclick = (function(u) { return function() { u.forEach(url => window.open(url, '_blank')); }; })(urls);
+    btn.onclick = (function(u) { return function() { u.forEach((url, i) => setTimeout(() => window.open(url, '_blank'), i * 200)); }; })(urls);
     batchBar.appendChild(btn);
   }
   const tip = document.createElement('span');
