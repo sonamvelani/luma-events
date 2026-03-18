@@ -231,12 +231,16 @@ function render() {
     const btn = document.createElement('button');
     btn.className = 'batch-btn';
     btn.textContent = `Batch ${batchNum} (${urls.length} LI)`;
-    btn.onclick = (function(u) { return function() { u.forEach((url, i) => setTimeout(() => window.open(url, '_blank'), i * 200)); }; })(urls);
+    btn.onclick = (function(u) { return function() {
+      const script = u.map(url => `window.open(${JSON.stringify(url)},'_blank');`).join('');
+      const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${u.length} tabs...</p></body></html>`;
+      window.open('data:text/html,' + encodeURIComponent(page), '_blank');
+    }; })(urls);
     batchBar.appendChild(btn);
   }
   const tip = document.createElement('span');
   tip.className = 'popup-tip';
-  tip.textContent = 'Allow popups when prompted';
+  tip.textContent = 'Allow popups for the launcher tab';
   batchBar.appendChild(tip);
 
   // Build rows
