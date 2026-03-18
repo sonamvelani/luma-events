@@ -78,7 +78,7 @@
   .open-starred-btn:hover { background: #d97706; }
 
   /* ── Table ── */
-  .table-wrap { margin: 0 24px 40px; overflow-x: auto; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .table-wrap { margin: 0 24px 40px; overflow: auto; max-height: 75vh; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
   table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
   thead th {
     background: #f5f7ff; padding: 12px 16px; text-align: left;
@@ -216,7 +216,6 @@
 <table id="mainTable">
 <thead>
   <tr>
-    <th class="td-expand" style="cursor:default"></th>
     <th class="td-cb" style="cursor:default" title="Shortlist">&#9711;</th>
     <th class="td-photo" style="cursor:default"></th>
     <th class="td-li" style="cursor:default">LI</th>
@@ -224,6 +223,7 @@
     <th onclick="sortBy('title')">Title <span class="sort-arrow">&#8597;</span></th>
     <th onclick="sortBy('company')">Company <span class="sort-arrow">&#8597;</span></th>
     <th onclick="sortBy('about')">About <span class="sort-arrow">&#8597;</span></th>
+    <th class="td-expand" style="cursor:default"></th>
   </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -514,14 +514,16 @@ function renderTable() {
     const badgeClass = { 'C-Suite': 'badge-csuite', 'VP/Dir': 'badge-vpdir', 'Senior': 'badge-senior', 'Associate': 'badge-associate' }[seniority] || '';
     const badgeHtml = seniority ? '<span class="badge ' + badgeClass + '">' + seniority + '</span>' : '';
 
+    // Encode name safely for use inside HTML attribute values
+    const nameAttr = r[1].replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+
     const expandBtn = about
-      ? '<button class="expand-btn' + (isExpanded ? ' open' : '') + '" onclick="toggleExpand(' + JSON.stringify(r[1]) + ')" title="Expand / collapse bio">&#9654;</button>'
+      ? '<button class="expand-btn' + (isExpanded ? ' open' : '') + '" onclick="toggleExpand(&quot;' + nameAttr + '&quot;)" title="Expand / collapse bio">&#9654;</button>'
       : '';
 
     tr.innerHTML =
-      '<td class="td-expand">' + expandBtn + '</td>' +
-      '<td class="td-cb"><input type="checkbox" class="shortlist-cb" ' + (isStarred ? 'checked' : '') + ' onchange="toggleStar(' + JSON.stringify(r[1]) + ', this)" title="Shortlist"></td>' +
-      '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + r[1] + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
+      '<td class="td-cb"><input type="checkbox" class="shortlist-cb" ' + (isStarred ? 'checked' : '') + ' onchange="toggleStar(&quot;' + nameAttr + '&quot;, this)" title="Shortlist"></td>' +
+      '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + nameAttr + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
       '<td class="td-li">' + (r[5] ? '<a class="li-link" href="' + r[5] + '" target="_blank" rel="noopener" title="' + liTitle + '">' + liSvg + '</a>' : '<span class="li-link grey" title="' + liTitle + '">' + liSvg + '</span>') + '</td>' +
       '<td class="td-name"><span class="name-text">' + r[1] + '</span><div class="tags-row">' + tagsHtml + '</div></td>' +
       '<td class="td-title"><div class="title-wrap">' + (r[2] ? '<span>' + r[2] + '</span>' : '<span style="color:#ccc">\u2014</span>') + badgeHtml + '</div></td>' +
@@ -529,7 +531,8 @@ function renderTable() {
         (logo ? '<img class="company-logo" src="' + logo + '" alt="" onerror="this.style.display=\'none\'" loading="lazy">' : '') +
         '<span class="company-name">' + (r[3] || '<span style="color:#ccc">\u2014</span>') + '</span>' +
       '</div></td>' +
-      '<td class="td-about">' + aboutHtml + '</td>';
+      '<td class="td-about">' + aboutHtml + '</td>' +
+      '<td class="td-expand">' + expandBtn + '</td>';
   });
 
   updateBatchBtns(filtered);
@@ -573,7 +576,7 @@ function sortBy(col) {
     const sa = th.querySelector('.sort-arrow');
     if (sa) sa.innerHTML = '&#8597;';
   });
-  const colNames = [null, null, null, null, 'name', 'title', 'company', 'about'];
+  const colNames = [null, null, null, 'name', 'title', 'company', 'about', null];
   document.querySelectorAll('thead th').forEach((th, i) => {
     if (colNames[i] === col) {
       th.classList.add('sorted');
