@@ -231,7 +231,7 @@ function renderTable() {
       d.cells[0].colSpan = 6;
     }
     const tr = tbody.insertRow();
-    const logo = r[4] ? 'https://logo.clearbit.com/' + r[4] : null;
+    const logo = r[4] ? 'https://www.google.com/s2/favicons?domain=' + r[4] + '&sz=64' : null;
     const sc = r[6] === 'Confirmed' ? 'badge-confirmed' : r[6] === 'Guessed' ? 'badge-guessed' : 'badge-na';
     tr.innerHTML =
       '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + r[1] + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
