@@ -6,278 +6,301 @@
 <title>FischTank PR Happy Hour · Attendees</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #1a1a1a; }
-  .header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 20px 28px; }
-  .header h1 { font-size: 18px; font-weight: 700; color: #111; }
-  .header p { font-size: 13px; color: #6b7280; margin-top: 3px; }
-  .controls { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 14px 28px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .controls input { border: 1px solid #d1d5db; border-radius: 6px; padding: 7px 11px; font-size: 13px; width: 200px; outline: none; }
-  .controls input:focus { border-color: #6366f1; }
-  .controls select { border: 1px solid #d1d5db; border-radius: 6px; padding: 7px 11px; font-size: 13px; background: #fff; cursor: pointer; outline: none; }
-  .controls select:focus { border-color: #6366f1; }
-  .row-count { font-size: 13px; color: #6b7280; margin-left: auto; }
-  .batch-bar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 28px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .batch-bar span { font-size: 12px; color: #9ca3af; margin-right: 4px; }
-  .batch-btn { font-size: 12px; font-weight: 600; background: #f0f0ff; color: #4f46e5; border: 1px solid #c7d2fe; border-radius: 5px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
-  .batch-btn:hover { background: #e0e7ff; }
-  .popup-tip { font-size: 11px; color: #9ca3af; margin-left: 6px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { background: #f9fafb; border-bottom: 2px solid #e5e7eb; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; color: #374151; cursor: pointer; user-select: none; white-space: nowrap; }
-  thead th:hover { background: #f1f5f9; }
-  thead th .sort-icon { display: inline-block; margin-left: 4px; color: #9ca3af; }
-  tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.1s; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #1a1a2e; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white; padding: 32px 40px; margin-bottom: 24px;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header p { font-size: 14px; opacity: 0.7; }
+
+  .controls {
+    background: white; border-radius: 12px; padding: 16px 20px;
+    margin: 0 24px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  }
+  .controls input, .controls select {
+    border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px 12px;
+    font-size: 13px; outline: none; color: #333; transition: border-color 0.2s;
+  }
+  .controls input:focus, .controls select:focus { border-color: #0f3460; }
+  .controls input { flex: 1; min-width: 200px; }
+  .count-badge {
+    margin-left: auto; background: #f0f4ff; color: #0f3460;
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  }
+
+  .batch-buttons {
+    margin: 0 24px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .batch-tip { font-size: 11px; color: #999; }
+  .batch-btn {
+    background: #0f3460; color: white; border: none; border-radius: 8px;
+    padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s; white-space: nowrap;
+  }
+  .batch-btn:hover { background: #1a5276; }
+
+  .table-wrap { margin: 0 24px 40px; overflow-x: auto; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+  thead th {
+    background: #f5f7ff; padding: 12px 16px; text-align: left;
+    font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase;
+    letter-spacing: 0.05em; cursor: pointer; user-select: none;
+    border-bottom: 2px solid #e8ecff; white-space: nowrap;
+  }
+  thead th:hover { background: #eef0ff; }
+  thead th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+  thead th.sorted .sort-arrow { opacity: 1; color: #0f3460; }
+  tbody tr { border-bottom: 1px solid #f0f2f8; transition: background 0.12s; }
+  tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #fafbff; }
-  tbody td { padding: 9px 14px; vertical-align: middle; }
-  .batch-divider td { background: #f4f4f8; font-size: 11px; font-weight: 600; color: #9ca3af; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 14px; }
-  .li-icon { display: inline-flex; align-items: center; }
-  .li-icon a { display: inline-flex; }
-  .li-icon svg { display: block; }
-  .li-dim { opacity: 0.15; }
-  .name { font-weight: 600; color: #111; }
-  .badge { display: inline-block; font-size: 11px; font-weight: 600; border-radius: 99px; padding: 2px 9px; white-space: nowrap; }
-  /* Event badge */
-  .ev-fischtank { background: #fce7f3; color: #9d174d; }
-  /* Status badges */
-  .st-confirmed { background: #d1fae5; color: #065f46; }
-  .st-guessed   { background: #fef9c3; color: #854d0e; }
-  .st-na        { background: #f3f4f6; color: #6b7280; }
-  /* Type badges */
-  .tp-vc        { background: #ede9fe; color: #5b21b6; }
-  .tp-lp        { background: #dbeafe; color: #1e40af; }
-  .tp-impact    { background: #d1fae5; color: #065f46; }
-  .tp-investor  { background: #e0f2fe; color: #075985; }
-  .tp-policy    { background: #fce7f3; color: #9d174d; }
-  .tp-academic  { background: #fef3c7; color: #92400e; }
-  .tp-consultant{ background: #f0fdf4; color: #166534; }
-  .tp-founder   { background: #fff7ed; color: #9a3412; }
-  .tp-media     { background: #fee2e2; color: #991b1b; }
-  .tp-unknown   { background: #f3f4f6; color: #6b7280; }
-  .table-wrap { overflow-x: auto; }
+  td { padding: 10px 16px; vertical-align: middle; font-size: 13px; }
+
+  .batch-divider td {
+    background: #f5f7ff; font-size: 11px; font-weight: 700;
+    color: #888; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 6px 16px; border-bottom: 1px solid #e8ecff;
+  }
+
+  .td-photo { width: 44px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #e8ecff; }
+
+  .td-li { width: 36px; text-align: center; }
+  .li-link { display: inline-flex; align-items: center; justify-content: center; }
+  .li-link.grey { opacity: 0.15; cursor: default; pointer-events: none; }
+
+  .td-name { min-width: 140px; }
+  .name-text { font-weight: 600; color: #1a1a2e; }
+
+  .td-title { min-width: 160px; color: #555; }
+
+  .td-company { min-width: 180px; }
+  .company-cell { display: flex; align-items: center; gap: 8px; }
+  .company-logo {
+    width: 24px; height: 24px; border-radius: 4px; object-fit: contain;
+    border: 1px solid #eee; background: white; flex-shrink: 0;
+  }
+  .company-name { color: #333; font-weight: 500; }
+
+  .td-status { white-space: nowrap; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-confirmed { background: #e8f5e9; color: #2e7d32; }
+  .badge-guessed   { background: #fff8e1; color: #f57f17; }
+  .badge-na        { background: #f5f5f5; color: #9e9e9e; }
+
+  @media (max-width: 600px) {
+    .header { padding: 20px; }
+    .controls, .table-wrap, .batch-buttons { margin: 0 12px 12px; }
+  }
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>FischTank PR Happy Hour</h1>
-  <p>61 attendees · <a href="https://luma.com/ihohs2le" target="_blank" style="color:#6b7280">luma.com/ihohs2le</a></p>
+  <p>61 attendees &middot; luma.com/ihohs2le &middot; Scraped March 2026</p>
 </div>
 
 <div class="controls">
-  <input type="text" id="search" placeholder="Search name…" oninput="render()">
-  <select id="filterType" onchange="render()">
-    <option value="">All types</option>
-    <option value="VC">VC</option>
-    <option value="LP">LP</option>
-    <option value="Impact Investor">Impact Investor</option>
-    <option value="Investor">Investor</option>
-    <option value="Founder/Operator">Founder/Operator</option>
-    <option value="Policy/NGO">Policy/NGO</option>
-    <option value="Academic/Research">Academic/Research</option>
-    <option value="Consultant/Advisor">Consultant/Advisor</option>
-    <option value="Media/Journalist">Media/Journalist</option>
-    <option value="Unknown">Unknown</option>
+  <input type="text" id="search" placeholder="Search by name, title, or company&hellip;">
+  <select id="filterCompany"><option value="">All Companies</option></select>
+  <select id="filterStatus">
+    <option value="">All Statuses</option>
+    <option value="Confirmed">Confirmed LI</option>
+    <option value="Guessed">Guessed LI</option>
+    <option value="N/A">No LI</option>
   </select>
-  <select id="filterStatus" onchange="render()">
-    <option value="">All statuses</option>
-    <option value="Confirmed">Confirmed</option>
-    <option value="Guessed">Guessed</option>
-    <option value="N/A">N/A</option>
-  </select>
-  <span class="row-count" id="rowCount"></span>
+  <span class="count-badge" id="countBadge">61 of 61</span>
 </div>
 
-<div class="batch-bar" id="batchBar">
-  <span>Open LinkedIn:</span>
-  <span class="popup-tip">Allow popups on the launcher tab</span>
+<div class="batch-buttons" id="batchButtons">
+  <span class="batch-tip">Open LinkedIn in batch (allow popups for launcher tab):</span>
 </div>
 
 <div class="table-wrap">
-<table>
-  <thead>
-    <tr>
-      <th data-col="0" style="width:36px">LI</th>
-      <th data-col="1">Name <span class="sort-icon">↕</span></th>
-      <th data-col="2">Event <span class="sort-icon">↕</span></th>
-      <th data-col="4">Status <span class="sort-icon">↕</span></th>
-      <th data-col="5">Type <span class="sort-icon">↕</span></th>
-    </tr>
-  </thead>
-  <tbody id="tbody"></tbody>
+<table id="mainTable">
+<thead>
+  <tr>
+    <th class="td-photo" style="cursor:default"></th>
+    <th class="td-li" style="cursor:default">LI</th>
+    <th onclick="sortBy('name')">Name <span class="sort-arrow">&#8597;</span></th>
+    <th onclick="sortBy('title')">Title <span class="sort-arrow">&#8597;</span></th>
+    <th onclick="sortBy('company')">Company <span class="sort-arrow">&#8597;</span></th>
+    <th onclick="sortBy('status')">LI Status <span class="sort-arrow">&#8597;</span></th>
+  </tr>
+</thead>
+<tbody id="tbody"></tbody>
 </table>
 </div>
 
 <script>
-// [photo_url_or_null, name, event, linkedin_url, status, type]
+// [photo_url, name, title, company, company_domain, linkedin_url, li_status]
 const DATA = [
-  [null,"Sonam Velani","FischTank PR Happy Hour","https://linkedin.com/in/sonamvelani","Confirmed","VC"],
-  [null,"Abe Pressman","FischTank PR Happy Hour","https://linkedin.com/in/abepressman","Confirmed","Unknown"],
-  [null,"Aditi Desai","FischTank PR Happy Hour","https://linkedin.com/in/desaiaditi","Confirmed","Unknown"],
-  [null,"Alec Turnbull","FischTank PR Happy Hour","https://linkedin.com/in/alecturnbull","Confirmed","Unknown"],
-  [null,"Allison Jegla","FischTank PR Happy Hour","https://linkedin.com/in/allisonjegla","Guessed","Impact Investor"],
-  [null,"Anjana Agarwal","FischTank PR Happy Hour","https://linkedin.com/in/anjana-agarwal","Confirmed","Unknown"],
-  [null,"Anna","FischTank PR Happy Hour","https://linkedin.com/in/anna-bell-345428147","Confirmed","Unknown"],
-  [null,"Ashley A Fallon","FischTank PR Happy Hour","https://linkedin.com/in/ashleyfallon","Confirmed","Unknown"],
-  [null,"Benjy Hansen-Bundy","FischTank PR Happy Hour","https://linkedin.com/in/benjy-hansen-bundy","Guessed","Media/Journalist"],
-  [null,"Bikesh Kumar","FischTank PR Happy Hour","https://linkedin.com/in/bikeshkumar","Confirmed","Unknown"],
-  [null,"Brock Donnelly","FischTank PR Happy Hour","https://linkedin.com/in/brockdonnelly","Guessed","Founder/Operator"],
-  [null,"Cat Clifford","FischTank PR Happy Hour","https://linkedin.com/in/catclifford","Confirmed","Media/Journalist"],
-  [null,"Cate Battey","FischTank PR Happy Hour","https://linkedin.com/in/cate-battey","Confirmed","Unknown"],
-  [null,"Chad Reed","FischTank PR Happy Hour","https://linkedin.com/in/dchadreed","Confirmed","Unknown"],
-  [null,"Comly Wilson","FischTank PR Happy Hour","https://linkedin.com/in/comly-wilson-07b8262b","Guessed","Founder/Operator"],
-  [null,"Cory Waltrip","FischTank PR Happy Hour","https://linkedin.com/in/cory-waltrip","Confirmed","Unknown"],
-  [null,"Dan Svejnar","FischTank PR Happy Hour","https://linkedin.com/in/dansvejnar","Guessed","Founder/Operator"],
-  [null,"Dylan Carbone","FischTank PR Happy Hour","https://linkedin.com/in/dylancarbone","Confirmed","Unknown"],
-  [null,"Elaine Kanak","FischTank PR Happy Hour","https://linkedin.com/in/elaine-p-kanak","Guessed","Consultant/Advisor"],
-  [null,"Eric Fischgrund","FischTank PR Happy Hour","https://linkedin.com/in/ericfischgrund","Confirmed","Consultant/Advisor"],
-  [null,"Erin Hadden","FischTank PR Happy Hour","https://linkedin.com/in/erin-hadden-21938798","Confirmed","Unknown"],
-  [null,"Heatmap News","FischTank PR Happy Hour",null,"N/A","Media/Journalist"],
-  [null,"Isabella Roy","FischTank PR Happy Hour","https://linkedin.com/in/bellazxyz","Confirmed","Unknown"],
-  [null,"Javin","FischTank PR Happy Hour","https://linkedin.com/in/javin-chan","Confirmed","Unknown"],
-  [null,"Jeff","FischTank PR Happy Hour","https://linkedin.com/in/jeff-siegel-7a438214","Confirmed","Unknown"],
-  [null,"Joel Santisteban","FischTank PR Happy Hour","https://linkedin.com/in/joel-santisteban","Confirmed","Unknown"],
-  [null,"John Kaywood","FischTank PR Happy Hour","https://linkedin.com/in/john-kaywood-478850104","Confirmed","Unknown"],
-  [null,"John Simon","FischTank PR Happy Hour",null,"N/A","Unknown"],
-  [null,"Julian Daszkal","FischTank PR Happy Hour","https://linkedin.com/in/julian-daszkal","Confirmed","Unknown"],
-  [null,"Jyotika Chandhoke","FischTank PR Happy Hour","https://linkedin.com/in/jyotika-chandhoke","Confirmed","Unknown"],
-  [null,"Kalp","FischTank PR Happy Hour","https://linkedin.com/in/k-oza-9a86b911b","Confirmed","Unknown"],
-  [null,"Katherine Cunningham","FischTank PR Happy Hour","https://linkedin.com/in/katherine-cunningham-b4057635","Guessed","Consultant/Advisor"],
-  [null,"Katherine Tweed","FischTank PR Happy Hour","https://linkedin.com/in/katherine-tweed-3595268","Guessed","Media/Journalist"],
-  [null,"Kevin Dugan","FischTank PR Happy Hour","https://linkedin.com/in/kevin-dugan-93b2b86","Confirmed","Unknown"],
-  [null,"Kyle Kirkpatrick","FischTank PR Happy Hour",null,"N/A","Unknown"],
-  [null,"Lauren Dalban","FischTank PR Happy Hour","https://linkedin.com/in/lauren-dalban-61302916a","Guessed","Media/Journalist"],
-  [null,"Lisa Mallner","FischTank PR Happy Hour","https://linkedin.com/in/lisamallner","Confirmed","Unknown"],
-  [null,"Mai Munoz","FischTank PR Happy Hour",null,"N/A","Unknown"],
-  [null,"Maria Gallucci","FischTank PR Happy Hour","https://linkedin.com/in/mariagallucci","Guessed","Media/Journalist"],
-  [null,"Martha Muir","FischTank PR Happy Hour","https://linkedin.com/in/martha-muir-01015244","Guessed","Media/Journalist"],
-  [null,"Matt Bretzius","FischTank PR Happy Hour","https://linkedin.com/in/matthewbretzius","Confirmed","Consultant/Advisor"],
-  [null,"Matthew Glasser","FischTank PR Happy Hour","https://linkedin.com/in/matthewglasser","Guessed","Media/Journalist"],
-  [null,"Max Davidson","FischTank PR Happy Hour","https://linkedin.com/in/max-roland-davidson-055831109","Confirmed","Unknown"],
-  [null,"Maya Schuchert","FischTank PR Happy Hour","https://linkedin.com/in/maya-schuchert-7aa1891b3","Confirmed","Unknown"],
-  [null,"Michael Canova","FischTank PR Happy Hour","https://linkedin.com/in/michael-canova-83840bb6","Guessed","Consultant/Advisor"],
-  [null,"Mike Gray","FischTank PR Happy Hour","https://linkedin.com/in/michaelgray6","Confirmed","Unknown"],
-  [null,"Miriam Lujan","FischTank PR Happy Hour","https://linkedin.com/in/miriam-gonzalez-lujan-mba-finance-ma-","Confirmed","Unknown"],
-  [null,"Molly Taft","FischTank PR Happy Hour","https://linkedin.com/in/mollytaft","Guessed","Media/Journalist"],
-  [null,"Natalie Zhang","FischTank PR Happy Hour","https://linkedin.com/in/nataliejzhang","Guessed","Unknown"],
-  [null,"Nate Poon","FischTank PR Happy Hour","https://linkedin.com/in/natepoon","Confirmed","Unknown"],
-  [null,"Nicola Phillips","FischTank PR Happy Hour","https://linkedin.com/in/nicolahphillips","Confirmed","Unknown"],
-  [null,"Patrick Lewis","FischTank PR Happy Hour","https://linkedin.com/in/patrick-l-6791b7220","Confirmed","Unknown"],
-  [null,"Reena Karasin","FischTank PR Happy Hour","https://linkedin.com/in/reena-karasin-5630a1104","Guessed","Founder/Operator"],
-  [null,"Rob Kreis","FischTank PR Happy Hour","https://linkedin.com/in/robert-kreis-29b51773","Confirmed","Unknown"],
-  [null,"Sameer Bhalesha","FischTank PR Happy Hour","https://linkedin.com/in/sameerbhalesha","Confirmed","Unknown"],
-  [null,"Stephanie Primavera","FischTank PR Happy Hour","https://linkedin.com/in/stephanieprimavera","Confirmed","Unknown"],
-  [null,"Stevie Robinson","FischTank PR Happy Hour","https://linkedin.com/in/srobinson30","Guessed","Media/Journalist"],
-  [null,"TeraWatt Infrastructure","FischTank PR Happy Hour",null,"N/A","Founder/Operator"],
-  [null,"Tricia Crimmins","FischTank PR Happy Hour","https://linkedin.com/in/triciacrimmins","Guessed","Media/Journalist"],
-  [null,"Wes Mangum","FischTank PR Happy Hour","https://linkedin.com/in/wes-mangum-12934614a","Confirmed","Unknown"],
-  [null,"Xander Dailey","FischTank PR Happy Hour","https://linkedin.com/in/xander-dailey","Confirmed","Unknown"],
+  ["https://images.lumacdn.com/avatars/px/c37094d2-b35c-4304-a063-7dcf4964aa4e","Sonam Velani","Co-Founder & Managing Partner","Streetlife Ventures","streetlifeventures.com","https://linkedin.com/in/sonamvelani","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_23.png","Abe Pressman","Founder (Stealth)","Stealth Startup","","https://linkedin.com/in/abepressman","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_42.png","Aditi Desai","Associate","Barclays Investment Bank","barclays.com","https://linkedin.com/in/desaiaditi","Confirmed"],
+  ["https://images.lumacdn.com/avatars/d3/4e8f6ab3-0008-4a44-bfe8-f175cef1dfd6","Alec Turnbull","Co-Founder","Climate Tech Cities","climatetechcities.com","https://linkedin.com/in/alecturnbull","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_45.png","Allison Jegla","","Renown Capital Partners","","https://linkedin.com/in/allisonjegla","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_28.png","Anjana Agarwal","Consultant","The Ad Hoc Group","theadhocgroup.com","https://linkedin.com/in/anjana-agarwal","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_21.png","Anna Bell","","","","https://linkedin.com/in/anna-bell-345428147","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_32.png","Ashley A Fallon","","Kiwa PVEL","kiwapvel.com","https://linkedin.com/in/ashleyfallon","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_9.png","Benjy Hansen-Bundy","Writer & Editor","Freelance","","https://linkedin.com/in/benjy-hansen-bundy","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_41.png","Bikesh Kumar","Entrepreneur & Investor","","","https://linkedin.com/in/bikeshkumar","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_5.png","Brock Donnelly","Customer Success Manager","Clean Energy / DER","","https://linkedin.com/in/brockdonnelly","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_1.png","Cat Clifford","Senior Correspondent","Cipher News","cipher.news","https://linkedin.com/in/catclifford","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_31.png","Cate Battey","","HowGood","howgood.com","https://linkedin.com/in/cate-battey","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_35.png","Chad Reed","VP, Investor Relations & ESG","Hannon Armstrong","hannonarmstrong.com","https://linkedin.com/in/dchadreed","Confirmed"],
+  ["https://images.lumacdn.com/avatars/mf/f9488fa2-869a-4e30-8c86-38276671e0f1.jpg","Comly Wilson","Director, Digital Marketing","Enertiv","enertiv.com","https://linkedin.com/in/comly-wilson-07b8262b","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_7.png","Cory Waltrip","Business Development","Sublime Systems","sublime-systems.com","https://linkedin.com/in/cory-waltrip","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_23.png","Dan Svejnar","SVP, Growth","Voltus","voltus.co","https://linkedin.com/in/dansvejnar","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_19.png","Dylan Carbone","","ProtonH2","protonh2.com","https://linkedin.com/in/dylancarbone","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_46.png","Elaine Kanak","Chief Marketing Officer","Vontier","vontier.com","https://linkedin.com/in/elaine-p-kanak-b78b426","Guessed"],
+  ["https://images.lumacdn.com/avatars/zl/75fd223c-a264-44a9-a8f6-e7c3429099ee.jpg","Eric Fischgrund","CEO","FischTank PR","fischtankpr.com","https://linkedin.com/in/ericfischgrund","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_41.png","Erin Hadden","Account Director","FischTank PR","fischtankpr.com","https://linkedin.com/in/erin-hadden-21938798","Confirmed"],
+  ["https://images.lumacdn.com/avatars/vi/a949d171-851a-4d51-9e1c-659c59834f71.png","Heatmap News","","Heatmap News","heatmap.news","https://linkedin.com/company/heatmap-news","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_40.png","Isabella Roy","Account Manager","FischTank PR","fischtankpr.com","https://linkedin.com/in/bellazxyz","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_25.png","Javin Chan","","","","https://linkedin.com/in/javin-chan","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_0.png","Jeff Siegel","","","","https://linkedin.com/in/jeff-siegel-7a438214","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_2.png","Joel Santisteban","Co-Founder & CEO","Ecosuite","ecosuite.com","https://linkedin.com/in/joel-santisteban","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_41.png","John Kaywood","Senior Account Executive","FischTank PR","fischtankpr.com","https://linkedin.com/in/john-kaywood-478850104","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_40.png","John Simon","","","","https://linkedin.com/in/pfizer","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_18.png","Julian Daszkal","","","","https://linkedin.com/in/julian-daszkal","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_45.png","Jyotika Chandhoke","Senior Associate","The Ad Hoc Group","theadhocgroup.com","https://linkedin.com/in/jyotika-chandhoke","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_10.png","Kalp Oza","","","","https://linkedin.com/in/k-oza-9a86b911b","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_39.png","Katherine Cunningham","Engagement Manager","The Ad Hoc Group","theadhocgroup.com","https://linkedin.com/in/katherine-cunningham-b4057635","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_7.png","Katherine Tweed","Sr. Director, Partnerships","David Energy","davidenergy.com","https://linkedin.com/in/katherine-tweed-3595268","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_36.png","Kevin Dugan","Reporter","The Wall Street Journal","wsj.com","https://linkedin.com/in/kevin-dugan-93b2b86","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_46.png","Kyle Kirkpatrick","","","","","N/A"],
+  ["https://cdn.lu.ma/avatars-default/avatar_7.png","Lauren Dalban","Environmental Journalist","Inside Climate News","insideclimatenews.org","https://linkedin.com/in/lauren-dalban-61302916a","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_15.png","Lisa Mallner","Commercial Advisor","Consulate Gen. of Denmark","","https://linkedin.com/in/lisamallner","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_3.png","Mai Munoz","","","","","N/A"],
+  ["https://cdn.lu.ma/avatars-default/avatar_28.png","Maria Gallucci","Senior Reporter","Canary Media","canarymedia.com","https://linkedin.com/in/mariagallucci","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_42.png","Martha Muir","Energy Reporter","Financial Times","ft.com","https://linkedin.com/in/martha-muir-01015244","Guessed"],
+  ["https://images.lumacdn.com/avatars/bv/feede488-aea1-4fc4-9e20-0e9d28ed3d29.png","Matt Bretzius","Partner","FischTank PR","fischtankpr.com","https://linkedin.com/in/matthewbretzius","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_35.png","Matthew Glasser","Sr. Coordinating Producer","ABC News","abcnews.go.com","https://linkedin.com/in/matthewglasser","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_8.png","Max Davidson","Associate","EIG","eigpartners.com","https://linkedin.com/in/max-roland-davidson-055831109","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_40.png","Maya Schuchert","Chemical Engineer","Aircela","aircela.com","https://linkedin.com/in/maya-schuchert-7aa1891b3","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_7.png","Michael Canova","Media Relations Director","FischTank PR","fischtankpr.com","https://linkedin.com/in/michael-canova-83840bb6","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_24.png","Mike Gray","","RVC","","https://linkedin.com/in/michaelgray6","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_47.png","Miriam Lujan","","","","https://linkedin.com/in/miriam-gonzalez-lujan-mba-finance-ma-economics-05b637","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_6.png","Molly Taft","Reporter","WIRED","wired.com","https://linkedin.com/in/mollytaft","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_1.png","Natalie Zhang","Segment Producer","CNBC","cnbc.com","https://linkedin.com/in/natalie-zhang-55b76698","Guessed"],
+  ["https://images.lumacdn.com/avatars/so/1b78d9f3-ebfb-4eaa-acdf-797409bda958","Nate Poon","Founder","Stealth (Air Delivery)","","https://linkedin.com/in/natepoon","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_20.png","Nicola Phillips","","Clean Integration","","https://linkedin.com/in/nicolahphillips","Confirmed"],
+  ["https://images.lumacdn.com/avatars/pi/98a4e73e-0d7d-4182-883e-ed9718856cdd.jpg","Patrick Lewis","","","","https://linkedin.com/in/patrick-l-6791b7220","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_3.png","Reena Karasin","Sr. Director, Communications","Greentown Labs","greentownlabs.com","https://linkedin.com/in/reena-karasin-5630a1104","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_2.png","Rob Kreis","Vice President","FischTank PR","fischtankpr.com","https://linkedin.com/in/robert-kreis-29b51773","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_9.png","Sameer Bhalesha","BioTech Accelerationist","","","https://linkedin.com/in/sameerbhalesha","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_38.png","Stephanie Primavera","Director, Creative & Brand Partnerships","Canary Media","canarymedia.com","https://linkedin.com/in/stephanieprimavera","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_35.png","Stevie Robinson","Development","Canary Media","canarymedia.com","https://linkedin.com/in/srobinson30","Guessed"],
+  ["https://images.lumacdn.com/avatars/sh/cb233ff3-3969-4cef-9d0f-1242c9598416","TeraWatt Infrastructure","","TeraWatt Infrastructure","terawattinfrastructure.com","https://linkedin.com/company/terawatt-infrastructure","Confirmed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_16.png","Tricia Crimmins","Climate Tech Reporter","Morning Brew","morningbrew.com","https://linkedin.com/in/triciacrimmins","Guessed"],
+  ["https://cdn.lu.ma/avatars-default/avatar_35.png","Wes Mangum","Senior Account Director","FischTank PR","fischtankpr.com","https://linkedin.com/in/wes-mangum-12934614a","Confirmed"],
+  ["https://images.lumacdn.com/avatars/c8/fd196b35-15d4-4bfc-a5d9-699f7b9c18ce.jpg","Xander Dailey","","Nasdaq","nasdaq.com","https://linkedin.com/in/xander-dailey","Confirmed"]
 ];
 
-const TYPE_ORDER = ["VC","LP","Impact Investor","Investor","Founder/Operator","Media/Journalist","Consultant/Advisor","Policy/NGO","Academic/Research","Unknown"];
-const STATUS_ORDER = ["Confirmed","Guessed","N/A"];
+const LI_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
 
-function typeClass(t) {
-  const m = {"VC":"tp-vc","LP":"tp-lp","Impact Investor":"tp-impact","Investor":"tp-investor",
-    "Founder/Operator":"tp-founder","Policy/NGO":"tp-policy","Academic/Research":"tp-academic",
-    "Consultant/Advisor":"tp-consultant","Media/Journalist":"tp-media","Unknown":"tp-unknown"};
-  return m[t] || "tp-unknown";
-}
-function statusClass(s) {
-  return {"Confirmed":"st-confirmed","Guessed":"st-guessed","N/A":"st-na"}[s] || "st-na";
-}
+let sortCol = null, sortAsc = true;
+let currentData = [...DATA];
 
-const LI_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
-
-let sortCol = 5, sortDir = 1;
-
-function sortKey(row) {
-  if (sortCol === 5) return [TYPE_ORDER.indexOf(row[5]) < 0 ? 99 : TYPE_ORDER.indexOf(row[5]), STATUS_ORDER.indexOf(row[4]), row[1]];
-  if (sortCol === 4) return [STATUS_ORDER.indexOf(row[4]) < 0 ? 99 : STATUS_ORDER.indexOf(row[4]), row[1]];
-  return [row[sortCol] || ""];
-}
-
-function filtered() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const ft = document.getElementById('filterType').value;
+function renderTable() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const fc = document.getElementById('filterCompany').value;
   const fs = document.getElementById('filterStatus').value;
-  return DATA.filter(r =>
-    (!q || r[1].toLowerCase().includes(q)) &&
-    (!ft || r[5] === ft) &&
-    (!fs || r[4] === fs)
-  );
-}
 
-function render() {
-  const rows = filtered().slice().sort((a, b) => {
-    const ka = sortKey(a), kb = sortKey(b);
-    for (let i = 0; i < ka.length; i++) {
-      if (ka[i] < kb[i]) return -1 * sortDir;
-      if (ka[i] > kb[i]) return 1 * sortDir;
-    }
-    return 0;
+  const filtered = currentData.filter(r => {
+    const ok1 = !search || r[1].toLowerCase().includes(search) || r[2].toLowerCase().includes(search) || r[3].toLowerCase().includes(search);
+    const ok2 = !fc || r[3] === fc;
+    const ok3 = !fs || r[6] === fs;
+    return ok1 && ok2 && ok3;
   });
 
-  document.getElementById('rowCount').textContent = rows.length + ' of ' + DATA.length;
+  document.getElementById('countBadge').textContent = filtered.length + ' of ' + DATA.length;
 
-  // Batch buttons
-  const bar = document.getElementById('batchBar');
-  bar.innerHTML = '<span>Open LinkedIn:</span>';
-  const liRows = rows.filter(r => r[3]);
-  for (let i = 0; i < liRows.length; i += 10) {
-    const batch = liRows.slice(i, i + 10);
-    const urls = batch.map(r => r[3]);
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  filtered.forEach((r, i) => {
+    if (i % 10 === 0) {
+      const d = tbody.insertRow(); d.className = 'batch-divider';
+      d.insertCell().colSpan = 6;
+      d.cells[0].textContent = 'Batch ' + (Math.floor(i/10)+1) + ' \u00B7 rows ' + (i+1) + '\u2013' + Math.min(i+10, filtered.length);
+      d.cells[0].colSpan = 6;
+    }
+    const tr = tbody.insertRow();
+    const logo = r[4] ? 'https://logo.clearbit.com/' + r[4] : null;
+    const sc = r[6] === 'Confirmed' ? 'badge-confirmed' : r[6] === 'Guessed' ? 'badge-guessed' : 'badge-na';
+    tr.innerHTML =
+      '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + r[1] + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
+      '<td class="td-li">' + (r[5] ? '<a class="li-link" href="' + r[5] + '" target="_blank" rel="noopener">' + LI_SVG + '</a>' : '<span class="li-link grey">' + LI_SVG + '</span>') + '</td>' +
+      '<td><span class="name-text">' + r[1] + '</span></td>' +
+      '<td class="td-title">' + (r[2] || '<span style="color:#ccc">\u2014</span>') + '</td>' +
+      '<td class="td-company"><div class="company-cell">' +
+        (logo ? '<img class="company-logo" src="' + logo + '" alt="" onerror="this.style.display=\'none\'" loading="lazy">' : '') +
+        '<span class="company-name">' + (r[3] || '<span style="color:#ccc">\u2014</span>') + '</span>' +
+      '</div></td>' +
+      '<td class="td-status"><span class="badge ' + sc + '">' + r[6] + '</span></td>';
+  });
+
+  updateBatchBtns(filtered);
+}
+
+function updateBatchBtns(filtered) {
+  const urls = filtered.filter(r => r[5]).map(r => r[5]);
+  const wrap = document.getElementById('batchButtons');
+  wrap.innerHTML = '<span class="batch-tip">Open LinkedIn in batch (allow popups for launcher tab):</span>';
+  for (let i = 0; i < urls.length; i += 10) {
+    const chunk = urls.slice(i, i+10);
     const btn = document.createElement('button');
     btn.className = 'batch-btn';
-    btn.textContent = `Batch ${Math.floor(i/10)+1} (${urls.length})`;
-    btn.onclick = (function(u) {
-      return function() {
-        const script = u.map(url => `window.open(${JSON.stringify(url)},'_blank');`).join('');
-        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${u.length} tabs…</p></body></html>`;
-        const blob = new Blob([page], {type:'text/html'});
-        window.open(URL.createObjectURL(blob),'_blank');
-      };
-    })(urls);
-    bar.appendChild(btn);
+    btn.textContent = 'Batch ' + (Math.floor(i/10)+1) + ' (' + chunk.length + ')';
+    btn.onclick = (function(u) { return function() {
+      const s = u.map(x => 'window.open(' + JSON.stringify(x) + ',"_blank");').join('');
+      const p = '<html><body><script>window.onload=function(){' + s + 'window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ' + u.length + ' tabs\u2026</p></body></html>';
+      window.open(URL.createObjectURL(new Blob([p], {type:'text/html'})), '_blank');
+    }; })(chunk);
+    wrap.appendChild(btn);
   }
-  const tip = document.createElement('span');
-  tip.className = 'popup-tip';
-  tip.textContent = 'Allow popups on the launcher tab';
-  bar.appendChild(tip);
-
-  // Table rows
-  const tbody = document.getElementById('tbody');
-  let html = '';
-  rows.forEach((row, idx) => {
-    if (idx % 10 === 0) {
-      const batchNum = Math.floor(idx/10) + 1;
-      const start = idx + 1, end = Math.min(idx + 10, rows.length);
-      html += `<tr class="batch-divider"><td colspan="5">Batch ${batchNum} · rows ${start}–${end}</td></tr>`;
-    }
-    const li = row[3];
-    const liCell = li
-      ? `<div class="li-icon"><a href="${li}" target="_blank">${LI_SVG}</a></div>`
-      : `<div class="li-icon li-dim">${LI_SVG}</div>`;
-    html += `<tr>
-      <td>${liCell}</td>
-      <td class="name">${row[1]}</td>
-      <td><span class="badge ev-fischtank">${row[2]}</span></td>
-      <td><span class="badge ${statusClass(row[4])}">${row[4]}</span></td>
-      <td><span class="badge ${typeClass(row[5])}">${row[5]}</span></td>
-    </tr>`;
-  });
-  tbody.innerHTML = html;
 }
 
-// Sortable headers
-document.querySelectorAll('thead th[data-col]').forEach(th => {
-  th.addEventListener('click', () => {
-    const col = parseInt(th.dataset.col);
-    if (sortCol === col) sortDir *= -1;
-    else { sortCol = col; sortDir = 1; }
-    render();
+function sortBy(col) {
+  const idx = {name:1, title:2, company:3, status:6};
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  const i = idx[col];
+  currentData.sort((a, b) => {
+    const av = (a[i]||'').toLowerCase(), bv = (b[i]||'').toLowerCase();
+    return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
   });
-});
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sorted');
+    const sa = th.querySelector('.sort-arrow');
+    if (sa) sa.innerHTML = '&#8597;';
+  });
+  const cols = [null, null, 'name', 'title', 'company', 'status'];
+  document.querySelectorAll('thead th').forEach((th, i) => {
+    if (cols[i] === col) {
+      th.classList.add('sorted');
+      const sa = th.querySelector('.sort-arrow');
+      if (sa) sa.innerHTML = sortAsc ? '&#8593;' : '&#8595;';
+    }
+  });
+  renderTable();
+}
 
-render();
+(function populateFilters() {
+  const companies = [...new Set(DATA.map(r => r[3]).filter(Boolean))].sort();
+  const sel = document.getElementById('filterCompany');
+  companies.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; sel.appendChild(o); });
+})();
+
+document.getElementById('search').addEventListener('input', renderTable);
+document.getElementById('filterCompany').addEventListener('change', renderTable);
+document.getElementById('filterStatus').addEventListener('change', renderTable);
+
+renderTable();
 </script>
 </body>
 </html>
