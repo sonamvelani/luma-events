@@ -84,11 +84,14 @@
   }
   .company-name { color: #333; font-weight: 500; }
 
-  .td-status { white-space: nowrap; }
-  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .badge-confirmed { background: #e8f5e9; color: #2e7d32; }
-  .badge-guessed   { background: #fff8e1; color: #f57f17; }
-  .badge-na        { background: #f5f5f5; color: #9e9e9e; }
+  .td-about { min-width: 200px; max-width: 320px; color: #555; font-size: 12px; line-height: 1.4; }
+  .about-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .td-status { width: 36px; text-align: center; }
+  .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+  .status-confirmed { background: #4caf50; }
+  .status-guessed   { background: #ffc107; }
+  .status-na        { background: #ccc; }
 
   @media (max-width: 600px) {
     .header { padding: 20px; }
@@ -100,7 +103,7 @@
 
 <div class="header">
   <h1>FischTank PR Happy Hour</h1>
-  <p>61 attendees &middot; luma.com/ihohs2le &middot; Scraped March 2026</p>
+  <p>61 attendees &middot; <a href="https://lu.ma/ihohs2le" target="_blank" rel="noopener" style="color:inherit;opacity:1;text-decoration:underline;text-underline-offset:2px">lu.ma/ihohs2le</a> &middot; Extracted March 2026</p>
 </div>
 
 <div class="controls">
@@ -128,7 +131,8 @@
     <th onclick="sortBy('name')">Name <span class="sort-arrow">&#8597;</span></th>
     <th onclick="sortBy('title')">Title <span class="sort-arrow">&#8597;</span></th>
     <th onclick="sortBy('company')">Company <span class="sort-arrow">&#8597;</span></th>
-    <th onclick="sortBy('status')">LI Status <span class="sort-arrow">&#8597;</span></th>
+    <th onclick="sortBy('about')">About <span class="sort-arrow">&#8597;</span></th>
+    <th class="td-status" style="cursor:default">LI</th>
   </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -226,13 +230,15 @@ function renderTable() {
   filtered.forEach((r, i) => {
     if (i % 10 === 0) {
       const d = tbody.insertRow(); d.className = 'batch-divider';
-      d.insertCell().colSpan = 6;
+      d.insertCell().colSpan = 7;
       d.cells[0].textContent = 'Batch ' + (Math.floor(i/10)+1) + ' \u00B7 rows ' + (i+1) + '\u2013' + Math.min(i+10, filtered.length);
-      d.cells[0].colSpan = 6;
+      d.cells[0].colSpan = 7;
     }
     const tr = tbody.insertRow();
     const logo = r[4] ? 'https://www.google.com/s2/favicons?domain=' + r[4] + '&sz=64' : null;
-    const sc = r[6] === 'Confirmed' ? 'badge-confirmed' : r[6] === 'Guessed' ? 'badge-guessed' : 'badge-na';
+    const sd = r[6] === 'Confirmed' ? 'status-confirmed' : r[6] === 'Guessed' ? 'status-guessed' : 'status-na';
+    const about = r[7] || '';
+    const aboutHtml = about ? '<div class="about-text" title="' + about.replace(/"/g,'&quot;') + '">' + about + '</div>' : '<span style="color:#ccc">\u2014</span>';
     tr.innerHTML =
       '<td class="td-photo"><img class="avatar" src="' + r[0] + '" alt="' + r[1] + '" onerror="this.src=\'https://cdn.lu.ma/avatars-default/avatar_0.png\'"></td>' +
       '<td class="td-li">' + (r[5] ? '<a class="li-link" href="' + r[5] + '" target="_blank" rel="noopener">' + LI_SVG + '</a>' : '<span class="li-link grey">' + LI_SVG + '</span>') + '</td>' +
@@ -242,7 +248,8 @@ function renderTable() {
         (logo ? '<img class="company-logo" src="' + logo + '" alt="" onerror="this.style.display=\'none\'" loading="lazy">' : '') +
         '<span class="company-name">' + (r[3] || '<span style="color:#ccc">\u2014</span>') + '</span>' +
       '</div></td>' +
-      '<td class="td-status"><span class="badge ' + sc + '">' + r[6] + '</span></td>';
+      '<td class="td-about">' + aboutHtml + '</td>' +
+      '<td class="td-status"><span class="status-dot ' + sd + '" title="' + r[6] + '"></span></td>';
   });
 
   updateBatchBtns(filtered);
@@ -267,7 +274,7 @@ function updateBatchBtns(filtered) {
 }
 
 function sortBy(col) {
-  const idx = {name:1, title:2, company:3, status:6};
+  const idx = {name:1, title:2, company:3, about:7, status:6};
   if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
   const i = idx[col];
   currentData.sort((a, b) => {
