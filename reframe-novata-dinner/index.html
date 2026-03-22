@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reframe Venture × Novata Dinner Attendees</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e8eaf0;
+    --muted: #8b8fa8;
+    --accent: #6c63ff;
+    --badge-vc: #10b981;
+    --badge-lp: #3b82f6;
+    --badge-founder: #f59e0b;
+    --badge-operator: #8b5cf6;
+    --badge-policymaker: #ef4444;
+    --badge-ngo: #06b6d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+  }
+  /* ── Header ── */
+  .header { max-width: 1200px; margin: 0 auto 2rem; }
+  .event-meta { display: flex; align-items: center; gap: .6rem; margin-bottom: .4rem; }
+  .event-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .event-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  h1 { font-size: clamp(1.3rem, 4vw, 1.9rem); font-weight: 700; line-height: 1.2; margin-bottom: .35rem; }
+  .subtitle { color: var(--muted); font-size: .875rem; }
+
+  /* ── Controls row ── */
+  .controls { max-width: 1200px; margin: 0 auto 1.25rem; display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 280px; }
+  .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); opacity: .4; pointer-events: none; }
+  #search { width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: .42rem .75rem .42rem 2rem; border-radius: 8px; font-size: .82rem; outline: none; }
+  #search:focus { border-color: var(--accent); }
+  .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: .38rem .8rem; border-radius: 20px; font-size: .76rem; cursor: pointer; transition: all .15s; font-weight: 500; white-space: nowrap; }
+  .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+  .filter-btn.active { color: #fff; }
+  .filter-btn.active[data-type="all"]          { background: var(--accent); border-color: var(--accent); }
+  .filter-btn.active[data-type="vc"]           { background: var(--badge-vc); border-color: var(--badge-vc); }
+  .filter-btn.active[data-type="lp"]           { background: var(--badge-lp); border-color: var(--badge-lp); }
+  .filter-btn.active[data-type="founder"]      { background: var(--badge-founder); border-color: var(--badge-founder); }
+  .filter-btn.active[data-type="operator"]     { background: var(--badge-operator); border-color: var(--badge-operator); }
+  .filter-btn.active[data-type="policymaker"]  { background: var(--badge-policymaker); border-color: var(--badge-policymaker); }
+  .filter-btn.active[data-type="ngo"]          { background: var(--badge-ngo); border-color: var(--badge-ngo); }
+  .count { margin-left: auto; color: var(--muted); font-size: .8rem; white-space: nowrap; }
+
+  /* ── Batch open buttons ── */
+  .batch-wrap { max-width: 1200px; margin: 0 auto .9rem; display: flex; flex-wrap: wrap; gap: .5rem; min-height: 0; }
+  .batch-btn { background: #1e2130; border: 1px solid var(--border); color: var(--muted); padding: .32rem .75rem; border-radius: 6px; font-size: .75rem; cursor: pointer; transition: all .15s; }
+  .batch-btn:hover { background: #252840; color: var(--text); border-color: var(--accent); }
+  .batch-tip { font-size: .7rem; color: var(--muted); align-self: center; }
+
+  /* ── Table ── */
+  .table-wrap { max-width: 1200px; margin: 0 auto; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+  thead tr { background: #13151f; border-bottom: 1px solid var(--border); }
+  th { padding: .7rem 1rem; text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); white-space: nowrap; font-weight: 600; cursor: pointer; user-select: none; }
+  th:hover { color: var(--text); }
+  th .sort-arrow { display: inline-block; margin-left: 4px; opacity: .4; font-style: normal; }
+  th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(108,99,255,.05); }
+  tbody tr.hidden { display: none; }
+  td { padding: .8rem 1rem; vertical-align: middle; }
+
+  /* ── Batch divider rows ── */
+  tr.batch-header td { padding: .35rem 1rem; font-size: .67rem; text-transform: uppercase; letter-spacing: .07em; color: #4a4e6a; background: #10121a; border-bottom: 1px solid #1e2030; }
+
+  /* Photo */
+  .photo-cell { width: 52px; }
+  .avatar-wrap { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+  .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* LI */
+  .li-cell { width: 36px; text-align: center; }
+  .li-link { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; text-decoration: none; transition: opacity .15s; }
+  .li-link:hover { opacity: .8; }
+  .li-link.dim { opacity: .15; pointer-events: none; }
+
+  /* Name */
+  .name-cell { min-width: 155px; }
+  .name { font-weight: 600; line-height: 1.3; }
+  .org { font-size: .73rem; color: var(--muted); margin-top: 2px; }
+
+  /* About */
+  .about-cell { min-width: 240px; max-width: 370px; }
+  .about-text { color: #c0c4d6; line-height: 1.5; font-size: .8rem; }
+  .about-short { display: block; }
+  .about-full  { display: none; }
+  .more-btn { background: none; border: none; color: var(--accent); font-size: .75rem; cursor: pointer; padding: 0; margin-top: 2px; }
+
+  /* Event */
+  .event-cell { min-width: 115px; }
+  .event-chip { display: inline-block; font-size: .68rem; color: var(--muted); background: #1e2130; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; white-space: nowrap; }
+
+  /* Status */
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: .76rem; }
+  .status-badge::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+  .status-badge.confirmed { color: var(--badge-vc); }
+  .status-badge.confirmed::before { background: var(--badge-vc); }
+
+  /* Type */
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: .67rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+  .badge-vc           { background: rgba(16,185,129,.15);  color: #34d399; }
+  .badge-lp           { background: rgba(59,130,246,.15);  color: #60a5fa; }
+  .badge-founder      { background: rgba(245,158,11,.15);  color: #fbbf24; }
+  .badge-operator     { background: rgba(139,92,246,.15);  color: #a78bfa; }
+  .badge-policymaker  { background: rgba(239,68,68,.15);   color: #f87171; }
+  .badge-ngo          { background: rgba(6,182,212,.15);   color: #22d3ee; }
+
+  @media (max-width: 768px) {
+    body { padding: 1rem; }
+    .about-cell, .event-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="event-meta">
+    <div class="event-dot"></div>
+    <span class="event-label">Dinner · New York City · March 2025</span>
+  </div>
+  <h1>Reframe Venture × Novata Dinner</h1>
+  <p class="subtitle">Navigating Global Sustainability Regulation &nbsp;·&nbsp; 17 Guests</p>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search name…">
+  </div>
+  <button class="filter-btn active" data-type="all">All (17)</button>
+  <button class="filter-btn" data-type="vc">VC (7)</button>
+  <button class="filter-btn" data-type="lp">LP (6)</button>
+  <button class="filter-btn" data-type="operator">Operator (2)</button>
+  <button class="filter-btn" data-type="ngo">NGO (2)</button>
+  <button class="filter-btn" data-type="policymaker">Policymaker (1)</button>
+  <span class="count" id="count">17 of 17</span>
+</div>
+
+<div class="batch-wrap" id="batch-wrap"></div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="photo-cell" data-col="photo">Photo</th>
+        <th class="li-cell">LI</th>
+        <th data-col="name">Name <em class="sort-arrow">↕</em></th>
+        <th class="about-cell">About</th>
+        <th class="event-cell">Event</th>
+        <th>Status</th>
+        <th data-col="type">Type <em class="sort-arrow">↕</em></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+// ─── Data ────────────────────────────────────────────────────────────────────
+const TYPE_ORDER = ['vc','lp','operator','founder','policymaker','ngo'];
+const TYPE_LABELS = {vc:'VC', lp:'Limited Partner', founder:'Founder', operator:'Operator', policymaker:'Policymaker', ngo:'NGO'};
+const LI_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+const ATTENDEES = [
+  { name:"Sonam Velani",            org:"Streetlife Ventures",     li:"https://www.linkedin.com/in/sonamvelani/",              photo:"https://media.licdn.com/dms/image/v2/C4D03AQHhEWg_zOLfvQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516622010982", about:"Co-Founder & Managing Partner at Streetlife Ventures, investing at the intersection of cities × climate. Former Goldman Sachs, World Bank, NYC Mayor's Office. Founded Climate Tech Cities community.", type:"vc" },
+  { name:"Adam Robbins",            org:"Collective Global Mgmt",  li:"https://www.linkedin.com/in/adambrobbins/",             photo:"https://media.licdn.com/dms/image/v2/D4E03AQHNzquWHrgn9A/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1678482912213", about:"Partner at Collective Global Management. Former Director at Wafra (Capital Constellation JV) and Head of Future Investing Initiatives at the World Economic Forum; bridges institutional capital and private markets.", type:"lp" },
+  { name:"Audrey Mocle",            org:"Open MIC",                li:"https://www.linkedin.com/in/audrey-mocle-04928842/",    photo:"https://media.licdn.com/dms/image/v2/D5603AQHnuNktc2H4wg/profile-displayphoto-scale_400_400/B56ZxyxezCGoAg-/0/1771452100383", about:"Executive Director at Open MIC (Open Media and Information Companies Initiative). Works on corporate accountability, racial equity audits, and responsible governance at major tech and media platforms.", type:"ngo" },
+  { name:"Ayako Kageyama",          org:"Sustainable Finance",     li:"https://www.linkedin.com/in/ayako-kageyama-94545b33/",  photo:"https://media.licdn.com/dms/image/v2/D4E03AQEHyZyeko7_Ug/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1678981454735", about:"Head of Innovative Sustainable Finance. Expert in sustainable finance, impact investing, and climate-focused capital deployment across Asian markets.", type:"lp" },
+  { name:"Douglas Sloan",           org:"Big Society Capital",     li:"https://www.linkedin.com/in/douglassloan/",             photo:"https://media.licdn.com/dms/image/v2/C4D03AQHP7J-4TmuFfQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1628075016271", about:"Managing Director, Impact Venture at Big Society Capital. Focuses on ESG integration in VC, showcasing how impact-driven startups (Wagestream, Ophelos) build commercial and social value.", type:"lp" },
+  { name:"Drew Morales",            org:"Wellington Management",   li:"https://www.linkedin.com/in/andrew-morales-0605335/",   photo:"https://media.licdn.com/dms/image/v2/C4E03AQGYHOVX2cvJZQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1661376813274", about:"ESG and sustainable investing professional at Wellington Management. Former PJT Partners ESG advisor to senior executives and boards on sustainability strategy and shareholder engagement.", type:"lp" },
+  { name:"Dr Johannes Lenhard",     org:"Reframe Venture",         li:"https://www.linkedin.com/in/johannes-lenhard-b2904577/",photo:"https://media.licdn.com/dms/image/v2/D4E03AQHbms9oSCT_CA/profile-displayphoto-scale_400_400/B4EZfLnsGgHcAo-/0/1751467875293", about:"Co-founder of Reframe Venture, working with 500+ VC funds and 100+ LPs globally on ESG integration across the full venture capital value chain. Author and researcher on impact in venture.", type:"operator" },
+  { name:"Hannah Leach",            org:"VentureESG / AFI Ventures",li:"https://www.linkedin.com/in/hannahleach/",             photo:"https://media.licdn.com/dms/image/v2/C4D03AQGX_RN9ZIaEhQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1560160761979", about:"Co-founder of VentureESG and partner at Houghton Street Ventures / AFI Ventures. Pioneer in ESG-in-venture community building; hosted UN PRI × VentureESG questionnaire and led ESG sessions at Web Summit.", type:"operator" },
+  { name:"Izzy Schmidt",            org:"Quona Capital",           li:"https://www.linkedin.com/in/isabelle-c-schmidt/",       photo:"https://media.licdn.com/dms/image/v2/D4E03AQF8ZVl8-B2Suw/profile-displayphoto-scale_400_400/B4EZfvqfWaHEAg-/0/1752072582984", about:"Investor at Quona Capital, focused on fintech and financial inclusion in emerging markets. Passionate about VentureESG, impact investing, and scaling solutions in historically underserved communities.", type:"vc" },
+  { name:"Josianne Galea Baron",    org:"UNICEF",                  li:"https://www.linkedin.com/in/josianne-galea-baron/",     photo:"https://media.licdn.com/dms/image/v2/D4D03AQGE81aB-utvDA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1709726578754", about:"Business and Human Rights specialist at UNICEF. Works on responsible business practices, digital rights for children, and corporate accountability. Presented UNICEF's digital responsible business tools at MWC2024.", type:"ngo" },
+  { name:"Julia LeStrange Stern",   org:"Summit Partners",         li:"https://www.linkedin.com/in/justern/",                  photo:"https://media.licdn.com/dms/image/v2/D4E03AQHQ8yAs-e8UPQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1708025723502", about:"Director of Responsible Investing at Summit Partners. Leads ESG integration and strategy across Summit's growth equity and venture portfolio. Harvard Kennedy School alumna.", type:"vc" },
+  { name:"Katie Green, CFA",        org:"Mubadala Capital",        li:"https://www.linkedin.com/in/katie-green-cfa-9b177bb7/", photo:"https://media.licdn.com/dms/image/v2/D4E03AQEqAJgUV5Aktw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1713518729162", about:"CFA at Mubadala Capital (Abu Dhabi sovereign wealth fund). Host of speaker series on 'Climate in the Boardroom: From Oversight to Impact,' exploring climate as a financial and fiduciary decision.", type:"lp" },
+  { name:"Nandini S Hampole",       org:"Bregal Investments",      li:"https://www.linkedin.com/in/nandini-hampole/",          photo:"https://media.licdn.com/dms/image/v2/D4E03AQG6AMFZpcxtsQ/profile-displayphoto-scale_400_400/B4EZtr_COOJwAc-/0/1767043245434", about:"Impact & ESG Program advisor at Bregal Investments. Committed to social justice and human rights; expertise in bioeconomy, climate resilience, and nature-positive inclusive economies.", type:"lp" },
+  { name:"Natàlia Costa i Coromina",org:"Energy Impact Partners",  li:"https://www.linkedin.com/in/natalia-costa-i-coromina/", photo:"https://media.licdn.com/dms/image/v2/D4D03AQGZQvDM1oG6pA/profile-displayphoto-scale_400_400/B4DZgPLoUPGQAc-/0/1752601364066", about:"Associate, Impact & Sustainability at Energy Impact Partners. Focuses on ESG regulatory frameworks, CSRD/sustainability reporting standards, and climate policy in the clean energy transition.", type:"vc" },
+  { name:"Nelson Switzer",          org:"Climate Innovation Capital",li:"https://www.linkedin.com/in/nelson-switzer-88b944b/",  photo:"https://media.licdn.com/dms/image/v2/D5603AQG-AijIZExpmA/profile-displayphoto-shrink_400_400/B56ZR51rgEGQAU-/0/1737210903064", about:"Managing Partner at Climate Innovation Capital. 'The Gigacorn Hunter' — invests in breakthrough technologies capable of solving global sustainability challenges. Author of 'Little Green Lies.'", type:"vc" },
+  { name:"Paul Fehlinger",          org:"Project Liberty",         li:"https://www.linkedin.com/in/paulfehlinger/",             photo:"https://media.licdn.com/dms/image/v2/D4E03AQGB1wWHI5uUqA/profile-displayphoto-scale_400_400/B4EZjxjL6gIUAc-/0/1756399190248", about:"Director at Project Liberty (Harvard-affiliated). Focused on responsible AI innovation, RegTech, internet governance, and tech policy frameworks in Europe. Co-author of reports on digital regulation.", type:"policymaker" },
+  { name:"Shaun Chaudhuri",         org:"The Westly Group",        li:"https://www.linkedin.com/in/shaunchaudhuri/",            photo:"https://media.licdn.com/dms/image/v2/C4E03AQFduS7ifjNUuQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1638286136231", about:"Partner at The Westly Group (cleantech VC). Co-led standardized environmental and DEI term sheet clause development with Leaders for Climate Action and Diversity VC. Championed ESG in venture.", type:"vc" },
+];
+
+// ─── Sort & Filter State ──────────────────────────────────────────────────────
+let currentFilter = 'all';
+let currentSearch = '';
+let sortCol = 'type';
+let sortDir = 1;
+
+// ─── SVG Avatar ──────────────────────────────────────────────────────────────
+function svgAvatar(name, type) {
+  const bgs = {vc:'#064e3b',lp:'#1e3a5f',founder:'#451a03',operator:'#2e1065',policymaker:'#450a0a',ngo:'#083344'};
+  const fgs = {vc:'#34d399',lp:'#60a5fa',founder:'#fbbf24',operator:'#a78bfa',policymaker:'#f87171',ngo:'#22d3ee'};
+  const bg = bgs[type]||'#1f2937', fg = fgs[type]||'#9ca3af';
+  const initials = name.split(' ').slice(0,2).map(p=>p[0].toUpperCase()).join('');
+  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"><circle cx="21" cy="21" r="21" fill="${bg}"/><text x="21" y="26" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="${fg}">${initials}</text></svg>`)}`;
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function getVisible() {
+  return ATTENDEES.filter(a => {
+    const matchType = currentFilter === 'all' || a.type === currentFilter;
+    const matchSearch = !currentSearch || a.name.toLowerCase().includes(currentSearch.toLowerCase());
+    return matchType && matchSearch;
+  }).sort((a,b) => {
+    if (sortCol === 'name') return sortDir * a.name.localeCompare(b.name);
+    if (sortCol === 'type') {
+      const diff = TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type);
+      return sortDir * (diff !== 0 ? diff : a.name.localeCompare(b.name));
+    }
+    return 0;
+  });
+}
+
+function renderTable() {
+  const visible = getVisible();
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  visible.forEach((a, i) => {
+    // Batch divider every 10 rows
+    if (i % 10 === 0) {
+      const divTr = document.createElement('tr');
+      divTr.className = 'batch-header';
+      const end = Math.min(i+10, visible.length);
+      divTr.innerHTML = `<td colspan="7">Batch ${Math.floor(i/10)+1} · rows ${i+1}–${end}</td>`;
+      tbody.appendChild(divTr);
+    }
+
+    const fallback = svgAvatar(a.name, a.type);
+    const short = a.about.substring(0,110) + (a.about.length > 110 ? '…' : '');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="photo-cell">
+        <div class="avatar-wrap">
+          <img class="avatar-img" src="${a.photo}" alt="${a.name}"
+               onerror="this.onerror=null;this.src='${fallback}'"
+               referrerpolicy="no-referrer">
+        </div>
+      </td>
+      <td class="li-cell">
+        <a class="li-link${a.li?'':' dim'}" href="${a.li||'#'}" target="_blank" rel="noopener" title="LinkedIn">${LI_SVG}</a>
+      </td>
+      <td class="name-cell">
+        <div class="name">${a.name}</div>
+        <div class="org">${a.org}</div>
+      </td>
+      <td class="about-cell">
+        <div class="about-text">
+          <span class="about-short">${short}</span>
+          <span class="about-full">${a.about}</span>
+          ${a.about.length > 110 ? '<button class="more-btn" onclick="toggleAbout(this)">more</button>' : ''}
+        </div>
+      </td>
+      <td class="event-cell"><span class="event-chip">Reframe × Novata</span></td>
+      <td><span class="status-badge confirmed">Attended</span></td>
+      <td><span class="badge badge-${a.type}">${TYPE_LABELS[a.type]||a.type}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('count').textContent = `${visible.length} of ${ATTENDEES.length}`;
+  renderBatchButtons(visible);
+}
+
+function toggleAbout(btn) {
+  const wrap = btn.closest('.about-text');
+  const short = wrap.querySelector('.about-short');
+  const full  = wrap.querySelector('.about-full');
+  if (full.style.display === 'inline') {
+    full.style.display = 'none'; short.style.display = 'inline'; btn.textContent = 'more';
+  } else {
+    full.style.display = 'inline'; short.style.display = 'none'; btn.textContent = 'less';
+  }
+}
+
+function renderBatchButtons(visible) {
+  const wrap = document.getElementById('batch-wrap');
+  wrap.innerHTML = '';
+  if (!visible.length) return;
+  const urls = visible.filter(a => a.li).map(a => a.li);
+  if (!urls.length) return;
+
+  for (let i = 0; i < urls.length; i += 10) {
+    const batch = urls.slice(i, i+10);
+    const n = Math.floor(i/10)+1;
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `Open Batch ${n} (${batch.length} tabs)`;
+    btn.onclick = (function(u){
+      return function() {
+        const script = u.map(url=>`window.open(${JSON.stringify(url)},'_blank');`).join('');
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px;color:#333">Opening ${u.length} tabs…</p></body></html>`;
+        const blob = new Blob([page], {type:'text/html'});
+        window.open(URL.createObjectURL(blob), '_blank');
+      };
+    })(batch);
+    wrap.appendChild(btn);
+  }
+  const tip = document.createElement('span');
+  tip.className = 'batch-tip';
+  tip.textContent = 'Allow popups for batch tabs';
+  wrap.appendChild(tip);
+}
+
+// ─── Sort ────────────────────────────────────────────────────────────────────
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (col === 'photo') return;
+    if (sortCol === col) { sortDir *= -1; }
+    else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('th[data-col]').forEach(h => {
+      h.classList.remove('sorted');
+      const arrow = h.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = '↕';
+    });
+    th.classList.add('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = sortDir === 1 ? '↑' : '↓';
+    renderTable();
+  });
+});
+
+// ─── Filter buttons ──────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.type;
+    renderTable();
+  });
+});
+
+// ─── Search ──────────────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  renderTable();
+});
+
+// ─── Initial render ──────────────────────────────────────────────────────────
+renderTable();
+</script>
+</body>
+</html>
