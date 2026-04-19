@@ -204,8 +204,8 @@ function renderTable() {
     const aboutText = about || bio || '';
     const isLong = aboutText.length > 300;
     const aboutHtml = isLong
-      ? `<div class="about-text">\${aboutText}</div><button class="expand-btn" onclick="toggleAbout(this)">more ↓</button>`
-      : `<div class="about-text expanded">\${aboutText}</div>`;
+      ? `<div class="about-text">${aboutText}</div><button class="expand-btn" onclick="toggleAbout(this)">more ↓</button>`
+      : `<div class="about-text expanded">${aboutText}</div>`;
 
     html += `<tr>
       <td class="photo-cell">
