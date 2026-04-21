@@ -96,9 +96,12 @@
   .identity-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .name-line { display: flex; align-items: center; gap: 5px; }
   .person-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--text); white-space: nowrap; }
-  .company-line { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
+  .company-line { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--brand); font-weight: 500; }
   .company-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
-  .title-line { font-size: 11.5px; color: var(--muted); opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+  .title-line { font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+  .title-senior { color: #b83030; }
+  .title-mid    { color: #c07020; }
+  .title-junior { color: var(--muted); }
   .li-badge { display: inline-flex; align-items: center; flex-shrink: 0; }
   .li-badge svg { display: block; }
   .li-link { text-decoration: none; }
@@ -193,8 +196,8 @@
     <tr>
       <th class="action-cell no-sort"></th>
       <th class="no-sort">Person</th>
+      <th data-col="type">Type <span class="sort-arrow">↕</span></th>
       <th data-col="about">About <span class="sort-arrow">↕</span></th>
-      <th data-col="type" style="text-align:right;padding-right:36px">Type <span class="sort-arrow">↕</span></th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
@@ -268,6 +271,16 @@ function liIcon(linkedin, status) {
   if (!linkedin) return `<span class="li-badge" style="opacity:.2">${liSvg('#9dbfaa')}</span>`;
   const color = status === 'Verified' ? '#0a66c2' : '#9dbfaa';
   return `<a href="${linkedin}" target="_blank" class="li-link li-badge">${liSvg(color)}</a>`;
+}
+
+function titleLevel(title) {
+  if (!title) return 'junior';
+  const t = title.toLowerCase();
+  const senior = ['founder','co-founder','partner','director','vp','vice president','chief','president','head of','principal','managing','cto','ceo','coo','cfo','chair'];
+  const junior = ['intern','analyst','coordinator','assistant','junior','associate analyst'];
+  if (senior.some(s => t.includes(s))) return 'senior';
+  if (junior.some(s => t.includes(s))) return 'junior';
+  return 'mid';
 }
 
 function typePill(t) {
@@ -350,14 +363,14 @@ function render() {
               <span class="person-name">${a.name}</span>
             </div>
             ${a.company ? `<div class="company-line">${a.company_domain ? `<img class="company-logo" src="https://logo.clearbit.com/${a.company_domain}" onerror="this.style.display='none'">` : ''}<span>${a.company}</span></div>` : ''}
-            ${a.title ? `<div class="title-line">${a.title}</div>` : ''}
+            ${a.title ? `<div class="title-line title-${titleLevel(a.title)}">${a.title}</div>` : ''}
           </div>
         </div>
       </td>
+      <td style="vertical-align:middle;padding-right:8px">${typePill(a.type)}</td>
       <td class="about-cell" onclick="toggleExpand('${a.person_id}')">
         ${aboutContent}
       </td>
-      <td style="vertical-align:middle;text-align:right;padding-right:36px">${typePill(a.type)}</td>
     </tr>`;
   }).join('');
 
