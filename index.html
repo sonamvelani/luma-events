@@ -3,85 +3,284 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luma Events · Streetlife Ventures</title>
+<title>Events · Streetlife Ventures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --forest: #2c4a38;
-    --brand:  #3d7a55;
-    --bg:     #f3f2ec;
-    --card:   #ffffff;
-    --border: #dce3da;
-    --text:   #1a2820;
-    --muted:  #5c6e60;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg); color: var(--text); min-height: 100vh; }
-  header { background: var(--forest); color: #e8f0eb; padding: 28px 36px; }
-  header h1 { font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
-  header p  { font-size: 13px; color: #9dbfaa; margin-top: 4px; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fafaf9;
+    color: #111;
+    min-height: 100vh;
+  }
+
+  /* ── Nav ── */
+  nav {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e6;
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nav a.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  nav img.logo {
+    height: 22px;
+    width: auto;
+  }
+
+  nav span.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  /* ── Hero / page header ── */
+  .page-header {
+    padding: 64px 48px 48px;
+    border-bottom: 1px solid #e8e8e6;
+    background: #fff;
+  }
+
+  .page-header .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: #111;
+  }
+
+  .page-header h1 em {
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* ── Grid ── */
+  .grid-container {
+    padding: 48px;
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
-    padding: 28px 36px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: #e8e8e6;
+    border: 1px solid #e8e8e6;
   }
+
+  /* ── Card ── */
   .card {
-    background: var(--card); border-radius: 10px; border: 1px solid var(--border);
-    padding: 20px 22px; text-decoration: none; color: inherit;
-    transition: box-shadow .15s, transform .15s; display: block;
+    background: #fff;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    transition: background 0.15s ease;
+    position: relative;
   }
-  .card:hover { box-shadow: 0 4px 16px rgba(44,74,56,.1); transform: translateY(-2px); }
-  .card-title { font-size: 15px; font-weight: 600; line-height: 1.35; margin-bottom: 6px; color: var(--text); }
-  .card-meta  { font-size: 12px; color: var(--muted); line-height: 1.4; }
-  .badge {
-    display: inline-flex; align-items: center; padding: 3px 9px;
-    border-radius: 5px; font-size: 11px; font-weight: 600;
-    background: #d4edda; color: #1a4d2e; margin-top: 12px;
+
+  .card:hover {
+    background: #f5f5f3;
   }
-  @media (max-width: 600px) {
-    header { padding: 20px; }
-    .grid  { padding: 16px; gap: 10px; }
+
+  .card-body {}
+
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #111;
+    letter-spacing: -0.01em;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  .card-arrow {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #111;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  .card:hover .card-arrow {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+    transform: translate(2px, -2px);
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid #e8e8e6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer a {
+    font-size: 11px;
+    color: #999;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+
+  footer a:hover { color: #111; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    nav { padding: 0 24px; }
+    .page-header { padding: 40px 24px 32px; }
+    .page-header h1 { font-size: 26px; }
+    .grid-container { padding: 24px; }
+    footer { padding: 24px; flex-direction: column; gap: 12px; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>Luma Events</h1>
-  <p>Streetlife Ventures · Attendee directories</p>
-</header>
-<div class="grid">
 
-  <a class="card" href="/events/DSIC-Guided-Tour/">
-    <div class="card-title">DSIC Guided Tour: Explore Heat Pump Technology at Daikin</div>
-    <div class="card-meta">DC Climate Week · April 21, 2026 · Washington DC · 10 attendees</div>
-    <span class="badge">View attendees →</span>
+<nav>
+  <a class="logo-link" href="https://www.streetlifeventures.com/" target="_blank">
+    <img class="logo"
+      src="https://images.squarespace-cdn.com/content/v1/6439bea5decc65220d21ba27/0db34877-e970-4d92-97eb-e1e9bc213f70/Logo_H_Black.png?format=1500w"
+      alt="Streetlife Ventures" />
   </a>
+  <span class="nav-label">Events</span>
+</nav>
 
-  <a class="card" href="/events/climate-vc-breakfast-apr2026/">
-    <div class="card-title">DC Climate Week – Climate VC Breakfast</div>
-    <div class="card-meta">April 2026 · Washington DC</div>
-    <span class="badge">View attendees →</span>
-  </a>
-
-  <a class="card" href="/events/dc-climate-week-gplp-2026/">
-    <div class="card-title">DC's 2nd Annual Climate GP/LP Matching Catalyst</div>
-    <div class="card-meta">DC Climate Week · April 2026</div>
-    <span class="badge">View attendees →</span>
-  </a>
-
-  <a class="card" href="/events/gari-summit-nyc-2026/">
-    <div class="card-title">GARI Summit · New York</div>
-    <div class="card-meta">Global Adaptation &amp; Resilience Investment Working Group</div>
-    <span class="badge">View attendees →</span>
-  </a>
-
-  <a class="card" href="/events/lunch-new-angels-emerging-lps/">
-    <div class="card-title">Your First Climate Investment</div>
-    <div class="card-meta">A Lunch for New Angels &amp; Emerging LPs</div>
-    <span class="badge">View attendees →</span>
-  </a>
-
+<div class="page-header">
+  <p class="eyebrow">Sonam Velani</p>
+  <h1>Event <em>attendees</em></h1>
 </div>
+
+<div class="grid-container">
+  <div class="grid">
+
+    <a class="card" href="/events/gari-summit-nyc-2026/">
+      <div class="card-body">
+        <div class="card-tag">Summit · 2026</div>
+        <div class="card-title">GARI Summit NYC 2026</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">32 speakers</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+    <a class="card" href="/annie-and-everett/">
+      <div class="card-body">
+        <div class="card-tag">Firm · Internal</div>
+        <div class="card-title">Welcome, Annie &amp; Everett — New Senior Associates</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">30 attendees</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+    <a class="card" href="/energy-and-eggs/">
+      <div class="card-body">
+        <div class="card-tag">Industry · Breakfast</div>
+        <div class="card-title">Energy &amp; Eggs</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Attendee list</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+    <a class="card" href="/fischtank-pr-happy-hour/">
+      <div class="card-body">
+        <div class="card-tag">Networking · Happy Hour</div>
+        <div class="card-title">FischTank PR Happy Hour</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">61 attendees</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+    <a class="card" href="/climate-happy-hour/">
+      <div class="card-body">
+        <div class="card-tag">Climate · Networking</div>
+        <div class="card-title">Climate Happy Hour</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">15 attendees</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+    <a class="card" href="/reframe-novata-dinner/">
+      <div class="card-body">
+        <div class="card-tag">Dinner · VC</div>
+        <div class="card-title">Reframe Venture × Novata Dinner</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">17 attendees</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <a href="https://www.streetlifeventures.com/" target="_blank">streetlifeventures.com</a>
+  <a href="mailto:sonam@streetlifeventures.com">sonam@streetlifeventures.com</a>
+</footer>
+
 </body>
 </html>

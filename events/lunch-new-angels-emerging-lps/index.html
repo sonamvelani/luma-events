@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your First Climate Investment Ã¢ÂÂ Attendees</title>
+  <title>Your First Climate Investment — Attendees</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f4f3; color: #1a1a1a; min-height: 100vh; }
@@ -21,8 +21,8 @@
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04); }
     thead th { background: #2D6A4F; color: #fff; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 13px 14px; text-align: left; cursor: pointer; user-select: none; white-space: nowrap; }
     thead th:hover { background: #1B4332; }
-    thead th.sort-asc::after { content: ' Ã¢ÂÂ'; opacity: .7; }
-    thead th.sort-desc::after { content: ' Ã¢ÂÂ'; opacity: .7; }
+    thead th.sort-asc::after { content: ' ↑'; opacity: .7; }
+    thead th.sort-desc::after { content: ' ↓'; opacity: .7; }
     tbody tr { border-bottom: 1px solid #eef1f0; transition: background .12s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f6faf8; }
@@ -31,6 +31,7 @@
     td { padding: 10px 14px; vertical-align: middle; font-size: 0.88rem; }
     .photo-cell { width: 52px; padding: 8px 10px; }
     .photo-cell img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #d0e8dc; display: block; }
+    .photo-placeholder { width: 40px; height: 40px; border-radius: 50%; background: #d0e8dc; display: block; }
     .li-cell { width: 36px; text-align: center; }
     .li-link { display: inline-flex; align-items: center; justify-content: center; }
     .li-link.no-url { opacity: 0.2; pointer-events: none; }
@@ -50,23 +51,22 @@
     .pill-academic  { background: #f0fdf4; color: #14532d; }
     .pill-consultant{ background: #fff7ed; color: #7c2d12; }
     .pill-unknown   { background: #f3f4f6; color: #6b7280; }
+    .title-cell { font-size: 0.82rem; color: #555; min-width: 110px; }
+    .company-cell { font-size: 0.82rem; font-weight: 600; color: #1B4332; min-width: 140px; }
     .batch-btn-row { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 24px; max-width: 1200px; margin: 0 auto 4px; }
     .batch-btn { background: #2D6A4F; color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 0.8rem; cursor: pointer; font-weight: 500; }
     .batch-btn:hover { background: #1B4332; }
     .batch-tip { font-size: 0.75rem; color: #888; padding: 0 24px 12px; max-width: 1200px; margin: 0 auto; }
     footer { text-align: center; padding: 24px; font-size: 0.78rem; color: #999; }
-      .title-cell { font-size: 0.82rem; color: #555; min-width: 110px; }
-    .company-cell { font-size: 0.82rem; font-weight: 600; color: #1B4332; min-width: 140px; }
   </style>
 </head>
-<body>
-<header>
+<body><header>
   <h1>Your First Climate Investment</h1>
   <p>A Lunch for New Angels &amp; Emerging LPs</p>
-  <span class="badge" id="total-badge">93 attendees</span>
+  <span class="badge" id="total-badge">133 attendees</span>
 </header>
 <div class="controls">
-  <input id="search" type="text" placeholder="Search name or about&hellip;" oninput="applyFilters()">
+  <input id="search" type="text" placeholder="Search name, title, company or about&hellip;" oninput="applyFilters()">
   <select id="type-filter" onchange="applyFilters()">
     <option value="">All Types</option>
     <option value="VC">VC</option><option value="LP">LP</option>
@@ -84,128 +84,271 @@
     <option value="Guessed">Guessed</option>
     <option value="N/A">N/A</option>
   </select>
-  <span id="count">93 shown</span>
+  <span id="count">133 shown</span>
 </div>
 <div class="batch-btn-row" id="batch-btns"></div>
 <p class="batch-tip">Allow popups for the launcher tab when opening batches.</p>
 <div class="table-wrap">
   <table id="tbl">
-    <thead><tr><th></th><th></th><th onclick="sortTable(2)">Name</th>
-        <th onclick="sortTable(6)">Title</th>
-        <th onclick="sortTable(7)">Company</th><th onclick="sortTable(3)">About</th><th onclick="sortTable(4)">Status</th><th onclick="sortTable(5)">Type</th></tr></thead>
+    <thead><tr>
+      <th></th><th></th>
+      <th onclick="sortTable(2)">Name</th>
+      <th onclick="sortTable(6)">Title</th>
+      <th onclick="sortTable(7)">Company</th>
+      <th onclick="sortTable(5)">About</th>
+      <th onclick="sortTable(3)">Status</th>
+      <th onclick="sortTable(4)">Type</th>
+    </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
-<footer>Built with Streetlife Ventures &middot; Your First Climate Investment &middot; April 2026</footer>
-<script>
+<footer>Built with Streetlife Ventures &middot; Your First Climate Investment &middot; April 2026</footer><script>
 var DATA = [
-  ["photos/sonamvelani.jpg","Sonam Velani","https://www.linkedin.com/in/sonamvelani","Confirmed","VC","Sonam Velani is Co-Founder and Managing Partner of Streetlife Ventures, which invests in startups at the intersection of cities and climate. She has financed $10 billion of transportation, energy, and water infrastructure projects at Goldman Sachs, helped build coastal protection and water systems in Asia at the World Bank, and developed New York City's $15 billion Green New Deal at the NYC Mayor's Office.","Co-Founder & Managing Partner","Streetlife Ventures"],
-  ["photos/akileshramak.jpg","Akilesh","https://www.linkedin.com/in/akileshramak","Confirmed","Academic/Research","Akilesh Ramakrishna conducted research on water and sanitation investments' climate resilience impacts in Ecuador, analyzing financial, census, and health data across 2.8M households and 3,500 development bank loans. He has experience with data science, machine learning, and climate finance analysis.","Senior Consultant","Intellecap"],
-  ["photos/alexmourant.jpg","Alex Mourant","https://www.linkedin.com/in/alexmourant","Confirmed","Investor","Alex Mourant is a Vice President in the Climate & Energy Transition group at MidCap Financial, sourcing and underwriting senior debt investments in clean energy and climate solutions. He holds a CFA and has experience in climate finance and energy transition deal structuring.","Vice President","MidCap Financial"],
-  ["photos/arotatori.jpg","Ali Rotatori","https://www.linkedin.com/in/arotatori","Confirmed","Investor","Ali Rotatori is an angel investor and advisor focused on climate and energy tech ventures.","Manager","Third Derivative"],
-  ["photos/aliza-drewes-49a798b.jpg","Aliza Drewes","https://www.linkedin.com/in/aliza-drewes-49a798b","Confirmed","Investor","Aliza Drewes is an emerging climate investor and advisor working in the energy transition and climate tech sectors.","",""],
-  ["photos/amlan344.jpg","Amlan Mukherjee","https://www.linkedin.com/in/amlan344","Confirmed","Investor","Amlan Mukherjee is active in climate and energy investing circles, focused on climate tech and renewable energy investments.","Senior Director",""],
-  ["photos/ajgoel.jpg","Ankur Goel","https://www.linkedin.com/in/ajgoel","Confirmed","Investor","Ankur Goel is a climate-focused investor and entrepreneur working in the cleantech space.","",""],
-  ["photos/asi-de-silva-cfa.jpg","Asi De Silva","https://www.linkedin.com/in/asi-de-silva-cfa","Confirmed","Investor","Asi De Silva holds a CFA and is involved in climate and sustainability investing with financial expertise in climate tech and clean energy sectors.","Chief Investment Officer","Capital Squared Financial"],
-  ["photos/blairealexandrarowe.jpg","Blaire Rakowicz","https://www.linkedin.com/in/blairealexandrarowe","Confirmed","Investor","Blaire Rakowicz is an emerging climate investor and advisor focused on clean energy and climate tech opportunities.","Founding Investor","Cross Impact Capital"],
-  ["photos/brhodes0.jpg","Brahm Rhodes","https://www.linkedin.com/in/brhodes0","Confirmed","Investor","Brahm Rhodes is active in climate venture investing as an early-stage climate tech investor.","General Partner","Malaika Ventures"],
-  ["photos/brandon-kortokrax.jpg","Brandon Kortokrax","https://www.linkedin.com/in/brandon-kortokrax","Confirmed","Investor","Brandon Kortokrax is a Principal at Earth to Mars Capital (E2MC), investing in space technology startups. He holds an MBA from UNC Kenan-Flagler with 10+ years in finance and banking roles.","Principal","E2MC Ventures"],
-  ["photos/camille-l-95b73a90.jpg","Camille L","https://www.linkedin.com/in/camille-l-95b73a90","Confirmed","Investor","Camille L is involved in climate investment and clean energy financing.","Professional Engineer",""],
-  ["photos/christinastanton.jpg","Christina Stanton","https://www.linkedin.com/in/christinastanton","Confirmed","Impact Investor","Christina Stanton is Co-Founder at Resilient Earth Capital with over 20 years in climate sector expertise spanning clean energy, climate mitigation, finance, and carbon sequestration. She holds an MPA from Columbia University.","Co-Founder","Resilient Earth Capital"],
-  ["photos/clairesmalley.jpg","Claire Smalley","https://www.linkedin.com/in/clairesmalley","Confirmed","Investor","Claire Smalley is an emerging climate investor focused on cleantech and renewable energy ventures.","Founder","small c studio"],
-  ["photos/colleen-green-6170081.jpg","Colleen Green","https://www.linkedin.com/in/colleen-green-6170081","Confirmed","Investor","Colleen Green is active in climate and energy venture investing.","Manager","DAI"],
-  ["photos/joseph-schiarizzi.jpg","Cupojoseph","https://www.linkedin.com/in/joseph-schiarizzi","Confirmed","Investor","Joseph Schiarizzi (Cupojoseph) is an emerging investor in climate and clean energy technologies.","Advisor","SolarpunkVC"],
-  ["photos/dahnagoldstein.jpg","Dahna Goldstein","https://www.linkedin.com/in/dahnagoldstein","Confirmed","VC","Dahna Goldstein is Managing Partner of Halcyon Venture Partners, focused on climate, health, and equity tech. She is a two-time founder who previously founded PhilanTech and Resistance by Design, with extensive venture capital and impact investing experience.","Managing Partner","Halcyon Venture Partners"],
-  ["photos/daniel-aliber.jpg","Dan Aliber","https://www.linkedin.com/in/daniel-aliber","Confirmed","Investor","Dan Aliber is an investment professional with experience in climate and energy ventures active in the climate finance ecosystem.","","Halcyon Venture Partners"],
-  ["photos/david-antonioli.jpg","David Antonioli","https://www.linkedin.com/in/david-antonioli","Confirmed","Impact Investor","David Antonioli is a climate finance strategist with 30 years of experience. Former CEO of Verra, the world's leading carbon standard, he specializes in carbon markets and climate finance instruments. He currently runs Transition Finance consulting.","Founder","Transition Finance"],
-  ["photos/davidlacklen.jpg","David Lacklen","https://www.linkedin.com/in/davidlacklen","Confirmed","Investor","David Lacklen is involved in climate and energy investing.","Partner","Climate Capital"],
-  ["photos/davidlipowicz.jpg","David Lipowicz","https://www.linkedin.com/in/davidlipowicz","Confirmed","Investor","David Lipowicz is an emerging climate investor focused on clean energy and decarbonization ventures.","Co-Founder & Partner","Trajectory Energy Partners"],
-  ["photos/dean-girdis-65a3976.jpg","Dean Girdis","https://www.linkedin.com/in/dean-girdis-65a3976","Confirmed","Investor","Dean Girdis is active in climate tech investing and venture capital circles.","","OP Energy Advisors"],
-  ["photos/durreh.jpg","Durreh Tabassum","https://www.linkedin.com/in/durreh","Confirmed","Investor","Durreh Tabassum is an Investment Analyst with IFC (International Finance Corporation) on the Global Infrastructure team, with deep expertise in clean energy technologies and energy transition financing. She is an electrical engineer focused on renewable energy systems and innovative climate finance.","Investment Analyst","IFC"],
-  ["photos/eka-ginting-b948083.jpg","Eka Ginting","https://www.linkedin.com/in/eka-ginting-b948083","Confirmed","Impact Investor","Eka Ginting is a serial entrepreneur and angel investor with 25 years in technology ecosystems and climate finance. He founded Rimba Raya Conservation to restore Indonesian rainforests and is founder/CEO of Indo.com, bringing experience from Bain & Company and SYSTEMIQ.","Founder & CEO","Indo.com"],
-  ["photos/fredcatonjr.jpg","Fred Caton","https://www.linkedin.com/in/fredcatonjr","Confirmed","Investor","Fred Caton is an angel investor and advisor in the clean energy and climate tech sectors.","Angel Investor",""],
-  ["photos/ambrielpouncy.jpg","Fusion Fashion Tech Society","https://www.linkedin.com/in/ambrielpouncy","Confirmed","Founder/Operator","Ambriel Pouncy is an entrepreneur and advisor exploring the intersection of fashion technology and sustainability.","Partnerships Executive","Intertrust"],
-  ["photos/garrett-jaso.jpg","Garrett Jaso","https://www.linkedin.com/in/garrett-jaso","Confirmed","Impact Investor","Garrett Jaso has experience in impact capital management and sustainable finance. He supported the investor engagement and research team at the Center for Financial Inclusion, focusing on impact investing and governance.","","Impact Capital Managers"],
-  ["","Haroon","https://www.linkedin.com/in/haroonaakbar","Confirmed","Investor","Haroon Akbar is an emerging investor in climate and clean energy ventures active in the climate investment ecosystem.","",""],
-  ["photos/hodgeenergy.jpg","Hodge Hodgson","https://www.linkedin.com/in/hodgeenergy","Confirmed","Founder/Operator","Hodge Hodgson is the founder of HodgeEnergy, making solar accessible to low and middle-income homeowners through transparent financing and reliable long-term maintenance. He is building climate resilience in South Florida through clean energy solutions.","Founder","HodgeEnergy"],
-  ["photos/ilana-fogelman-5142014.jpg","Ilana Fogelman","https://www.linkedin.com/in/ilana-fogelman-5142014","Confirmed","Founder/Operator","Ilana Fogelman is Chief Executive Officer at miCure Therapeutics and Co-Founder of C2N Diagnostics. While her background is in biotechnology, she is active in climate activism and fossil fuel divestment campaigns.","CEO","miCure Therapeutics"],
-  ["photos/jacksterne.jpg","Jack Sterne","https://www.linkedin.com/in/jacksterne","Confirmed","Investor","Jack Sterne is an investor focused on climate and energy tech ventures.","Executive Director","JPMorgan Chase"],
-  ["photos/jaidanabayan.jpg","Jaida","https://www.linkedin.com/in/jaidanabayan","Confirmed","Investor","Jaida Nabayan is an emerging climate investor and advisor in the clean energy sector.","","County of Sonoma"],
-  ["photos/jatin-khanna-dc.jpg","Jatin Khanna","https://www.linkedin.com/in/jatin-khanna-dc","Confirmed","Policy/NGO","Jatin Khanna spent 7 years at First Solar before joining the DOE Loan Programs Office in October 2021, where he supports technologies across solar PV, offshore wind, geothermal, EV batteries, and critical minerals. He hosts the Heating Up podcast on climate tech.","Program Manager","DOE Loan Programs Office"],
-  ["photos/john-leary-a7379a5.jpg","John Leary","https://www.linkedin.com/in/john-leary-a7379a5","Confirmed","Investor","John Leary is active in climate and energy venture investing.","Chief Strategy Officer","Mother Trees"],
-  ["photos/jpmoscarella.jpg","John Paul Moscarella","https://www.linkedin.com/in/jpmoscarella","Confirmed","Investor","John Paul Moscarella is an emerging climate investor focused on clean energy and sustainability ventures.","Founder","Resilient Earth Capital"],
-  ["photos/josephmeany.jpg","Joseph Meany","https://www.linkedin.com/in/josephmeany","Confirmed","Academic/Research","Joseph Meany, Ph.D., known as The Crimson Alkemist, is a Senior Scientist at Savannah River National Laboratory with discoveries in materials science for renewable energy and green manufacturing. He is Principal of Ionic Flask Materials Group.","Senior Scientist","Savannah River National Laboratory"],
-  ["photos/joyita-mukherjee-8814095.jpg","Joyita Mukherjee","https://www.linkedin.com/in/joyita-mukherjee-8814095","Confirmed","Investor","Joyita Mukherjee is an emerging investor in climate and clean energy technologies.","","CoolPact Capital"],
-  ["photos/abramsjulie.jpg","Julie Abrams","https://www.linkedin.com/in/abramsjulie","Confirmed","Investor","Julie Abrams is an emerging climate investor and advisor in the energy transition space.","Senior Advisor","Abrams Advisors"],
-  ["photos/justinb-k.jpg","Justin Brodie-Kommit","https://www.linkedin.com/in/justinb-k","Confirmed","Investor","Justin Brodie-Kommit is active in climate and energy venture investing.","Investor","Lichen Ventures"],
-  ["photos/karan-capoor-b98392.jpg","Karan Capoor","https://www.linkedin.com/in/karan-capoor-b98392","Confirmed","Policy/NGO","Karan Capoor is a Senior Finance Specialist in Climate Mitigation and Carbon Finance at the World Bank, with 25+ years of experience in climate finance and carbon markets. He is a Rockefeller Foundation Fellow and expert in climate policy and private sector transactions.","Senior Finance Specialist","World Bank"],
-  ["photos/kbeatty.jpg","Karen Beatty","https://www.linkedin.com/in/kbeatty","Confirmed","Investor","Karen Beatty is an emerging climate investor focused on clean energy ventures.","",""],
-  ["photos/kristy-mckain.jpg","Kristy Shea","https://www.linkedin.com/in/kristy-mckain","Confirmed","Investor","Kristy Shea is an emerging climate investor and advisor.","Senior Associate","Arborview Capital"],
-  ["photos/laurahammett.jpg","Laura Hammett","https://www.linkedin.com/in/laurahammett","Confirmed","Investor","Laura Hammett is active in climate and energy investing.","","UNDP"],
-  ["photos/laurel-hanson-84596b18.jpg","Laurel Hanson","https://www.linkedin.com/in/laurel-hanson-84596b18","Confirmed","Investor","Laurel Hanson is an emerging climate investor focused on clean energy and decarbonization.","",""],
-  ["photos/laurencstowe.jpg","Lauren Stowe","https://www.linkedin.com/in/laurencstowe","Confirmed","Investor","Lauren Stowe is an emerging investor in climate and clean energy technologies.","",""],
-  ["photos/leonli.jpg","Leon","https://www.linkedin.com/in/leonli","Confirmed","Investor","Leon Li is active in climate and energy venture investing.","",""],
-  ["photos/lisabowers.jpg","Lisa Bowers","https://www.linkedin.com/in/lisabowers","Confirmed","VC","Lisa Bowers is a biotech executive and venture fund founder named managing director of UVA's Enterprise Studio. Formerly Chief Commercial Officer at Day One Bio and founder/CEO of Rhia Ventures, focused on reproductive health and venture investment.","Managing Director","UVA Enterprise Studio"],
-  ["photos/lizabowersox.jpg","Liza Bowersox","https://www.linkedin.com/in/lizabowersox","Confirmed","Investor","Liza Bowersox is an emerging climate investor and advisor in the clean energy sector.","Valuation Services Partner","Weaver"],
-  ["photos/lizmcavoygabriel.jpg","Liz Gabriel","https://www.linkedin.com/in/lizmcavoygabriel","Confirmed","Investor","Liz Gabriel is an emerging investor in climate and clean energy ventures.","Brand Strategist",""],
-  ["photos/lorrainespradleywilson.jpg","Lorraine Wilson","https://www.linkedin.com/in/lorrainespradleywilson","Confirmed","Investor","Lorraine Spradley Wilson is an emerging climate investor and advisor.","",""],
-  ["photos/madalinapruna.jpg","Madalina Pruna","https://www.linkedin.com/in/madalinapruna","Confirmed","Investor","Madalina Pruna is an emerging climate investor focused on clean energy technologies.","Senior Consultant","IFC"],
-  ["photos/mardell-moffett-6235215.jpg","Mardell Moffett","https://www.linkedin.com/in/mardell-moffett-6235215","Confirmed","Investor","Mardell Moffett is active in climate and energy venture investing.","Philanthropy Advisor",""],
-  ["photos/mariap-rojas.jpg","Maria Paula Rojas","https://www.linkedin.com/in/mariap-rojas","Confirmed","Investor","Maria Paula Rojas is an emerging investor in climate and clean energy sectors.","","New England Impact Investing Initiative"],
-  ["","Marija Spaic White","https://www.linkedin.com/in/marija-spai","Confirmed","Investor","Marija Spaic White is active in climate and energy investing.","Software Engineering Manager","M1 Finance"],
-  ["photos/marina-sofos-ph-d-47b834b.jpg","Marina Sofos","https://www.linkedin.com/in/marina-sofos-ph-d-47b834b","Confirmed","Policy/NGO","Dr. Marina Sofos is a Program Director at ARPA-E (Advanced Research Projects Agency-Energy) focusing on novel materials, manufacturing, and advanced control methods for buildings and transportation. She previously managed R&D portfolios at the Department of Energy's Building Technologies Office.","Program Director","ARPA-E"],
-  ["photos/matt-grason-bb0b255.jpg","Matt Grason","https://www.linkedin.com/in/matt-grason-bb0b255","Confirmed","Consultant/Advisor","Matt Grason is an environmentalist from the East Coast with 15 years in Washington D.C., focused on climate solutions including permaculture and clean energy.","Grants Writer",""],
-  ["photos/max-calzada-munoz.jpg","Max Calzada-Munoz","https://www.linkedin.com/in/max-calzada-munoz","Confirmed","Investor","Max Calzada-Munoz is an emerging climate investor and advisor.","",""],
-  ["photos/michael-luciani.jpg","Michael Luciani","https://www.linkedin.com/in/michael-luciani","Confirmed","VC","Michael Luciani is Managing Partner and co-founder at Climate Capital, a pre-seed venture fund backing biotech companies building climate solutions. He previously served as venture partner at Social Impact Capital, focusing on impact investing across energy, water, and food sectors.","Managing Partner","Climate Capital"],
-  ["photos/michaelsobrien.jpg","Michael O'Brien","https://www.linkedin.com/in/michaelsobrien","Confirmed","Investor","Michael O'Brien is an emerging investor in climate and clean energy ventures.","Founder & Managing Partner","Síol Venture Capital"],
-  ["photos/eslamipour.jpg","Moe Eslamipour","https://www.linkedin.com/in/eslamipour","Confirmed","Investor","Moe Eslamipour is active in climate and energy venture investing.","Senior Manager","Applegreen Electric"],
-  ["photos/molly-mcgregor-683a1152.jpg","Molly McGregor","https://www.linkedin.com/in/molly-mcgregor-683a1152","Confirmed","Policy/NGO","Molly McGregor is a climate finance and knowledge management professional with experience at the NDC Partnership and World Resources Institute, focused on climate policy and international climate agreements.","",""],
-  ["photos/naviya.jpg","Naviya Kothari","https://www.linkedin.com/in/naviya","Confirmed","Investor","Naviya Kothari is a graduate from Cornell with a BS in Operations Research and Engineering. She is co-founder and co-lead of District Angels, an angel syndicate democratizing startup investing, and is passionate at the intersection of tech, impact, and entrepreneurship.","Co-Founder","District Angels"],
-  ["photos/nobaji.jpg","Ndidi Obaji","https://www.linkedin.com/in/nobaji","Confirmed","Investor","Ndidi Obaji is an emerging climate investor focused on clean energy and decarbonization.","Director, Corporate Development","Genomatica"],
-  ["photos/nicholas-abel.jpg","Nic Abel","https://www.linkedin.com/in/nicholas-abel","Confirmed","Investor","Nic Abel is an emerging investor in climate and clean energy technologies.","","CalSTRS"],
-  ["photos/n-mathur.jpg","Nikhil Mathur","https://www.linkedin.com/in/n-mathur","Confirmed","Investor","Nikhil Mathur is active in climate and energy venture investing.","","Featurespace"],
-  ["photos/oliver-m-barham.jpg","Oliver Barham","https://www.linkedin.com/in/oliver-m-barham","Confirmed","Investor","Oliver Barham is an emerging climate investor and advisor in the energy transition space.","COO",""],
-  ["photos/prabh-s-17776b2b.jpg","Prabh Singh","https://www.linkedin.com/in/prabh-s-17776b2b","Confirmed","Investor","Prabh Singh is an emerging investor in climate and clean energy ventures.","",""],
-  ["photos/prajwalbaral.jpg","Prajwal Baral","https://www.linkedin.com/in/prajwalbaral","Confirmed","Founder/Operator","Prajwal Baral, CFA, is a specialist in sustainable finance and clean technology. He founded Hornfels Group to support climate innovation globally and co-founded Thymbell, a data-driven e-commerce platform. His experience spans the World Bank, development finance, and entrepreneurial ventures.","Co-Founder & Managing Partner","Hornfels Group"],
-  ["photos/praveenkathpal.jpg","Praveen Kathpal","https://www.linkedin.com/in/praveenkathpal","Confirmed","Founder/Operator","Praveen Kathpal is CEO of Motor, helping electric utilities accelerate consumer EV adoption. He previously served as VP of New Business at AES Next and VP of Market Applications at Fluence, specializing in energy storage technology and smart grid solutions.","CEO","Motor"],
-  ["photos/dwivedirajiv.jpg","Rajiv Dwivedi","https://www.linkedin.com/in/dwivedirajiv","Confirmed","Investor","Rajiv Dwivedi is an emerging climate investor focused on clean energy and decarbonization.","",""],
-  ["photos/rjlevesque2.jpg","Ray LeVesque","https://www.linkedin.com/in/rjlevesque2","Confirmed","Investor","Ray LeVesque is an emerging investor in climate and energy ventures.","","KBR"],
-  ["photos/robertfparker.jpg","Robert Parker","https://www.linkedin.com/in/robertfparker","Confirmed","Consultant/Advisor","Robert F. Parker is an expert in ClimateTech spanning solar, energy storage, carbon tech, and smart grids, with experience across two economic cycles. He founded Honu Hoku Advisors in 2022 to support early-stage ClimateTech companies and teaches at NYU on ClimateTech and renewable energy finance.","Managing Partner","Honu Hoku Advisors"],
-  ["photos/roshni-puli-385ab3156.jpg","Roshni Puli","https://www.linkedin.com/in/roshni-puli-385ab3156","Confirmed","Investor","Roshni Puli is an Equity Research Analyst at Terra Alpha Investments focusing on sustainable investing and waste/circularity. She graduated from University of Virginia and was recognized among Trailblazing Women in Climate 2024.","Equity Research Analyst","Terra Alpha Investments"],
-  ["photos/sana-ikram-sharif-77796426.jpg","Sana Ikram","https://www.linkedin.com/in/sana-ikram-sharif-77796426","Confirmed","Investor","Sana Ikram Sharif is an emerging climate investor and advisor.","",""],
-  ["photos/sarah-key-2a49b61a.jpg","Sarah Key","https://www.linkedin.com/in/sarah-key-2a49b61a","Confirmed","Investor","Sarah Key is an emerging investor in climate and clean energy technologies.","Director, Strategic Initiatives","KBR"],
-  ["photos/saurabh-srivastava-iitk.jpg","Saurabh Srivastava","https://www.linkedin.com/in/saurabh-srivastava-iitk","Confirmed","Impact Investor","Saurabh Srivastava is an IIT Kanpur alumnus and Harvard graduate who is one of India's leading entrepreneurs and an architect of the Indian IT industry. He now focuses on climate finance and sustainable investment, delivering keynotes on financial architecture for climate ambitions and publishing the State of Climate Finance report.","Chairman","NASSCOM"],
-  ["","Sean Casey","https://www.linkedin.com/in/-sean-casey","Confirmed","Investor","Sean Casey is an emerging investor in climate and clean energy ventures.","",""],
-  ["","Seema Wadhwa","https://www.linkedin.com/in/Seemaw","Confirmed","Investor","Seema Wadhwa is an emerging climate investor and advisor in the clean energy sector.","Executive Director","Kaiser Permanente"],
-  ["photos/ssentman.jpg","Shannon Sentman","https://www.linkedin.com/in/ssentman","Confirmed","Investor","Shannon Sentman is active in climate and energy venture investing.","Entrepreneur in Residence","Maryland Innovation Center"],
-  ["photos/shari-friedman-36ba8313.jpg","Shari Friedman","https://www.linkedin.com/in/shari-friedman-36ba8313","Confirmed","Investor","Shari Friedman is an emerging climate investor focused on clean energy and decarbonization.","","Eurasia Group"],
-  ["photos/solomon-asad-59606313b.jpg","Solomon Asad","https://www.linkedin.com/in/solomon-asad-59606313b","Confirmed","Investor","Solomon Asad is an emerging investor in climate and clean energy technologies.","Founder & Principal","Sandy Spring Climate Partners"],
-  ["photos/sophiasennett.jpg","Sophia Sennett","https://www.linkedin.com/in/sophiasennett","Confirmed","Investor","Sophia Sennett is an emerging climate investor and advisor.","Environmental Designer","Edgelands Institute"],
-  ["","Sriram Gollapalli","https://www.linkedin.com/in/sriramg","Confirmed","Investor","Sriram Gollapalli is active in climate and energy venture investing.","Co-Founder","Long Angle"],
-  ["photos/ubaid-r-94653270.jpg","Ubaid Rahman","https://www.linkedin.com/in/ubaid-r-94653270","Confirmed","Investor","Ubaid Rahman is an emerging investor in climate and clean energy ventures.","",""],
-  ["photos/urossimovic.jpg","Uros Simovic","https://www.linkedin.com/in/urossimovic","Confirmed","Investor","Uros Simovic is an emerging climate investor focused on clean energy technologies.","","Motive Power"],
-  ["photos/vasundharajolly.jpg","Vasundhara Jolly","https://www.linkedin.com/in/vasundharajolly","Confirmed","Policy/NGO","Vasundhara Jolly is a climate finance professional currently with the World Bank, previously with UNDP and FAO working on climate change adaptation in developing countries, particularly agriculture and food systems. She has an MA in Development Economics from The Fletcher School and BA in International Relations from Tufts.","Climate Finance Specialist","World Bank"],
-  ["photos/viviangarciatunon.jpg","Vivian","https://www.linkedin.com/in/viviangarciatunon","Confirmed","Investor","Vivian Garcia-Tunon is an emerging investor in climate and energy ventures.","Founder","VGT People Advisory"],
-  ["photos/walterlmcleod.jpg","Walter L. McLeod","https://www.linkedin.com/in/walterlmcleod","Confirmed","Impact Investor","Walter L. McLeod is Managing Director of Monarch Strategic Ventures and Founder/Managing Director of Eco Capitol Energy, a clean tech holding company with 700+ MW of solar projects across the Mid-Atlantic region valued at $750M+. He is a Professor of Practice at George Mason University and author of The Carbon Creed.","Managing Director","Eco Capitol Energy"],
-  ["photos/whitneymuse.jpg","Whitney Muse","https://www.linkedin.com/in/whitneymuse","Confirmed","Investor","Whitney Muse is an emerging climate investor and advisor in the energy transition space.","Senior Policy Advisor","White House"],
-  ["photos/patriciaelangan.jpg","Women for Women's Wear","https://www.linkedin.com/in/patriciaelangan","Confirmed","Founder/Operator","Patricia Elangan is an entrepreneur focused on fashion and sustainability.","Founder","Consulting for a Better World"],
-  ["photos/yangbodu.jpg","Yangbo Du","https://www.linkedin.com/in/yangbodu","Confirmed","Investor","Yangbo Du is an emerging investor in climate and clean energy technologies.","","INNOVO"],
-  ["photos/zack-moore.jpg","Zack Moore","https://www.linkedin.com/in/zack-moore","Confirmed","Investor","Zack Moore is active in climate and energy venture investing.","","Lichen Ventures"],
-  ["photos/zealan-hoover.jpg","Zealan Hoover","https://www.linkedin.com/in/zealan-hoover","Confirmed","Investor","Zealan Hoover is an emerging climate investor focused on clean energy and decarbonization.","Senior Advisor","EPA"]
+  ["photos/alla-jezmir-1000a52.jpg", "Alla Jezmir", "https://www.linkedin.com/in/alla-jezmir-1000a52", "Confirmed", "VC", "", "", ""],
+  ["photos/bretstrogen.jpg", "Bret Strogen", "https://www.linkedin.com/in/bretstrogen", "Confirmed", "VC", "", "", ""],
+  ["photos/dahnagoldstein.jpg", "Dahna Goldstein", "https://www.linkedin.com/in/dahnagoldstein", "Confirmed", "VC", "Dahna Goldstein is Managing Partner of Halcyon Venture Partners, focused on climate, health, and equity tech. She is a two-time founder who previously founded PhilanTech and Resistance by Design, with extensive venture capital and impact investing experience.", "Managing Partner", "Halcyon Venture Partners"],
+  ["photos/johannes-lenhard-b2904577.jpg", "Johannes Lenhard", "https://www.linkedin.com/in/johannes-lenhard-b2904577", "Confirmed", "VC", "VC and author focused on responsible tech and ethical investing. Author of Good Work.", "Partner", "Laude Capital"],
+  ["photos/ljin1.jpg", "Li Jin", "https://www.linkedin.com/in/ljin1", "Confirmed", "VC", "Founder of Atelier Ventures, investing in the passion economy and creator economy. Previously a partner at a16z.", "Founder", "Atelier Ventures"],
+  ["photos/lisabowers.jpg", "Lisa Bowers", "https://www.linkedin.com/in/lisabowers", "Confirmed", "VC", "Lisa Bowers is a biotech executive and venture fund founder named managing director of UVA's Enterprise Studio. Formerly Chief Commercial Officer at Day One Bio and founder/CEO of Rhia Ventures, focused on reproductive health and venture investment.", "Managing Director", "UVA Enterprise Studio"],
+  ["photos/melissalbradley.jpg", "Melissa Bradley", "https://www.linkedin.com/in/melissalbradley", "Confirmed", "VC", "", "", ""],
+  ["photos/michael-luciani.jpg", "Michael Luciani", "https://www.linkedin.com/in/michael-luciani", "Confirmed", "VC", "Michael Luciani is Managing Partner and co-founder at Climate Capital, a pre-seed venture fund backing biotech companies building climate solutions. He previously served as venture partner at Social Impact Capital, focusing on impact investing across energy, water, and food sectors.", "Managing Partner", "Climate Capital"],
+  ["photos/nandini-hampole.jpg", "Nandini Hampole", "https://www.linkedin.com/in/nandini-hampole", "Confirmed", "VC", "", "Responsible Investment Forum participant", ""],
+  ["photos/shaunchaudhuri.jpg", "Shaun Chaudhuri", "https://www.linkedin.com/in/shaunchaudhuri", "Confirmed", "VC", "Partner at The Westly Group, investing in enterprise software and climate tech startups.", "Partner", "The Westly Group"],
+  ["photos/snehal-shah-90074ba0.jpg", "Snehal Shah", "https://www.linkedin.com/in/snehal-shah-90074ba0", "Confirmed", "VC", "", "", ""],
+  ["photos/sonamvelani.jpg", "Sonam Velani", "https://www.linkedin.com/in/sonamvelani", "Confirmed", "VC", "Sonam Velani is Co-Founder and Managing Partner of Streetlife Ventures, which invests in startups at the intersection of cities and climate. She has financed $10 billion of transportation, energy, and water infrastructure projects at Goldman Sachs, helped build coastal protection and water systems in Asia at the World Bank, and developed New York City's $15 billion Green New Deal at the NYC Mayor's Office.", "Co-Founder & Managing Partner", "Streetlife Ventures"],
+  ["photos/christinastanton.jpg", "Christina Stanton", "https://www.linkedin.com/in/christinastanton", "Confirmed", "Impact Investor", "Christina Stanton is Co-Founder at Resilient Earth Capital with over 20 years in climate sector expertise spanning clean energy, climate mitigation, finance, and carbon sequestration. She holds an MPA from Columbia University.", "Co-Founder", "Resilient Earth Capital"],
+  ["photos/david-antonioli.jpg", "David Antonioli", "https://www.linkedin.com/in/david-antonioli", "Confirmed", "Impact Investor", "David Antonioli is a climate finance strategist with 30 years of experience. Former CEO of Verra, the world's leading carbon standard, he specializes in carbon markets and climate finance instruments. He currently runs Transition Finance consulting.", "Founder", "Transition Finance"],
+  ["photos/eka-ginting-b948083.jpg", "Eka Ginting", "https://www.linkedin.com/in/eka-ginting-b948083", "Confirmed", "Impact Investor", "Eka Ginting is a serial entrepreneur and angel investor with 25 years in technology ecosystems and climate finance. He founded Rimba Raya Conservation to restore Indonesian rainforests and is founder/CEO of Indo.com, bringing experience from Bain & Company and SYSTEMIQ.", "Founder & CEO", "Indo.com"],
+  ["photos/garrett-jaso.jpg", "Garrett Jaso", "https://www.linkedin.com/in/garrett-jaso", "Confirmed", "Impact Investor", "Garrett Jaso has experience in impact capital management and sustainable finance. He supported the investor engagement and research team at the Center for Financial Inclusion, focusing on impact investing and governance.", "", "Impact Capital Managers"],
+  ["photos/lee-kindberg-ph-d-gcb-d-bb76718.jpg", "Lee Kindberg, Ph.D.", "https://www.linkedin.com/in/lee-kindberg-ph-d-gcb-d-bb76718", "Confirmed", "Impact Investor", "", "", ""],
+  ["photos/nelson-switzer-88b944b.jpg", "Nelson Switzer", "https://www.linkedin.com/in/nelson-switzer-88b944b", "Confirmed", "Impact Investor", "", "", ""],
+  ["photos/saurabh-srivastava-iitk.jpg", "Saurabh Srivastava", "https://www.linkedin.com/in/saurabh-srivastava-iitk", "Confirmed", "Impact Investor", "Saurabh Srivastava is an IIT Kanpur alumnus and Harvard graduate who is one of India's leading entrepreneurs and an architect of the Indian IT industry. He now focuses on climate finance and sustainable investment, delivering keynotes on financial architecture for climate ambitions and publishing the State of Climate Finance report.", "Chairman", "NASSCOM"],
+  ["photos/walterlmcleod.jpg", "Walter L. McLeod", "https://www.linkedin.com/in/walterlmcleod", "Confirmed", "Impact Investor", "Walter L. McLeod is Managing Director of Monarch Strategic Ventures and Founder/Managing Director of Eco Capitol Energy, a clean tech holding company with 700+ MW of solar projects across the Mid-Atlantic region valued at $750M+. He is a Professor of Practice at George Mason University and author of The Carbon Creed.", "Managing Director", "Eco Capitol Energy"],
+  ["photos/alexmourant.jpg", "Alex Mourant", "https://www.linkedin.com/in/alexmourant", "Confirmed", "Investor", "Alex Mourant is a Vice President in the Climate & Energy Transition group at MidCap Financial, sourcing and underwriting senior debt investments in clean energy and climate solutions. He holds a CFA and has experience in climate finance and energy transition deal structuring.", "Vice President", "MidCap Financial"],
+  ["photos/arotatori.jpg", "Ali Rotatori", "https://www.linkedin.com/in/arotatori", "Confirmed", "Investor", "Ali Rotatori is an angel investor and advisor focused on climate and energy tech ventures.", "Manager", "Third Derivative"],
+  ["photos/aliza-drewes-49a798b.jpg", "Aliza Drewes", "https://www.linkedin.com/in/aliza-drewes-49a798b", "Confirmed", "Investor", "Aliza Drewes is an emerging climate investor and advisor working in the energy transition and climate tech sectors.", "", ""],
+  ["photos/amlan344.jpg", "Amlan Mukherjee", "https://www.linkedin.com/in/amlan344", "Confirmed", "Investor", "Amlan Mukherjee is active in climate and energy investing circles, focused on climate tech and renewable energy investments.", "Senior Director", ""],
+  ["photos/ajgoel.jpg", "Ankur Goel", "https://www.linkedin.com/in/ajgoel", "Confirmed", "Investor", "Ankur Goel is a climate-focused investor and entrepreneur working in the cleantech space.", "", ""],
+  ["photos/asi-de-silva-cfa.jpg", "Asi De Silva", "https://www.linkedin.com/in/asi-de-silva-cfa", "Confirmed", "Investor", "Asi De Silva holds a CFA and is involved in climate and sustainability investing with financial expertise in climate tech and clean energy sectors.", "Chief Investment Officer", "Capital Squared Financial"],
+  ["photos/blairealexandrarowe.jpg", "Blaire Rakowicz", "https://www.linkedin.com/in/blairealexandrarowe", "Confirmed", "Investor", "Blaire Rakowicz is an emerging climate investor and advisor focused on clean energy and climate tech opportunities.", "Founding Investor", "Cross Impact Capital"],
+  ["photos/brhodes0.jpg", "Brahm Rhodes", "https://www.linkedin.com/in/brhodes0", "Confirmed", "Investor", "Brahm Rhodes is active in climate venture investing as an early-stage climate tech investor.", "General Partner", "Malaika Ventures"],
+  ["photos/brandon-kortokrax.jpg", "Brandon Kortokrax", "https://www.linkedin.com/in/brandon-kortokrax", "Confirmed", "Investor", "Brandon Kortokrax is a Principal at Earth to Mars Capital (E2MC), investing in space technology startups. He holds an MBA from UNC Kenan-Flagler with 10+ years in finance and banking roles.", "Principal", "E2MC Ventures"],
+  ["photos/camille-l-95b73a90.jpg", "Camille L", "https://www.linkedin.com/in/camille-l-95b73a90", "Confirmed", "Investor", "Camille L is involved in climate investment and clean energy financing.", "Professional Engineer", ""],
+  ["photos/clairesmalley.jpg", "Claire Smalley", "https://www.linkedin.com/in/clairesmalley", "Confirmed", "Investor", "Claire Smalley is an emerging climate investor focused on cleantech and renewable energy ventures.", "Founder", "small c studio"],
+  ["photos/colleen-green-6170081.jpg", "Colleen Green", "https://www.linkedin.com/in/colleen-green-6170081", "Confirmed", "Investor", "Colleen Green is active in climate and energy venture investing.", "Manager", "DAI"],
+  ["photos/joseph-schiarizzi.jpg", "Cupojoseph", "https://www.linkedin.com/in/joseph-schiarizzi", "Confirmed", "Investor", "Joseph Schiarizzi (Cupojoseph) is an emerging investor in climate and clean energy technologies.", "Advisor", "SolarpunkVC"],
+  ["photos/daniel-aliber.jpg", "Dan Aliber", "https://www.linkedin.com/in/daniel-aliber", "Confirmed", "Investor", "Dan Aliber is an investment professional with experience in climate and energy ventures active in the climate finance ecosystem.", "", "Halcyon Venture Partners"],
+  ["photos/davidlacklen.jpg", "David Lacklen", "https://www.linkedin.com/in/davidlacklen", "Confirmed", "Investor", "David Lacklen is involved in climate and energy investing.", "Partner", "Climate Capital"],
+  ["photos/davidlipowicz.jpg", "David Lipowicz", "https://www.linkedin.com/in/davidlipowicz", "Confirmed", "Investor", "David Lipowicz is an emerging climate investor focused on clean energy and decarbonization ventures.", "Co-Founder & Partner", "Trajectory Energy Partners"],
+  ["photos/dean-girdis-65a3976.jpg", "Dean Girdis", "https://www.linkedin.com/in/dean-girdis-65a3976", "Confirmed", "Investor", "Dean Girdis is active in climate tech investing and venture capital circles.", "", "OP Energy Advisors"],
+  ["photos/durreh.jpg", "Durreh Tabassum", "https://www.linkedin.com/in/durreh", "Confirmed", "Investor", "Durreh Tabassum is an Investment Analyst with IFC (International Finance Corporation) on the Global Infrastructure team, with deep expertise in clean energy technologies and energy transition financing. She is an electrical engineer focused on renewable energy systems and innovative climate finance.", "Investment Analyst", "IFC"],
+  ["photos/fredcatonjr.jpg", "Fred Caton", "https://www.linkedin.com/in/fredcatonjr", "Confirmed", "Investor", "Fred Caton is an angel investor and advisor in the clean energy and climate tech sectors.", "Angel Investor", ""],
+  ["", "Haroon", "https://www.linkedin.com/in/haroonaakbar", "Confirmed", "Investor", "Haroon Akbar is an emerging investor in climate and clean energy ventures active in the climate investment ecosystem.", "", ""],
+  ["photos/jacksterne.jpg", "Jack Sterne", "https://www.linkedin.com/in/jacksterne", "Confirmed", "Investor", "Jack Sterne is an investor focused on climate and energy tech ventures.", "Executive Director", "JPMorgan Chase"],
+  ["photos/jaidanabayan.jpg", "Jaida", "https://www.linkedin.com/in/jaidanabayan", "Confirmed", "Investor", "Jaida Nabayan is an emerging climate investor and advisor in the clean energy sector.", "", "County of Sonoma"],
+  ["photos/john-leary-a7379a5.jpg", "John Leary", "https://www.linkedin.com/in/john-leary-a7379a5", "Confirmed", "Investor", "John Leary is active in climate and energy venture investing.", "Chief Strategy Officer", "Mother Trees"],
+  ["photos/jpmoscarella.jpg", "John Paul Moscarella", "https://www.linkedin.com/in/jpmoscarella", "Confirmed", "Investor", "John Paul Moscarella is an emerging climate investor focused on clean energy and sustainability ventures.", "Founder", "Resilient Earth Capital"],
+  ["photos/joyita-mukherjee-8814095.jpg", "Joyita Mukherjee", "https://www.linkedin.com/in/joyita-mukherjee-8814095", "Confirmed", "Investor", "Joyita Mukherjee is an emerging investor in climate and clean energy technologies.", "", "CoolPact Capital"],
+  ["photos/abramsjulie.jpg", "Julie Abrams", "https://www.linkedin.com/in/abramsjulie", "Confirmed", "Investor", "Julie Abrams is an emerging climate investor and advisor in the energy transition space.", "Senior Advisor", "Abrams Advisors"],
+  ["photos/justinb-k.jpg", "Justin Brodie-Kommit", "https://www.linkedin.com/in/justinb-k", "Confirmed", "Investor", "Justin Brodie-Kommit is active in climate and energy venture investing.", "Investor", "Lichen Ventures"],
+  ["photos/kbeatty.jpg", "Karen Beatty", "https://www.linkedin.com/in/kbeatty", "Confirmed", "Investor", "Karen Beatty is an emerging climate investor focused on clean energy ventures.", "", ""],
+  ["photos/katie-green-cfa-9b177bb7.jpg", "Katie Green, CFA", "https://www.linkedin.com/in/katie-green-cfa-9b177bb7", "Confirmed", "Investor", "", "", ""],
+  ["photos/kristy-mckain.jpg", "Kristy Shea", "https://www.linkedin.com/in/kristy-mckain", "Confirmed", "Investor", "Kristy Shea is an emerging climate investor and advisor.", "Senior Associate", "Arborview Capital"],
+  ["photos/laurahammett.jpg", "Laura Hammett", "https://www.linkedin.com/in/laurahammett", "Confirmed", "Investor", "Laura Hammett is active in climate and energy investing.", "", "UNDP"],
+  ["photos/laurel-hanson-84596b18.jpg", "Laurel Hanson", "https://www.linkedin.com/in/laurel-hanson-84596b18", "Confirmed", "Investor", "Laurel Hanson is an emerging climate investor focused on clean energy and decarbonization.", "", ""],
+  ["photos/laurencstowe.jpg", "Lauren Stowe", "https://www.linkedin.com/in/laurencstowe", "Confirmed", "Investor", "Lauren Stowe is an emerging investor in climate and clean energy technologies.", "", ""],
+  ["photos/leonli.jpg", "Leon", "https://www.linkedin.com/in/leonli", "Confirmed", "Investor", "Leon Li is active in climate and energy venture investing.", "", ""],
+  ["photos/lizmcavoygabriel.jpg", "Liz Gabriel", "https://www.linkedin.com/in/lizmcavoygabriel", "Confirmed", "Investor", "Liz Gabriel is an emerging investor in climate and clean energy ventures.", "Brand Strategist", ""],
+  ["photos/lizabowersox.jpg", "Liza Bowersox", "https://www.linkedin.com/in/lizabowersox", "Confirmed", "Investor", "Liza Bowersox is an emerging climate investor and advisor in the clean energy sector.", "Valuation Services Partner", "Weaver"],
+  ["photos/lorrainespradleywilson.jpg", "Lorraine Wilson", "https://www.linkedin.com/in/lorrainespradleywilson", "Confirmed", "Investor", "Lorraine Spradley Wilson is an emerging climate investor and advisor.", "", ""],
+  ["photos/madalinapruna.jpg", "Madalina Pruna", "https://www.linkedin.com/in/madalinapruna", "Confirmed", "Investor", "Madalina Pruna is an emerging climate investor focused on clean energy technologies.", "Senior Consultant", "IFC"],
+  ["photos/mardell-moffett-6235215.jpg", "Mardell Moffett", "https://www.linkedin.com/in/mardell-moffett-6235215", "Confirmed", "Investor", "Mardell Moffett is active in climate and energy venture investing.", "Philanthropy Advisor", ""],
+  ["photos/mariap-rojas.jpg", "Maria Paula Rojas", "https://www.linkedin.com/in/mariap-rojas", "Confirmed", "Investor", "Maria Paula Rojas is an emerging investor in climate and clean energy sectors.", "", "New England Impact Investing Initiative"],
+  ["", "Marija Spaic White", "https://www.linkedin.com/in/marija-spai", "Confirmed", "Investor", "Marija Spaic White is active in climate and energy investing.", "Software Engineering Manager", "M1 Finance"],
+  ["photos/max-calzada-munoz.jpg", "Max Calzada-Munoz", "https://www.linkedin.com/in/max-calzada-munoz", "Confirmed", "Investor", "Max Calzada-Munoz is an emerging climate investor and advisor.", "", ""],
+  ["photos/michaelsobrien.jpg", "Michael O'Brien", "https://www.linkedin.com/in/michaelsobrien", "Confirmed", "Investor", "Michael O'Brien is an emerging investor in climate and clean energy ventures.", "Founder & Managing Partner", "S\u00edol Venture Capital"],
+  ["photos/eslamipour.jpg", "Moe Eslamipour", "https://www.linkedin.com/in/eslamipour", "Confirmed", "Investor", "Moe Eslamipour is active in climate and energy venture investing.", "Senior Manager", "Applegreen Electric"],
+  ["photos/naviya.jpg", "Naviya Kothari", "https://www.linkedin.com/in/naviya", "Confirmed", "Investor", "Naviya Kothari is a graduate from Cornell with a BS in Operations Research and Engineering. She is co-founder and co-lead of District Angels, an angel syndicate democratizing startup investing, and is passionate at the intersection of tech, impact, and entrepreneurship.", "Co-Founder", "District Angels"],
+  ["photos/nobaji.jpg", "Ndidi Obaji", "https://www.linkedin.com/in/nobaji", "Confirmed", "Investor", "Ndidi Obaji is an emerging climate investor focused on clean energy and decarbonization.", "Director, Corporate Development", "Genomatica"],
+  ["photos/nicholas-abel.jpg", "Nic Abel", "https://www.linkedin.com/in/nicholas-abel", "Confirmed", "Investor", "Nic Abel is an emerging investor in climate and clean energy technologies.", "", "CalSTRS"],
+  ["photos/n-mathur.jpg", "Nikhil Mathur", "https://www.linkedin.com/in/n-mathur", "Confirmed", "Investor", "Nikhil Mathur is active in climate and energy venture investing.", "", "Featurespace"],
+  ["photos/oliver-m-barham.jpg", "Oliver Barham", "https://www.linkedin.com/in/oliver-m-barham", "Confirmed", "Investor", "Oliver Barham is an emerging climate investor and advisor in the energy transition space.", "COO", ""],
+  ["photos/prabh-s-17776b2b.jpg", "Prabh Singh", "https://www.linkedin.com/in/prabh-s-17776b2b", "Confirmed", "Investor", "Prabh Singh is an emerging investor in climate and clean energy ventures.", "", ""],
+  ["photos/dwivedirajiv.jpg", "Rajiv Dwivedi", "https://www.linkedin.com/in/dwivedirajiv", "Confirmed", "Investor", "Rajiv Dwivedi is an emerging climate investor focused on clean energy and decarbonization.", "", ""],
+  ["photos/rjlevesque2.jpg", "Ray LeVesque", "https://www.linkedin.com/in/rjlevesque2", "Confirmed", "Investor", "Ray LeVesque is an emerging investor in climate and energy ventures.", "", "KBR"],
+  ["photos/roshni-puli-385ab3156.jpg", "Roshni Puli", "https://www.linkedin.com/in/roshni-puli-385ab3156", "Confirmed", "Investor", "Roshni Puli is an Equity Research Analyst at Terra Alpha Investments focusing on sustainable investing and waste/circularity. She graduated from University of Virginia and was recognized among Trailblazing Women in Climate 2024.", "Equity Research Analyst", "Terra Alpha Investments"],
+  ["photos/sana-ikram-sharif-77796426.jpg", "Sana Ikram", "https://www.linkedin.com/in/sana-ikram-sharif-77796426", "Confirmed", "Investor", "Sana Ikram Sharif is an emerging climate investor and advisor.", "", ""],
+  ["photos/sarah-key-2a49b61a.jpg", "Sarah Key", "https://www.linkedin.com/in/sarah-key-2a49b61a", "Confirmed", "Investor", "Sarah Key is an emerging investor in climate and clean energy technologies.", "Director, Strategic Initiatives", "KBR"],
+  ["", "Sean Casey", "https://www.linkedin.com/in/-sean-casey", "Confirmed", "Investor", "Sean Casey is an emerging investor in climate and clean energy ventures.", "", ""],
+  ["", "Seema Wadhwa", "https://www.linkedin.com/in/Seemaw", "Confirmed", "Investor", "Seema Wadhwa is an emerging climate investor and advisor in the clean energy sector.", "Executive Director", "Kaiser Permanente"],
+  ["photos/ssentman.jpg", "Shannon Sentman", "https://www.linkedin.com/in/ssentman", "Confirmed", "Investor", "Shannon Sentman is active in climate and energy venture investing.", "Entrepreneur in Residence", "Maryland Innovation Center"],
+  ["photos/shari-friedman-36ba8313.jpg", "Shari Friedman", "https://www.linkedin.com/in/shari-friedman-36ba8313", "Confirmed", "Investor", "Shari Friedman is an emerging climate investor focused on clean energy and decarbonization.", "", "Eurasia Group"],
+  ["photos/solomon-asad-59606313b.jpg", "Solomon Asad", "https://www.linkedin.com/in/solomon-asad-59606313b", "Confirmed", "Investor", "Solomon Asad is an emerging investor in climate and clean energy technologies.", "Founder & Principal", "Sandy Spring Climate Partners"],
+  ["photos/sophiasennett.jpg", "Sophia Sennett", "https://www.linkedin.com/in/sophiasennett", "Confirmed", "Investor", "Sophia Sennett is an emerging climate investor and advisor.", "Environmental Designer", "Edgelands Institute"],
+  ["", "Sriram Gollapalli", "https://www.linkedin.com/in/sriramg", "Confirmed", "Investor", "Sriram Gollapalli is active in climate and energy venture investing.", "Co-Founder", "Long Angle"],
+  ["photos/ubaid-r-94653270.jpg", "Ubaid Rahman", "https://www.linkedin.com/in/ubaid-r-94653270", "Confirmed", "Investor", "Ubaid Rahman is an emerging investor in climate and clean energy ventures.", "", ""],
+  ["photos/urossimovic.jpg", "Uros Simovic", "https://www.linkedin.com/in/urossimovic", "Confirmed", "Investor", "Uros Simovic is an emerging climate investor focused on clean energy technologies.", "", "Motive Power"],
+  ["photos/viviangarciatunon.jpg", "Vivian", "https://www.linkedin.com/in/viviangarciatunon", "Confirmed", "Investor", "Vivian Garcia-Tunon is an emerging investor in climate and energy ventures.", "Founder", "VGT People Advisory"],
+  ["photos/whitneymuse.jpg", "Whitney Muse", "https://www.linkedin.com/in/whitneymuse", "Confirmed", "Investor", "Whitney Muse is an emerging climate investor and advisor in the energy transition space.", "Senior Policy Advisor", "White House"],
+  ["photos/yangbodu.jpg", "Yangbo Du", "https://www.linkedin.com/in/yangbodu", "Confirmed", "Investor", "Yangbo Du is an emerging investor in climate and clean energy technologies.", "", "INNOVO"],
+  ["photos/zack-moore.jpg", "Zack Moore", "https://www.linkedin.com/in/zack-moore", "Confirmed", "Investor", "Zack Moore is active in climate and energy venture investing.", "", "Lichen Ventures"],
+  ["photos/zealan-hoover.jpg", "Zealan Hoover", "https://www.linkedin.com/in/zealan-hoover", "Confirmed", "Investor", "Zealan Hoover is an emerging climate investor focused on clean energy and decarbonization.", "Senior Advisor", "EPA"],
+  ["photos/caseywoo.jpg", "Casey Woo", "https://www.linkedin.com/in/caseywoo", "Confirmed", "Founder/Operator", "", "", ""],
+  ["photos/ambrielpouncy.jpg", "Fusion Fashion Tech Society", "https://www.linkedin.com/in/ambrielpouncy", "Confirmed", "Founder/Operator", "Ambriel Pouncy is an entrepreneur and advisor exploring the intersection of fashion technology and sustainability.", "Partnerships Executive", "Intertrust"],
+  ["photos/hodgeenergy.jpg", "Hodge Hodgson", "https://www.linkedin.com/in/hodgeenergy", "Confirmed", "Founder/Operator", "Hodge Hodgson is the founder of HodgeEnergy, making solar accessible to low and middle-income homeowners through transparent financing and reliable long-term maintenance. He is building climate resilience in South Florida through clean energy solutions.", "Founder", "HodgeEnergy"],
+  ["photos/ilana-fogelman-5142014.jpg", "Ilana Fogelman", "https://www.linkedin.com/in/ilana-fogelman-5142014", "Confirmed", "Founder/Operator", "Ilana Fogelman is Chief Executive Officer at miCure Therapeutics and Co-Founder of C2N Diagnostics. While her background is in biotechnology, she is active in climate activism and fossil fuel divestment campaigns.", "CEO", "miCure Therapeutics"],
+  ["photos/kevinadler.jpg", "Kevin F. Adler", "https://www.linkedin.com/in/kevinadler", "Confirmed", "Founder/Operator", "Founder of Miracle Messages, a nonprofit connecting people experiencing homelessness with their loved ones.", "Founder & CEO", "Miracle Messages"],
+  ["photos/prajwalbaral.jpg", "Prajwal Baral", "https://www.linkedin.com/in/prajwalbaral", "Confirmed", "Founder/Operator", "Prajwal Baral, CFA, is a specialist in sustainable finance and clean technology. He founded Hornfels Group to support climate innovation globally and co-founded Thymbell, a data-driven e-commerce platform. His experience spans the World Bank, development finance, and entrepreneurial ventures.", "Co-Founder & Managing Partner", "Hornfels Group"],
+  ["photos/praveenkathpal.jpg", "Praveen Kathpal", "https://www.linkedin.com/in/praveenkathpal", "Confirmed", "Founder/Operator", "Praveen Kathpal is CEO of Motor, helping electric utilities accelerate consumer EV adoption. He previously served as VP of New Business at AES Next and VP of Market Applications at Fluence, specializing in energy storage technology and smart grid solutions.", "CEO", "Motor"],
+  ["photos/patriciaelangan.jpg", "Women for Women's Wear", "https://www.linkedin.com/in/patriciaelangan", "Confirmed", "Founder/Operator", "Patricia Elangan is an entrepreneur focused on fashion and sustainability.", "Founder", "Consulting for a Better World"],
+  ["photos/jatin-khanna-dc.jpg", "Jatin Khanna", "https://www.linkedin.com/in/jatin-khanna-dc", "Confirmed", "Policy/NGO", "Jatin Khanna spent 7 years at First Solar before joining the DOE Loan Programs Office in October 2021, where he supports technologies across solar PV, offshore wind, geothermal, EV batteries, and critical minerals. He hosts the Heating Up podcast on climate tech.", "Program Manager", "DOE Loan Programs Office"],
+  ["photos/karan-capoor-b98392.jpg", "Karan Capoor", "https://www.linkedin.com/in/karan-capoor-b98392", "Confirmed", "Policy/NGO", "Karan Capoor is a Senior Finance Specialist in Climate Mitigation and Carbon Finance at the World Bank, with 25+ years of experience in climate finance and carbon markets. He is a Rockefeller Foundation Fellow and expert in climate policy and private sector transactions.", "Senior Finance Specialist", "World Bank"],
+  ["photos/marina-sofos-ph-d-47b834b.jpg", "Marina Sofos", "https://www.linkedin.com/in/marina-sofos-ph-d-47b834b", "Confirmed", "Policy/NGO", "Dr. Marina Sofos is a Program Director at ARPA-E (Advanced Research Projects Agency-Energy) focusing on novel materials, manufacturing, and advanced control methods for buildings and transportation. She previously managed R&D portfolios at the Department of Energy's Building Technologies Office.", "Program Director", "ARPA-E"],
+  ["photos/molly-mcgregor-683a1152.jpg", "Molly McGregor", "https://www.linkedin.com/in/molly-mcgregor-683a1152", "Confirmed", "Policy/NGO", "Molly McGregor is a climate finance and knowledge management professional with experience at the NDC Partnership and World Resources Institute, focused on climate policy and international climate agreements.", "", ""],
+  ["photos/paulfehlinger.jpg", "Paul Fehlinger", "https://www.linkedin.com/in/paulfehlinger", "Confirmed", "Policy/NGO", "", "", ""],
+  ["photos/vasundharajolly.jpg", "Vasundhara Jolly", "https://www.linkedin.com/in/vasundharajolly", "Confirmed", "Policy/NGO", "Vasundhara Jolly is a climate finance professional currently with the World Bank, previously with UNDP and FAO working on climate change adaptation in developing countries, particularly agriculture and food systems. She has an MA in Development Economics from The Fletcher School and BA in International Relations from Tufts.", "Climate Finance Specialist", "World Bank"],
+  ["photos/akileshramak.jpg", "Akilesh", "https://www.linkedin.com/in/akileshramak", "Confirmed", "Academic/Research", "Akilesh Ramakrishna conducted research on water and sanitation investments' climate resilience impacts in Ecuador, analyzing financial, census, and health data across 2.8M households and 3,500 development bank loans. He has experience with data science, machine learning, and climate finance analysis.", "Senior Consultant", "Intellecap"],
+  ["photos/jhelvy.jpg", "John Paul Helveston", "https://www.linkedin.com/in/jhelvy", "Confirmed", "Academic/Research", "Professor at George Washington University researching electric vehicles, energy policy, and consumer choice. Author of the fueleconomy.guide and maintainer of R packages for conjoint survey analysis.", "Associate Professor", "George Washington University"],
+  ["photos/josephmeany.jpg", "Joseph Meany", "https://www.linkedin.com/in/josephmeany", "Confirmed", "Academic/Research", "Joseph Meany, Ph.D., known as The Crimson Alkemist, is a Senior Scientist at Savannah River National Laboratory with discoveries in materials science for renewable energy and green manufacturing. He is Principal of Ionic Flask Materials Group.", "Senior Scientist", "Savannah River National Laboratory"],
+  ["photos/mariambanahi.jpg", "Mariam Banahi, PhD", "https://www.linkedin.com/in/mariambanahi", "Confirmed", "Academic/Research", "", "", ""],
+  ["photos/matt-grason-bb0b255.jpg", "Matt Grason", "https://www.linkedin.com/in/matt-grason-bb0b255", "Confirmed", "Consultant/Advisor", "Matt Grason is an environmentalist from the East Coast with 15 years in Washington D.C., focused on climate solutions including permaculture and clean energy.", "Grants Writer", ""],
+  ["photos/robertfparker.jpg", "Robert Parker", "https://www.linkedin.com/in/robertfparker", "Confirmed", "Consultant/Advisor", "Robert F. Parker is an expert in ClimateTech spanning solar, energy storage, carbon tech, and smart grids, with experience across two economic cycles. He founded Honu Hoku Advisors in 2022 to support early-stage ClimateTech companies and teaches at NYU on ClimateTech and renewable energy finance.", "Managing Partner", "Honu Hoku Advisors"],
+  ["photos/adambrobbins.jpg", "Adam Robbins", "https://www.linkedin.com/in/adambrobbins", "Confirmed", "Unknown", "", "", ""],
+  ["photos/andrew-morales-0605335.jpg", "Andrew Morales", "https://www.linkedin.com/in/andrew-morales-0605335", "Confirmed", "Unknown", "", "", ""],
+  ["photos/annanikolova.jpg", "Anna Nikolova", "https://www.linkedin.com/in/annanikolova", "Confirmed", "Unknown", "", "", ""],
+  ["photos/audrey-mocle-04928842.jpg", "Audrey Mocle", "https://www.linkedin.com/in/audrey-mocle-04928842", "Confirmed", "Unknown", "", "", ""],
+  ["", "Ayako Kageyama", "https://www.linkedin.com/in/ayako-kageyama-94545b33", "Confirmed", "Unknown", "", "", ""],
+  ["photos/douglassloan.jpg", "Douglas Sloan", "https://www.linkedin.com/in/douglassloan", "Confirmed", "Unknown", "", "", ""],
+  ["photos/kasia-mol-wolf.jpg", "Dr. Katarzyna (Kasia) Mol-Wolf", "https://www.linkedin.com/in/kasia-mol-wolf", "Confirmed", "Unknown", "", "", ""],
+  ["photos/ethanturer.jpg", "Ethan Turer", "https://www.linkedin.com/in/ethanturer", "Confirmed", "Unknown", "", "", ""],
+  ["photos/gilford.jpg", "Gilford", "https://www.linkedin.com/in/gilford", "Confirmed", "Unknown", "", "", ""],
+  ["photos/hannahleach.jpg", "Hannah Leach", "https://www.linkedin.com/in/hannahleach", "Confirmed", "Unknown", "", "", ""],
+  ["photos/isabelle-c-schmidt.jpg", "Izzy Schmidt", "https://www.linkedin.com/in/isabelle-c-schmidt", "Confirmed", "Unknown", "", "", ""],
+  ["photos/jaineedial.jpg", "Jainee Dial", "https://www.linkedin.com/in/jaineedial", "Confirmed", "Unknown", "", "", ""],
+  ["photos/jeremykagan.jpg", "Jeremy Kagan", "https://www.linkedin.com/in/jeremykagan", "Confirmed", "Unknown", "", "", ""],
+  ["photos/jonathangsegal.jpg", "Jonathan Segal", "https://www.linkedin.com/in/jonathangsegal", "Confirmed", "Unknown", "", "", ""],
+  ["photos/josianne-galea-baron.jpg", "Josianne Galea Baron", "https://www.linkedin.com/in/josianne-galea-baron", "Confirmed", "Unknown", "", "", ""],
+  ["photos/justern.jpg", "Julia LeStrange Stern", "https://www.linkedin.com/in/justern", "Confirmed", "Unknown", "", "", ""],
+  ["photos/kira-bindrim-0b11646.jpg", "Kira Bindrim", "https://www.linkedin.com/in/kira-bindrim-0b11646", "Confirmed", "Unknown", "", "", ""],
+  ["photos/malcolm-handley-a3b8211.jpg", "Malcolm Handley", "https://www.linkedin.com/in/malcolm-handley-a3b8211", "Confirmed", "Unknown", "", "", ""],
+  ["photos/marykatemcgrath.jpg", "Mary Kate McGrath", "https://www.linkedin.com/in/marykatemcgrath", "Confirmed", "Unknown", "", "", ""],
+  ["photos/matteweaver.jpg", "Matt Weaver", "https://www.linkedin.com/in/matteweaver", "Confirmed", "Unknown", "", "", ""],
+  ["photos/natalia-costa-i-coromina.jpg", "Nat\u00e0lia Costa i Coromina", "https://www.linkedin.com/in/natalia-costa-i-coromina", "Confirmed", "Unknown", "", "", ""],
+  ["photos/paige-costigan-74367b94.jpg", "Paige Costigan", "https://www.linkedin.com/in/paige-costigan-74367b94", "Confirmed", "Unknown", "", "", ""],
+  ["photos/ryandavies0.jpg", "Ryan Davies", "https://www.linkedin.com/in/ryandavies0", "Confirmed", "Unknown", "", "", ""],
+  ["photos/tfrosenbaum.jpg", "Todd Rosenbaum", "https://www.linkedin.com/in/tfrosenbaum", "Confirmed", "Unknown", "", "", ""]
 ];
-var TYPE_CLASS={"VC":"vc","LP":"lp","Impact Investor":"impact","Investor":"investor","Founder/Operator":"founder","Policy/NGO":"policy","Academic/Research":"academic","Consultant/Advisor":"consultant","Unknown":"unknown"};
-var STATUS_CLASS={"Confirmed":"confirmed","Guessed":"guessed","N/A":"na"};
-var LI_SVG='<svg width="20" height="20" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
-function avatarUrl(n){var p=n.split(/s+/).filter(Boolean);var i=p.slice(0,2).map(function(w){return w[0].toUpperCase();}).join('+');return 'https://ui-avatars.com/api/?size=80&background=4A9B8E&color=fff&bold=true&name='+i;}
-function handleImgError(img){img.onerror=null;img.src=avatarUrl(img.alt||'');}
-var sortCol=2,sortDir=1;
-function renderTable(rows){var tbody=document.getElementById('tbody');tbody.innerHTML='';rows.forEach(function(row,i){var photo=row[0],name=row[1],li=row[2],status=row[3],type=row[4],about=row[5];if(i>0&&i%10===0){var div=document.createElement('tr');div.className='batch-divider';div.innerHTML='<td colspan="6">Batch '+(Math.floor(i/10)+1)+' ÃÂ· rows '+(i+1)+'Ã¢ÂÂ'+Math.min(i+10,rows.length)+'</td>';tbody.appendChild(div);}var imgSrc=photo||avatarUrl(name);var aboutHtml=about&&about.length>100?'<span class="about-short">'+about.substring(0,100)+'Ã¢ÂÂ¦<span class="about-toggle" onclick="toggleAbout(this)"> more</span></span><span class="about-full" style="display:none">'+about+'<span class="about-toggle" onclick="toggleAbout(this)"> less</span></span>':'<span>'+(about||'')+'</span>';var tr=document.createElement('tr');tr.innerHTML='<td class="photo-cell"><img src="'+imgSrc+'" alt="'+name+'" onerror="handleImgError(this)"></td><td class="li-cell"><a href="'+(li||'#')+'" target="_blank" rel="noopener" class="li-link'+(li?'':' no-url')+'" title="'+name+' on LinkedIn">'+LI_SVG+'</a></td><td class="name-cell">'+name+'</td><td class="about-cell">'+aboutHtml+'</td><td><span class="pill pill-'+(STATUS_CLASS[status]||'unknown')+'">'+status+'</span></td><td><span class="pill pill-'+(TYPE_CLASS[type]||'unknown')+'">'+type+'</span></td>';tbody.appendChild(tr);});document.getElementById('count').textContent=rows.length+' shown';renderBatchBtns(rows);}
-function toggleAbout(el){var td=el.closest('td');var s=td.querySelector('.about-short');var f=td.querySelector('.about-full');if(s&&s.contains(el)){s.style.display='none';if(f)f.style.display='inline';}else{if(f)f.style.display='none';if(s)s.style.display='inline';}}
-function renderBatchBtns(rows){var c=document.getElementById('batch-btns');c.innerHTML='';var urls=rows.map(function(r){return r[2];}).filter(Boolean);for(var i=0;i<urls.length;i+=10){(function(batch,n){var btn=document.createElement('button');btn.className='batch-btn';btn.textContent='Open LinkedIn Batch '+n+' ('+batch.length+')';btn.onclick=function(){var s=batch.map(function(u){return 'window.open('+JSON.stringify(u)+',"_blank");';}).join('');var p='<html><body><scr'+'ipt>window.onload=function(){'+s+'window.close();}</scr'+'ipt><p style="font-family:sans-serif;padding:20px">Opening '+batch.length+' tabsÃ¢ÂÂ¦</p></body></html>';var b=new Blob([p],{type:'text/html'});window.open(URL.createObjectURL(b),'_blank');};c.appendChild(btn);})(urls.slice(i,i+10),Math.floor(i/10)+1);}}
-function applyFilters(){var q=document.getElementById('search').value.toLowerCase();var tf=document.getElementById('type-filter').value;var sf=document.getElementById('status-filter').value;var f=DATA.filter(function(r){var name=r[1],status=r[3],type=r[4],about=r[5];if(q&&name.toLowerCase().indexOf(q)<0&&about.toLowerCase().indexOf(q)<0)return false;if(tf&&type!==tf)return false;if(sf&&status!==sf)return false;return true;});renderTable(f.slice().sort(function(a,b){var ta=(a[sortCol]||'').toLowerCase(),tb=(b[sortCol]||'').toLowerCase();return ta<tb?-sortDir:ta>tb?sortDir:0;}));}
-function sortTable(col){if(sortCol===col)sortDir=-sortDir;else{sortCol=col;sortDir=1;}document.querySelectorAll('thead th').forEach(function(th,i){th.classList.remove('sort-asc','sort-desc');if(i===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});applyFilters();}
-renderTable(DATA.slice().sort(function(a,b){return a[1].toLowerCase()<b[1].toLowerCase()?-1:1;}));
-document.getElementById('total-badge').textContent=DATA.length+' attendees';
+
+var TYPE_CSS = {
+  'VC':'pill-vc','LP':'pill-lp','Impact Investor':'pill-impact','Investor':'pill-investor',
+  'Founder/Operator':'pill-founder','Policy/NGO':'pill-policy','Academic/Research':'pill-academic',
+  'Consultant/Advisor':'pill-consultant','Unknown':'pill-unknown','':'pill-unknown'
+};
+var STATUS_CSS = {'Confirmed':'pill-confirmed','Guessed':'pill-guessed','N/A':'pill-na','':'pill-na'};
+var LI_SVG = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"#0a66c2\"><path d=\"M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z\"/></svg>";
+
+var filtered = DATA.slice();
+var sortCol = 4, sortDir = 1;
+
+function applyFilters() {
+  var q = document.getElementById('search').value.toLowerCase();
+  var t = document.getElementById('type-filter').value;
+  var s = document.getElementById('status-filter').value;
+  filtered = DATA.filter(function(r) {
+    var matchQ = !q || (r[1]+r[5]+r[6]+r[7]).toLowerCase().includes(q);
+    var matchT = !t || r[4] === t;
+    var matchS = !s || r[3] === s;
+    return matchQ && matchT && matchS;
+  });
+  filtered.sort(function(a,b) {
+    var av = a[sortCol]||'', bv = b[sortCol]||'';
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
+  });
+  renderTable();
+  renderBatchBtns();
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortDir = -sortDir; else { sortCol = col; sortDir = 1; }
+  document.querySelectorAll('thead th').forEach(function(th,i) {
+    th.className = '';
+    if (i === col) th.className = sortDir === 1 ? 'sort-asc' : 'sort-desc';
+  });
+  applyFilters();
+}
+
+function renderTable() {
+  var tb = document.getElementById('tbody');
+  var html = '';
+  var batchSize = 10;
+  filtered.forEach(function(r, i) {
+    var photo = r[0], name = r[1], li = r[2], status = r[3], type = r[4], about = r[5], title = r[6], company = r[7];
+    if (i % batchSize === 0) {
+      var batchNum = Math.floor(i/batchSize)+1;
+      var start = i+1, end = Math.min(i+batchSize, filtered.length);
+      html += '<tr class="batch-divider"><td colspan="8">Batch ' + batchNum + ' · rows ' + start + '–' + end + '</td></tr>';
+    }
+    var photoHtml = photo ? '<img src="'+photo+'" alt="'+name+'" onerror="this.style.display=\'none\'">' : '<div class="photo-placeholder"></div>';
+    var liHtml = li ? '<a class="li-link" href="'+li+'" target="_blank" rel="noopener">'+LI_SVG+'</a>' : '<span class="li-link no-url">'+LI_SVG+'</span>';
+    var shortAbout = about.length > 100 ? about.substring(0,100) : about;
+    var aboutHtml = about.length > 100
+      ? '<span class="about-short">'+shortAbout+'</span><span class="about-full" style="display:none">'+about+'</span><span class="about-toggle" onclick="toggleAbout(this)">more</span>'
+      : about;
+    html += '<tr>';
+    html += '<td class="photo-cell">'+photoHtml+'</td>';
+    html += '<td class="li-cell">'+liHtml+'</td>';
+    html += '<td class="name-cell">'+name+'</td>';
+    html += '<td class="title-cell">'+title+'</td>';
+    html += '<td class="company-cell">'+company+'</td>';
+    html += '<td class="about-cell">'+aboutHtml+'</td>';
+    html += '<td><span class="pill '+(STATUS_CSS[status]||'pill-na')+'">'+status+'</span></td>';
+    html += '<td><span class="pill '+(TYPE_CSS[type]||'pill-unknown')+'">'+type+'</span></td>';
+    html += '</tr>';
+  });
+  tb.innerHTML = html;
+  document.getElementById('count').textContent = filtered.length + ' of ' + DATA.length + ' shown';
+}
+
+function toggleAbout(el) {
+  var cell = el.parentElement;
+  var short = cell.querySelector('.about-short');
+  var full = cell.querySelector('.about-full');
+  if (full.style.display === 'none') {
+    short.style.display = 'none';
+    full.style.display = '';
+    el.textContent = 'less';
+  } else {
+    short.style.display = '';
+    full.style.display = 'none';
+    el.textContent = 'more';
+  }
+}
+
+function renderBatchBtns() {
+  var batchSize = 10;
+  var row = document.getElementById('batch-btns');
+  row.innerHTML = '';
+  for (var i = 0; i < filtered.length; i += batchSize) {
+    var batch = filtered.slice(i, i+batchSize);
+    var urls = batch.map(function(r) { return r[2]; }).filter(Boolean);
+    if (!urls.length) continue;
+    var batchNum = Math.floor(i/batchSize)+1;
+    var btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = 'Open Batch ' + batchNum + ' (' + urls.length + ')';
+    btn.onclick = (function(u) {
+      return function() {
+        var script = u.map(function(url) { return 'window.open('+JSON.stringify(url)+',"_blank");'; }).join('');
+        var page = '<html><body><script>window.onload=function(){'+script+'window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening '+u.length+' tabs...</p></body></html>';
+        var blob = new Blob([page], {type:'text/html'});
+        window.open(URL.createObjectURL(blob),'_blank');
+      };
+    })(urls);
+    row.appendChild(btn);
+  }
+}
+
+applyFilters();
 </script>
 </body>
 </html>
