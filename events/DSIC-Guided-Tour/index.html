@@ -33,6 +33,13 @@
   .sync-dot.syncing { background: #f0c040; }
   .sync-dot.synced  { background: #6fcf97; }
   .sync-dot.error   { background: #eb5757; }
+  .luma-link {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+    padding: 5px 11px; border-radius: 5px; border: 1px solid rgba(157,191,170,.4);
+    font-size: 11px; font-weight: 500; color: #c8dfd0; text-decoration: none;
+    transition: background .12s;
+  }
+  .luma-link:hover { background: rgba(255,255,255,.08); color: #e8f0eb; }
 
   /* ── Toolbar ── */
   .toolbar {
@@ -50,10 +57,10 @@
   .count { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; }
 
   /* ── Batch buttons ── */
-  .batch-btns { padding: 10px 36px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+  .batch-btns { padding: 12px 36px; display: flex; gap: 8px; flex-wrap: wrap; }
   .batch-btn {
     background: transparent; border: 1px solid var(--border); border-radius: 5px;
-    padding: 5px 12px; font-size: 12px; color: var(--muted); cursor: pointer;
+    padding: 7px 14px; font-size: 12px; color: var(--muted); cursor: pointer;
     font-family: inherit; transition: all .12s;
   }
   .batch-btn:hover { border-color: var(--brand); color: var(--brand); }
@@ -172,6 +179,10 @@
   <div>
     <h1>DSIC Guided Tour: Explore Heat Pump Technology at Daikin</h1>
     <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees<span class="sync-dot" id="syncDot" title="Supabase sync"></span></p>
+    <a class="luma-link" href="https://lu.ma/41nmecuh" target="_blank">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View on Luma
+    </a>
   </div>
 </header>
 <div class="toolbar">
