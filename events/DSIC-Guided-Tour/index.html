@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSIC Guided Tour: Explore Heat Pump Technology at Daikin · Apr 2026</title>
+<style>
+  :root {
+    --purple: #7c3aed; --orange: #ea580c; --blue: #2563eb;
+    --green: #16a34a; --yellow: #ca8a04; --grey: #6b7280;
+    --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
+    --text: #1e293b; --muted: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; }
+  header { background: #0f172a; color: #f1f5f9; padding: 20px 32px;
+    display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header p { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+  .toolbar { background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .toolbar input, .toolbar select {
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px;
+    font-size: 13px; color: var(--text); background: var(--bg); outline: none; }
+  .toolbar input { width: 220px; }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--purple); }
+  .count { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .batch-btns { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 32px 0; }
+  .batch-btn { background: #e0e7ff; color: #3730a3; border: none; border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; }
+  .batch-btn:hover { background: #c7d2fe; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: #f1f5f9; text-align: left; padding: 10px 14px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); border-bottom: 1px solid var(--border); cursor: pointer;
+    white-space: nowrap; user-select: none; }
+  thead th:hover { background: #e2e8f0; }
+  thead th .sort-arrow { margin-left: 4px; opacity: .4; }
+  thead th.sorted .sort-arrow { opacity: 1; }
+  tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:hover { background: #f8fafc; }
+  td { padding: 10px 14px; }
+  .photo-cell { width: 52px; padding: 8px 8px 8px 14px; }
+  .photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+    background: #e2e8f0; display: block; }
+  .li-cell { width: 36px; text-align: center; padding: 10px 4px; }
+  .li-link { opacity: 1; } .li-link.dim { opacity: .15; }
+  .name-cell { font-weight: 600; min-width: 140px; }
+  .about-cell { max-width: 340px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .about-short { display: block; }
+  .about-more { display: none; cursor: pointer; color: var(--purple); font-size: 12px; margin-top: 2px; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .pill-verified   { background: #dcfce7; color: #166534; }
+  .pill-unverified { background: #fef9c3; color: #854d0e; }
+  .pill-na         { background: #f1f5f9; color: #64748b; }
+  .pill-vc         { background: #ede9fe; color: #5b21b6; }
+  .pill-lp         { background: #dbeafe; color: #1e40af; }
+  .pill-impact     { background: #d1fae5; color: #065f46; }
+  .pill-investor   { background: #e0f2fe; color: #075985; }
+  .pill-founder    { background: #ffedd5; color: #9a3412; }
+  .pill-policy     { background: #ccfbf1; color: #0f766e; }
+  .pill-consultant { background: #f3e8ff; color: #6b21a8; }
+  .pill-academic   { background: #fce7f3; color: #9d174d; }
+  .pill-unknown    { background: #f1f5f9; color: #64748b; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>DSIC Guided Tour: Explore Heat Pump Technology at Daikin</h1>
+    <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees</p>
+  </div>
+</header>
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search name or about…">
+  <select id="typeFilter"><option value="">All Types</option>
+    <option>VC</option><option>LP</option><option>Impact Investor</option>
+    <option>Investor</option><option>Founder/Operator</option>
+    <option>Policy/NGO</option><option>Consultant/Advisor</option>
+    <option>Academic/Research</option><option>Unknown</option>
+  </select>
+  <select id="statusFilter"><option value="">All Statuses</option>
+    <option>Verified</option><option>Unverified</option><option>N/A</option>
+  </select>
+  <span class="count" id="countLabel"></span>
+</div>
+<div class="batch-btns" id="batchBtns"></div>
+<table>
+  <thead>
+    <tr>
+      <th class="photo-cell"></th>
+      <th class="li-cell">LI</th>
+      <th data-col="name">Name <span class="sort-arrow">↕</span></th>
+      <th data-col="about">About <span class="sort-arrow">↕</span></th>
+      <th data-col="status">LI Status <span class="sort-arrow">↕</span></th>
+      <th data-col="type">Type <span class="sort-arrow">↕</span></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+<script>
+const DATA = [{"name": "Sonam Velani", "slug": "sonamvelani", "linkedin": "https://linkedin.com/in/sonamvelani", "status": "Verified", "type": "VC", "about": "Co-Founder & Managing Partner at Streetlife Ventures, climate tech fund. Former Goldman Sachs, World Bank, NYC Mayor's Office, Zipline.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sonamvelani.jpg"}, {"name": "Ally Chen", "slug": "ally-chen-cfa-1058761a3", "linkedin": "https://linkedin.com/in/ally-chen-cfa-1058761a3", "status": "Verified", "type": "Impact Investor", "about": "Renewable energy portfolio management professional specializing in grid-connected assets.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/ally-chen-cfa-1058761a3.jpg"}, {"name": "Candice Fortin", "slug": "candice-f-375840128", "linkedin": "https://linkedin.com/in/candice-f-375840128", "status": "Verified", "type": "Unknown", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/candice-f-375840128.jpg"}, {"name": "Michele Heyward", "slug": "michelecheyward", "linkedin": "https://linkedin.com/in/michelecheyward", "status": "Verified", "type": "Consultant/Advisor", "about": "Founder of PH Balanced \u2014 workforce intelligence platform helping AEC firms strengthen engineer retention. 12 years in AEC as cost engineer and PM.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/michelecheyward.jpg"}, {"name": "Naurin Muzaffar Qureshy", "slug": "naurin-muzaffar-3582641a", "linkedin": "https://linkedin.com/in/naurin-muzaffar-3582641a", "status": "Verified", "type": "Consultant/Advisor", "about": "Founder of Innovatus, social compliance & labour rights consultancy across Pakistan, Bangladesh, India, Sri Lanka, EU. Former IFC, Gap Inc.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/naurin-muzaffar-3582641a.jpg"}, {"name": "Nic Savo", "slug": "nic-savo-3a365a173", "linkedin": "https://linkedin.com/in/nic-savo-3a365a173", "status": "Verified", "type": "Consultant/Advisor", "about": "Senior Account Executive at Silverline PR, specializing in energy and climate tech communications. Places clients in Bloomberg, Forbes, Reuters.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/nic-savo-3a365a173.jpg"}, {"name": "Rachel Malken", "slug": "rachelmalken", "linkedin": "https://linkedin.com/in/rachelmalken", "status": "Verified", "type": "Unknown", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rachelmalken.jpg"}, {"name": "Rose Stephens-Booker", "slug": "rose-stephens-booker", "linkedin": "https://linkedin.com/in/rose-stephens-booker", "status": "Verified", "type": "Policy/NGO", "about": "Managing Director at Building Decarbonization Coalition. Former Presidential Appointee at US DOE (IRA). Former EPA ENERGY STAR. $1B+ clean energy market impact.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rose-stephens-booker.jpg"}, {"name": "Sasha Shunko", "slug": "sashashunko", "linkedin": "https://linkedin.com/in/sashashunko", "status": "Verified", "type": "Founder/Operator", "about": "Working at Tradewater, sourcing refrigerants and supporting projects to reduce high-impact emissions from halocarbons in the USA.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sashashunko.jpg"}, {"name": "Saurabh Srivastava", "slug": "saurabh-srivastava-iitk", "linkedin": "https://linkedin.com/in/saurabh-srivastava-iitk", "status": "Verified", "type": "Founder/Operator", "about": "Founder of Sprih, AI-native sustainability management platform for automated ESG reporting and decarbonization. 20+ years in data analytics and risk management.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/saurabh-srivastava-iitk.jpg"}];
+
+const TYPE_ORDER = {'VC':0,'LP':1,'Impact Investor':2,'Investor':3,'Founder/Operator':4,'Policy/NGO':5,'Consultant/Advisor':6,'Academic/Research':7,'Unknown':8};
+const STATUS_ORDER = {'Verified':0,'Unverified':1,'N/A':2};
+
+function mkSvg(name) {
+  const parts = name.trim().split(/\s+/);
+  const ini = parts.length >= 2 ? (parts[0][0]+parts[parts.length-1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
+  const palette = ['#7c3aed','#1d4ed8','#0d9488','#b91c1c','#7e22ce','#0369a1','#be185d','#d97706','#065f46','#7f1d1d'];
+  let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))|0;
+  const col = palette[Math.abs(h)%palette.length];
+  return "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><rect width='80' height='80' rx='40' fill='" + col + "'/><text x='40' y='52' text-anchor='middle' font-family='Arial,sans-serif' font-size='28' font-weight='600' fill='white'>" + ini + "</text></svg>";
+}
+
+const liSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+function typePill(t) {
+  const cls = {'VC':'vc','LP':'lp','Impact Investor':'impact','Investor':'investor','Founder/Operator':'founder','Policy/NGO':'policy','Consultant/Advisor':'consultant','Academic/Research':'academic','Unknown':'unknown'}[t]||'unknown';
+  return `<span class="pill pill-${cls}">${t}</span>`;
+}
+function statusPill(s) {
+  const cls = {'Verified':'verified','Unverified':'unverified','N/A':'na'}[s]||'na';
+  return `<span class="pill pill-${cls}">${s}</span>`;
+}
+
+let sortCol = null, sortDir = 1;
+let filtered = [...DATA];
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const tf = document.getElementById('typeFilter').value;
+  const sf = document.getElementById('statusFilter').value;
+
+  filtered = DATA.filter(a => {
+    if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
+    if (tf && a.type !== tf) return false;
+    if (sf && a.status !== sf) return false;
+    return true;
+  });
+
+  if (sortCol) {
+    filtered.sort((a,b) => {
+      let av = a[sortCol]||'', bv = b[sortCol]||'';
+      if (sortCol==='type') { av = TYPE_ORDER[av]??9; bv = TYPE_ORDER[bv]??9; return (av-bv)*sortDir; }
+      if (sortCol==='status') { av = STATUS_ORDER[av]??9; bv = STATUS_ORDER[bv]??9; return (av-bv)*sortDir; }
+      return av.localeCompare(bv)*sortDir;
+    });
+  } else {
+    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || (STATUS_ORDER[a.status]??9)-(STATUS_ORDER[b.status]??9) || a.name.localeCompare(b.name));
+  }
+
+  document.getElementById('countLabel').textContent = `${filtered.length} of ${DATA.length}`;
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = filtered.map(a => {
+    const photoSrc = `photos/${a.slug}.jpg`;
+    const aboutShort = a.about ? (a.about.length > 100 ? a.about.slice(0,100)+'…' : a.about) : '<span style="color:#cbd5e1">—</span>';
+    const hasMore = a.about && a.about.length > 100;
+    return `<tr>
+      <td class="photo-cell"><img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'"></td>
+      <td class="li-cell">${a.linkedin ? `<a href="${a.linkedin}" target="_blank" class="li-link">${liSvg}</a>` : `<span class="li-link dim">${liSvg}</span>`}</td>
+      <td class="name-cell">${a.name}</td>
+      <td class="about-cell">
+        <span class="about-short">${aboutShort}</span>
+        ${hasMore ? `<span class="about-more" onclick="this.previousElementSibling.textContent=DATA.find(x=>x.slug==='${a.slug}').about;this.remove()">Show more</span>` : ''}
+      </td>
+      <td>${statusPill(a.status)}</td>
+      <td>${typePill(a.type)}</td>
+    </tr>`;
+  }).join('');
+
+  // Batch LinkedIn buttons
+  const batchBtns = document.getElementById('batchBtns');
+  const liUrls = filtered.filter(a => a.linkedin).map(a => a.linkedin);
+  batchBtns.innerHTML = '';
+  for (let i = 0; i < liUrls.length; i += 10) {
+    const batch = liUrls.slice(i, i+10);
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `Open LinkedIn ${i+1}–${Math.min(i+10, liUrls.length)}`;
+    btn.onclick = (function(urls) {
+      return function() {
+        const script = urls.map(u => `window.open(${JSON.stringify(u)},'_blank');`).join('');
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs...</p></body></html>`;
+        window.open(URL.createObjectURL(new Blob([page],{type:'text/html'})),'_blank');
+      };
+    })(batch);
+    batchBtns.appendChild(btn);
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('typeFilter').addEventListener('change', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
