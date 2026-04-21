@@ -6,99 +6,170 @@
 <title>DSIC Guided Tour: Explore Heat Pump Technology at Daikin · Apr 2026</title>
 <style>
   :root {
-    --purple: #7c3aed; --orange: #ea580c; --blue: #2563eb;
-    --green: #16a34a; --yellow: #ca8a04; --grey: #6b7280;
-    --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
-    --text: #1e293b; --muted: #64748b;
+    --forest:  #2c4a38;
+    --brand:   #3d7a55;
+    --olive:   #8a7a38;
+    --bg:      #f3f2ec;
+    --card:    #ffffff;
+    --border:  #dce3da;
+    --text:    #1a2820;
+    --muted:   #5c6e60;
+    --met:     #2c6644;
+    --skip:    #b83030;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg); color: var(--text); font-size: 14px; }
-  header { background: #0f172a; color: #f1f5f9; padding: 20px 32px;
-    display: flex; align-items: center; gap: 16px; }
-  header h1 { font-size: 18px; font-weight: 600; }
-  header p { font-size: 13px; color: #94a3b8; margin-top: 2px; }
-  .toolbar { background: var(--card); border-bottom: 1px solid var(--border);
-    padding: 12px 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  /* ── Header ── */
+  header {
+    background: var(--forest); color: #e8f0eb; padding: 22px 36px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  header p  { font-size: 12px; color: #9dbfaa; margin-top: 4px; }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #9dbfaa;
+    display: inline-block; margin-left: 6px; vertical-align: middle; }
+  .sync-dot.syncing { background: #f0c040; }
+  .sync-dot.synced  { background: #6fcf97; }
+  .sync-dot.error   { background: #eb5757; }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 36px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    box-shadow: 0 1px 3px rgba(44,74,56,.04);
+  }
   .toolbar input, .toolbar select {
-    border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px;
-    font-size: 13px; color: var(--text); background: var(--bg); outline: none; }
-  .toolbar input { width: 220px; }
-  .toolbar input:focus, .toolbar select:focus { border-color: var(--purple); }
-  .count { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 500; }
-  .batch-btns { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 32px 0; }
-  .batch-btn { background: #e0e7ff; color: #3730a3; border: none; border-radius: 6px;
-    padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; }
-  .batch-btn:hover { background: #c7d2fe; }
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px;
+    font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+    font-family: inherit;
+  }
+  .toolbar input { width: 210px; }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--brand); }
+  .count { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  /* ── Batch buttons ── */
+  .batch-btns { padding: 10px 36px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+  .batch-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 5px;
+    padding: 5px 12px; font-size: 12px; color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: all .12s;
+  }
+  .batch-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+  /* ── Table ── */
   table { width: 100%; border-collapse: collapse; }
-  thead th { background: #f1f5f9; text-align: left; padding: 10px 14px;
-    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
-    color: var(--muted); border-bottom: 1px solid var(--border); cursor: pointer;
-    white-space: nowrap; user-select: none; }
-  thead th:hover { background: #e2e8f0; }
-  thead th .sort-arrow { margin-left: 4px; opacity: .4; }
-  thead th.sorted .sort-arrow { opacity: 1; }
+  thead th {
+    background: var(--card); text-align: left; padding: 10px 14px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); border-bottom: 2px solid var(--border); cursor: pointer;
+    white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--text); }
+  thead th .sort-arrow { margin-left: 4px; opacity: .35; }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--brand); }
   thead th.no-sort { cursor: default; }
-  thead th.no-sort:hover { background: #f1f5f9; }
+  thead th.no-sort:hover { color: var(--muted); }
   tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
-  tbody tr:hover { background: #f8fafc; }
-  tbody tr.not-relevant-row { opacity: 0.4; }
-  td { padding: 10px 14px; }
-  .photo-cell { width: 52px; padding: 8px 8px 8px 14px; }
-  .photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
-    background: #e2e8f0; display: block; }
-  .li-cell { width: 36px; text-align: center; padding: 10px 4px; }
-  .li-link { opacity: 1; } .li-link.dim { opacity: .15; }
-  .name-cell { font-weight: 600; min-width: 140px; }
-  .about-cell { max-width: 300px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-  .about-more { cursor: pointer; color: var(--purple); font-size: 12px; margin-top: 2px; display: block; }
-  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px;
-    font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .pill-verified   { background: #dcfce7; color: #166534; }
-  .pill-unverified { background: #fef9c3; color: #854d0e; }
-  .pill-na         { background: #f1f5f9; color: #64748b; }
-  .pill-vc         { background: #ede9fe; color: #5b21b6; }
-  .pill-lp         { background: #dbeafe; color: #1e40af; }
-  .pill-impact     { background: #d1fae5; color: #065f46; }
-  .pill-investor   { background: #e0f2fe; color: #075985; }
-  .pill-founder    { background: #ffedd5; color: #9a3412; }
-  .pill-policy     { background: #ccfbf1; color: #0f766e; }
-  .pill-consultant { background: #f3e8ff; color: #6b21a8; }
-  .pill-academic   { background: #fce7f3; color: #9d174d; }
-  .pill-unknown    { background: #f1f5f9; color: #64748b; }
-  .check-cell { width: 56px; text-align: center; padding: 10px 8px; }
-  .check-btn { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--border);
-    background: white; cursor: pointer; font-size: 15px; display: inline-flex;
-    align-items: center; justify-content: center; transition: all .15s; }
-  .check-btn:hover { border-color: #a3a3a3; }
-  .check-btn.active-met { background: #16a34a; border-color: #16a34a; color: white; }
-  .check-btn.active-skip { background: #dc2626; border-color: #dc2626; color: white; }
-  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;
-    display: inline-block; margin-left: 4px; vertical-align: middle; }
-  .sync-dot.syncing { background: #f59e0b; }
-  .sync-dot.synced  { background: #16a34a; }
-  .sync-dot.error   { background: #dc2626; }
+  tbody tr.main-row:hover { background: #eef1ed; }
+  tbody tr.not-relevant-row { opacity: 0.35; }
+  td { padding: 12px 14px; }
+
+  /* ── 3-state action button ── */
+  .action-cell { width: 48px; text-align: center; padding: 12px 6px; vertical-align: middle; }
+  .action-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    background: transparent; cursor: pointer; font-size: 14px; display: inline-flex;
+    align-items: center; justify-content: center; transition: all .15s;
+    color: #b0bdb3; font-weight: 700;
+  }
+  .action-btn:hover { border-color: var(--muted); color: var(--muted); }
+  .action-btn.state-met  { background: var(--met);  border-color: var(--met);  color: #fff; }
+  .action-btn.state-skip { background: var(--skip); border-color: var(--skip); color: #fff; }
+
+  /* ── Identity cell ── */
+  .identity-cell { width: 155px; min-width: 130px; white-space: nowrap; vertical-align: middle; }
+  .identity-inner { display: flex; align-items: center; gap: 10px; }
+  .photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+    background: #dde5db; display: block; flex-shrink: 0; }
+  .identity-text { display: flex; flex-direction: column; gap: 3px; }
+  .person-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--text); }
+  .li-badge { display: inline-flex; align-items: center; }
+  .li-badge svg { display: block; }
+  .li-link { text-decoration: none; }
+
+  /* ── About cell ── */
+  .about-cell {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    cursor: pointer; padding-right: 20px;
+  }
+  .about-cell:hover .about-snippet { color: var(--text); }
+  .about-snippet {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color .12s;
+  }
+  .expand-hint {
+    display: inline-block; margin-top: 4px; font-size: 11px;
+    color: var(--brand); letter-spacing: .01em;
+  }
+  .about-full { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .notes-wrap { margin-top: 12px; }
+  .notes-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--muted); margin-bottom: 5px;
+  }
+  .notes-input {
+    width: 100%; min-height: 52px; resize: vertical;
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+    outline: none; line-height: 1.5; transition: border-color .12s;
+  }
+  .notes-input:focus { border-color: var(--brand); background: var(--card); }
+  .notes-input::placeholder { color: #b0bdb3; }
+
+  /* ── Pills ── */
+  .pill {
+    display: inline-block; padding: 2px 9px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: .01em;
+  }
+  .pill-vc         { background: #cce5d6; color: #1a4d2e; }
+  .pill-lp         { background: #d0e8de; color: #1e5235; }
+  .pill-impact     { background: #d6edd8; color: #1e5535; }
+  .pill-investor   { background: #d8ead8; color: #1a4a2a; }
+  .pill-founder    { background: #f5e6c8; color: #7a4a10; }
+  .pill-policy     { background: #d0e8e4; color: #0f4040; }
+  .pill-consultant { background: #e6dff0; color: #4a2a70; }
+  .pill-academic   { background: #f0dde8; color: #6a1a40; }
+  .pill-unknown    { background: #e8e8e2; color: #5a5a52; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center; padding: 56px 32px; color: var(--muted); font-size: 14px;
+  }
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>DSIC Guided Tour: Explore Heat Pump Technology at Daikin</h1>
-    <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees &nbsp;<span class="sync-dot" id="syncDot" title="Supabase sync status"></span></p>
+    <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees<span class="sync-dot" id="syncDot" title="Supabase sync"></span></p>
   </div>
 </header>
 <div class="toolbar">
   <input type="text" id="search" placeholder="Search name or about…">
-  <select id="typeFilter"><option value="">All Types</option>
+  <select id="typeFilter">
+    <option value="">All Types</option>
     <option>VC</option><option>LP</option><option>Impact Investor</option>
     <option>Investor</option><option>Founder/Operator</option>
     <option>Policy/NGO</option><option>Consultant/Advisor</option>
     <option>Academic/Research</option><option>Unknown</option>
   </select>
-  <select id="statusFilter"><option value="">All Statuses</option>
-    <option>Verified</option><option>Unverified</option><option>N/A</option>
-  </select>
-  <select id="metFilter"><option value="">All</option>
+  <select id="metFilter">
+    <option value="">All</option>
     <option value="met">Met ✓</option>
     <option value="skip">Skip ✗</option>
   </select>
@@ -108,14 +179,10 @@
 <table>
   <thead>
     <tr>
-      <th class="photo-cell no-sort"></th>
-      <th class="li-cell no-sort">LI</th>
-      <th data-col="name">Name <span class="sort-arrow">↕</span></th>
+      <th class="action-cell no-sort"></th>
+      <th class="no-sort">Person</th>
       <th data-col="about">About <span class="sort-arrow">↕</span></th>
-      <th data-col="status">LI Status <span class="sort-arrow">↕</span></th>
-      <th data-col="type">Type <span class="sort-arrow">↕</span></th>
-      <th class="check-cell no-sort" title="Met in person">✓ Met</th>
-      <th class="check-cell no-sort" title="Not relevant — skip outreach">✗ Skip</th>
+      <th data-col="type" style="text-align:right;padding-right:36px">Type <span class="sort-arrow">↕</span></th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
@@ -123,34 +190,29 @@
 <script>
 const SUPABASE_URL = "https://euyooppsevhejnvwksgc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_G-Qi9JFQUuDSUoU8FvP-pQ_UBW2hmHF";
-const DATA = [{"name": "Sonam Velani", "slug": "sonamvelani", "linkedin": "https://linkedin.com/in/sonamvelani", "status": "Verified", "type": "VC", "person_id": "af438b3c-156f-4cfc-965a-54b78bd6c57c", "about": "Co-Founder & Managing Partner at Streetlife Ventures, climate tech fund. Former Goldman Sachs, World Bank, NYC Mayor's Office, Zipline.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sonamvelani.jpg"}, {"name": "Ally Chen", "slug": "ally-chen-cfa-1058761a3", "linkedin": "https://linkedin.com/in/ally-chen-cfa-1058761a3", "status": "Verified", "type": "Impact Investor", "person_id": "dbaafa6e-d405-4506-9d97-d456612d3c9f", "about": "Renewable energy portfolio management professional specializing in grid-connected assets.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/ally-chen-cfa-1058761a3.jpg"}, {"name": "Candice Fortin", "slug": "candice-f-375840128", "linkedin": "https://linkedin.com/in/candice-f-375840128", "status": "Verified", "type": "Unknown", "person_id": "5b807e06-c692-4060-a072-bca4fcb758a9", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/candice-f-375840128.jpg"}, {"name": "Michele Heyward", "slug": "michelecheyward", "linkedin": "https://linkedin.com/in/michelecheyward", "status": "Verified", "type": "Consultant/Advisor", "person_id": "3806afa2-4366-49ce-be02-84731f0795c6", "about": "Founder of PH Balanced \u2014 workforce intelligence platform helping AEC firms strengthen engineer retention. 12 years in AEC as cost engineer and PM.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/michelecheyward.jpg"}, {"name": "Naurin Muzaffar Qureshy", "slug": "naurin-muzaffar-3582641a", "linkedin": "https://linkedin.com/in/naurin-muzaffar-3582641a", "status": "Verified", "type": "Consultant/Advisor", "person_id": "f098cf00-f51c-4491-a5dc-e89a224b5912", "about": "Founder of Innovatus, social compliance & labour rights consultancy across Pakistan, Bangladesh, India, Sri Lanka, EU. Former IFC, Gap Inc.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/naurin-muzaffar-3582641a.jpg"}, {"name": "Nic Savo", "slug": "nic-savo-3a365a173", "linkedin": "https://linkedin.com/in/nic-savo-3a365a173", "status": "Verified", "type": "Consultant/Advisor", "person_id": "04bbe285-8937-4f3f-acb2-d8738aff0136", "about": "Senior Account Executive at Silverline PR, specializing in energy and climate tech communications. Places clients in Bloomberg, Forbes, Reuters.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/nic-savo-3a365a173.jpg"}, {"name": "Rachel Malken", "slug": "rachelmalken", "linkedin": "https://linkedin.com/in/rachelmalken", "status": "Verified", "type": "Unknown", "person_id": "5f04c17f-fc0e-4cbb-9e76-d28d37cee0f6", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rachelmalken.jpg"}, {"name": "Rose Stephens-Booker", "slug": "rose-stephens-booker", "linkedin": "https://linkedin.com/in/rose-stephens-booker", "status": "Verified", "type": "Policy/NGO", "person_id": "5f8d9f87-083a-402f-a455-e0ccc8f9397d", "about": "Managing Director at Building Decarbonization Coalition. Former Presidential Appointee at US DOE (IRA). Former EPA ENERGY STAR. $1B+ clean energy market impact.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rose-stephens-booker.jpg"}, {"name": "Sasha Shunko", "slug": "sashashunko", "linkedin": "https://linkedin.com/in/sashashunko", "status": "Verified", "type": "Founder/Operator", "person_id": "29bd745f-0f51-49e8-bc97-494d12bddbe2", "about": "Working at Tradewater, sourcing refrigerants and supporting projects to reduce high-impact emissions from halocarbons in the USA.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sashashunko.jpg"}, {"name": "Saurabh Srivastava", "slug": "saurabh-srivastava-iitk", "linkedin": "https://linkedin.com/in/saurabh-srivastava-iitk", "status": "Verified", "type": "Founder/Operator", "person_id": "aa832448-0119-4040-a6d8-d544915e760a", "about": "Founder of Sprih, AI-native sustainability management platform for automated ESG reporting and decarbonization. 20+ years in data analytics and risk management.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/saurabh-srivastava-iitk.jpg"}];
+const DATA = [{"name":"Sonam Velani","slug":"sonamvelani","linkedin":"https://linkedin.com/in/sonamvelani","status":"Verified","type":"VC","person_id":"af438b3c-156f-4cfc-965a-54b78bd6c57c","about":"I've always been fascinated by the machinery of cities - how infrastructure, technology, and policy shape the way we live. This passion led me to launch Streetlife Ventures, where we invest in startups at the intersection of cities and climate. We back entrepreneurs building the systems that will make urban life more sustainable, equitable, and resilient.\n\nOver the course of my career, I've worked across the public and private sectors - Goldman Sachs, the World Bank, Zipline, and the NYC Mayor's Office - to design and finance multi-billion-dollar investments in climate infrastructure, affordable housing, and inclusive economic growth.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sonamvelani.jpg"},{"name":"Ally Chen","slug":"ally-chen-cfa-1058761a3","linkedin":"https://linkedin.com/in/ally-chen-cfa-1058761a3","status":"Verified","type":"Impact Investor","person_id":"dbaafa6e-d405-4506-9d97-d456612d3c9f","about":"Renewable energy portfolio management professional specializing in grid-connected assets.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/ally-chen-cfa-1058761a3.jpg"},{"name":"Candice Fortin","slug":"candice-f-375840128","linkedin":"https://linkedin.com/in/candice-f-375840128","status":"Verified","type":"Unknown","person_id":"5b807e06-c692-4060-a072-bca4fcb758a9","about":null,"photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/candice-f-375840128.jpg"},{"name":"Michele Heyward","slug":"michelecheyward","linkedin":"https://linkedin.com/in/michelecheyward","status":"Verified","type":"Consultant/Advisor","person_id":"3806afa2-4366-49ce-be02-84731f0795c6","about":"By 2027, the U.S. will be short more than 600,000 engineers, even as billions in infrastructure projects move forward under federal investment.\n\nFor AEC firms, this isn't just a hiring challenge, it's a profit and performance crisis. Every time a mid-career engineer walks out mid-project, deadlines slip, rework piles up, and millions in potential revenue are left on the table.\n\nThat's why I founded PH Balanced to help AEC leaders strengthen retention using workforce intelligence. Our platform and strategy framework reveal the hidden factors driving turnover so firms can stabilize teams, protect revenue, and deliver projects on time, even in a tight talent market.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/michelecheyward.jpg"},{"name":"Naurin Muzaffar Qureshy","slug":"naurin-muzaffar-3582641a","linkedin":"https://linkedin.com/in/naurin-muzaffar-3582641a","status":"Verified","type":"Consultant/Advisor","person_id":"f098cf00-f51c-4491-a5dc-e89a224b5912","about":"Twenty-five years of working in and around garment supply chains will do one of two things to you: make you very cynical, or give you a very specific set of opinions about what actually works.\n\nI run Innovatus, a social compliance and labour rights consultancy operating across Pakistan, Bangladesh, India, Sri Lanka, and the EU.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/naurin-muzaffar-3582641a.jpg"},{"name":"Nic Savo","slug":"nic-savo-3a365a173","linkedin":"https://linkedin.com/in/nic-savo-3a365a173","status":"Verified","type":"Consultant/Advisor","person_id":"04bbe285-8937-4f3f-acb2-d8738aff0136","about":"Senior Account Executive at Silverline, an award-winning public relations agency specializing in energy and climate technology. He leads integrated communications strategies for a diverse portfolio of utilities, corporate firms, NGOs, and B2B startups.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/nic-savo-3a365a173.jpg"},{"name":"Rachel Malken","slug":"rachelmalken","linkedin":"https://linkedin.com/in/rachelmalken","status":"Verified","type":"Unknown","person_id":"5f04c17f-fc0e-4cbb-9e76-d28d37cee0f6","about":null,"photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rachelmalken.jpg"},{"name":"Rose Stephens-Booker","slug":"rose-stephens-booker","linkedin":"https://linkedin.com/in/rose-stephens-booker","status":"Verified","type":"Policy/NGO","person_id":"5f8d9f87-083a-402f-a455-e0ccc8f9397d","about":"I've built my career translating clean energy policy into market adoption and deployment at scale.\n\nOver 15+ years, I've worked across federal, state, and private sector environments to design and deliver programs that move markets and accelerate adoption. My work focuses on aligning policy, market incentives, and partnerships so clean energy technologies don't just exist in frameworks, but show up in homes, buildings, and communities.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rose-stephens-booker.jpg"},{"name":"Sasha Shunko","slug":"sashashunko","linkedin":"https://linkedin.com/in/sashashunko","status":"Verified","type":"Founder/Operator","person_id":"29bd745f-0f51-49e8-bc97-494d12bddbe2","about":"Currently working at Tradewater, sourcing refrigerants and supporting projects to reduce high-impact emissions from halocarbons in the USA.\n\nI studied International Relations & Economics at Claremont McKenna College and have a strong research focus on aquaculture development, certification systems, and conducted fieldwork within smallholder communities in Thailand.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sashashunko.jpg"},{"name":"Saurabh Srivastava","slug":"saurabh-srivastava-iitk","linkedin":"https://linkedin.com/in/saurabh-srivastava-iitk","status":"Verified","type":"Founder/Operator","person_id":"aa832448-0119-4040-a6d8-d544915e760a","about":"I help businesses turn sustainability ambition into measurable action.\n\nWith 20+ years of leadership across data analytics, risk management, and technology strategy, I now focus on enabling climate action at scale through Sprih: an AI-native sustainability management platform helping global companies automate sustainability reporting, navigate climate regulations, and drive real decarbonization outcomes.","photo_url":"https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/saurabh-srivastava-iitk.jpg"}];
 
 const TYPE_ORDER = {'VC':0,'LP':1,'Impact Investor':2,'Investor':3,'Founder/Operator':4,'Policy/NGO':5,'Consultant/Advisor':6,'Academic/Research':7,'Unknown':8};
-const STATUS_ORDER = {'Verified':0,'Unverified':1,'N/A':2};
 
-// State: keyed by person_id
 const state = {};
 DATA.forEach(a => {
   const stored = JSON.parse(localStorage.getItem('person_' + a.person_id) || 'null');
-  state[a.person_id] = stored || { met: false, not_relevant: false };
+  state[a.person_id] = stored || { met: false, not_relevant: false, expanded: false, notes: '' };
+  if (!('notes'    in state[a.person_id])) state[a.person_id].notes    = '';
+  if (!('expanded' in state[a.person_id])) state[a.person_id].expanded = false;
 });
 
-function setSyncDot(s) {
-  const dot = document.getElementById('syncDot');
-  dot.className = 'sync-dot ' + s;
-}
+function saveState(pid) { localStorage.setItem('person_' + pid, JSON.stringify(state[pid])); }
 
-async function patchPerson(person_id, patch) {
+function setSyncDot(s) { document.getElementById('syncDot').className = 'sync-dot ' + s; }
+
+async function patchPerson(pid, patch) {
   setSyncDot('syncing');
   try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/people?id=eq.${person_id}`, {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/people?id=eq.${pid}`, {
       method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify(patch)
     });
     if (r.ok) { setSyncDot('synced'); setTimeout(() => setSyncDot(''), 2000); }
@@ -158,53 +220,60 @@ async function patchPerson(person_id, patch) {
   } catch(e) { setSyncDot('error'); }
 }
 
-function toggleMet(person_id) {
-  state[person_id].met = !state[person_id].met;
-  localStorage.setItem('person_' + person_id, JSON.stringify(state[person_id]));
-  patchPerson(person_id, { met: state[person_id].met });
+function cycleAction(pid) {
+  const s = state[pid];
+  if (!s.met && !s.not_relevant)    { s.met = true; }
+  else if (s.met)                   { s.met = false; s.not_relevant = true; }
+  else                              { s.not_relevant = false; }
+  saveState(pid);
+  patchPerson(pid, { met: s.met, not_relevant: s.not_relevant });
   render();
 }
 
-function toggleSkip(person_id) {
-  state[person_id].not_relevant = !state[person_id].not_relevant;
-  localStorage.setItem('person_' + person_id, JSON.stringify(state[person_id]));
-  patchPerson(person_id, { not_relevant: state[person_id].not_relevant });
+function toggleExpand(pid) {
+  state[pid].expanded = !state[pid].expanded;
+  saveState(pid);
   render();
+}
+
+function saveNotes(pid) {
+  const el = document.getElementById('notes_' + pid);
+  if (el) { state[pid].notes = el.value; saveState(pid); }
 }
 
 function mkSvg(name) {
   const parts = name.trim().split(/\s+/);
   const ini = parts.length >= 2 ? (parts[0][0]+parts[parts.length-1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
-  const palette = ['#7c3aed','#1d4ed8','#0d9488','#b91c1c','#7e22ce','#0369a1','#be185d','#d97706','#065f46','#7f1d1d'];
+  const palette = ['#2c4a38','#3d5c46','#1e4d30','#5a7a4a','#2a5038','#3a6b48','#1a3d28','#4a6040','#2e5540','#224030'];
   let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))|0;
   const col = palette[Math.abs(h)%palette.length];
   return "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><rect width='80' height='80' rx='40' fill='" + col + "'/><text x='40' y='52' text-anchor='middle' font-family='Arial,sans-serif' font-size='28' font-weight='600' fill='white'>" + ini + "</text></svg>";
 }
 
-const liSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+const liSvg = (color) => `<svg width="15" height="15" viewBox="0 0 24 24" fill="${color}"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+function liIcon(linkedin, status) {
+  if (!linkedin) return `<span class="li-badge" style="opacity:.2">${liSvg('#9dbfaa')}</span>`;
+  const color = status === 'Verified' ? '#0a66c2' : '#9dbfaa';
+  return `<a href="${linkedin}" target="_blank" class="li-link li-badge">${liSvg(color)}</a>`;
+}
 
 function typePill(t) {
   const cls = {'VC':'vc','LP':'lp','Impact Investor':'impact','Investor':'investor','Founder/Operator':'founder','Policy/NGO':'policy','Consultant/Advisor':'consultant','Academic/Research':'academic','Unknown':'unknown'}[t]||'unknown';
   return `<span class="pill pill-${cls}">${t}</span>`;
 }
-function statusPill(s) {
-  const cls = {'Verified':'verified','Unverified':'unverified','N/A':'na'}[s]||'na';
-  return `<span class="pill pill-${cls}">${s}</span>`;
-}
 
 let sortCol = null, sortDir = 1;
 
 function render() {
-  const q = document.getElementById('search').value.toLowerCase();
+  const q  = document.getElementById('search').value.toLowerCase();
   const tf = document.getElementById('typeFilter').value;
-  const sf = document.getElementById('statusFilter').value;
   const mf = document.getElementById('metFilter').value;
 
   let filtered = DATA.filter(a => {
     if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
     if (tf && a.type !== tf) return false;
-    if (sf && a.status !== sf) return false;
-    if (mf === 'met' && !state[a.person_id].met) return false;
+    if (mf === 'met'  && !state[a.person_id].met)          return false;
     if (mf === 'skip' && !state[a.person_id].not_relevant) return false;
     return true;
   });
@@ -213,36 +282,66 @@ function render() {
     filtered.sort((a,b) => {
       let av = a[sortCol]||'', bv = b[sortCol]||'';
       if (sortCol==='type') { av = TYPE_ORDER[av]??9; bv = TYPE_ORDER[bv]??9; return (av-bv)*sortDir; }
-      if (sortCol==='status') { av = STATUS_ORDER[av]??9; bv = STATUS_ORDER[bv]??9; return (av-bv)*sortDir; }
       return av.localeCompare(bv)*sortDir;
     });
   } else {
-    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || (STATUS_ORDER[a.status]??9)-(STATUS_ORDER[b.status]??9) || a.name.localeCompare(b.name));
+    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || a.name.localeCompare(b.name));
   }
 
   document.getElementById('countLabel').textContent = `${filtered.length} of ${DATA.length}`;
 
   const tbody = document.getElementById('tbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No attendees match your filters.</td></tr>`;
+    document.getElementById('batchBtns').innerHTML = '';
+    return;
+  }
+
   tbody.innerHTML = filtered.map(a => {
     const photoSrc = `photos/${a.slug}.jpg`;
-    const aboutShort = a.about ? (a.about.length > 100 ? a.about.slice(0,100)+'…' : a.about) : '<span style="color:#cbd5e1">—</span>';
-    const hasMore = a.about && a.about.length > 100;
     const s = state[a.person_id];
-    const metCls = s.met ? 'active-met' : '';
-    const skipCls = s.not_relevant ? 'active-skip' : '';
-    const rowCls = s.not_relevant ? 'not-relevant-row' : '';
-    return `<tr class="${rowCls}">
-      <td class="photo-cell"><img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'"></td>
-      <td class="li-cell">${a.linkedin ? `<a href="${a.linkedin}" target="_blank" class="li-link">${liSvg}</a>` : `<span class="li-link dim">${liSvg}</span>`}</td>
-      <td class="name-cell">${a.name}</td>
-      <td class="about-cell">
-        ${aboutShort}
-        ${hasMore ? `<span class="about-more" onclick="this.previousSibling.textContent=DATA.find(x=>x.slug==='${a.slug}').about;this.remove()">Show more</span>` : ''}
+    const rowCls    = s.not_relevant ? 'not-relevant-row' : '';
+    const actionCls = s.met ? 'state-met' : s.not_relevant ? 'state-skip' : '';
+    const actionLbl = s.met ? '✓' : s.not_relevant ? '✗' : '';
+
+    const hasAbout = !!a.about;
+
+    // Collapsed: 4-line clamped snippet + hint if long enough
+    // Expanded: full bio (newlines → <br>) + notes
+    let aboutContent;
+    if (s.expanded) {
+      aboutContent = `
+        <div class="about-full">${hasAbout ? a.about.replace(/\n\n/g,'<br><br>') : '<span style="color:#b0bdb3">—</span>'}</div>
+        <div class="notes-wrap">
+          <div class="notes-label">Notes</div>
+          <textarea class="notes-input" id="notes_${a.person_id}" placeholder="Add a note…"
+            oninput="saveNotes('${a.person_id}')"
+            onclick="event.stopPropagation()">${s.notes||''}</textarea>
+        </div>`;
+    } else {
+      const longEnough = hasAbout && a.about.length > 180;
+      aboutContent = `
+        <div class="about-snippet">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        ${longEnough ? `<span class="expand-hint">↓ more</span>` : ''}`;
+    }
+
+    return `<tr class="main-row ${rowCls}">
+      <td class="action-cell">
+        <button class="action-btn ${actionCls}" onclick="cycleAction('${a.person_id}')" title="Cycle: unset → met → skip">${actionLbl}</button>
       </td>
-      <td>${statusPill(a.status)}</td>
-      <td>${typePill(a.type)}</td>
-      <td class="check-cell"><button class="check-btn ${metCls}" onclick="toggleMet('${a.person_id}')" title="Toggle met">✓</button></td>
-      <td class="check-cell"><button class="check-btn ${skipCls}" onclick="toggleSkip('${a.person_id}')" title="Toggle not relevant">✗</button></td>
+      <td class="identity-cell">
+        <div class="identity-inner">
+          <img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'">
+          <div class="identity-text">
+            <span class="person-name">${a.name}</span>
+            ${liIcon(a.linkedin, a.status)}
+          </div>
+        </div>
+      </td>
+      <td class="about-cell" onclick="toggleExpand('${a.person_id}')">
+        ${aboutContent}
+      </td>
+      <td style="vertical-align:middle;text-align:right;padding-right:36px">${typePill(a.type)}</td>
     </tr>`;
   }).join('');
 
@@ -258,7 +357,7 @@ function render() {
     btn.onclick = (function(urls) {
       return function() {
         const script = urls.map(u => `window.open(${JSON.stringify(u)},'_blank');`).join('');
-        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs...</p></body></html>`;
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs…</p></body></html>`;
         window.open(URL.createObjectURL(new Blob([page],{type:'text/html'})),'_blank');
       };
     })(batch);
@@ -268,7 +367,6 @@ function render() {
 
 document.getElementById('search').addEventListener('input', render);
 document.getElementById('typeFilter').addEventListener('change', render);
-document.getElementById('statusFilter').addEventListener('change', render);
 document.getElementById('metFilter').addEventListener('change', render);
 
 document.querySelectorAll('thead th[data-col]').forEach(th => {
