@@ -38,8 +38,11 @@
   thead th:hover { background: #e2e8f0; }
   thead th .sort-arrow { margin-left: 4px; opacity: .4; }
   thead th.sorted .sort-arrow { opacity: 1; }
+  thead th.no-sort { cursor: default; }
+  thead th.no-sort:hover { background: #f1f5f9; }
   tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
   tbody tr:hover { background: #f8fafc; }
+  tbody tr.not-relevant-row { opacity: 0.4; }
   td { padding: 10px 14px; }
   .photo-cell { width: 52px; padding: 8px 8px 8px 14px; }
   .photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
@@ -47,9 +50,8 @@
   .li-cell { width: 36px; text-align: center; padding: 10px 4px; }
   .li-link { opacity: 1; } .li-link.dim { opacity: .15; }
   .name-cell { font-weight: 600; min-width: 140px; }
-  .about-cell { max-width: 340px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-  .about-short { display: block; }
-  .about-more { display: none; cursor: pointer; color: var(--purple); font-size: 12px; margin-top: 2px; }
+  .about-cell { max-width: 300px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .about-more { cursor: pointer; color: var(--purple); font-size: 12px; margin-top: 2px; display: block; }
   .pill { display: inline-block; padding: 2px 9px; border-radius: 999px;
     font-size: 11px; font-weight: 600; white-space: nowrap; }
   .pill-verified   { background: #dcfce7; color: #166534; }
@@ -64,13 +66,25 @@
   .pill-consultant { background: #f3e8ff; color: #6b21a8; }
   .pill-academic   { background: #fce7f3; color: #9d174d; }
   .pill-unknown    { background: #f1f5f9; color: #64748b; }
+  .check-cell { width: 56px; text-align: center; padding: 10px 8px; }
+  .check-btn { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--border);
+    background: white; cursor: pointer; font-size: 15px; display: inline-flex;
+    align-items: center; justify-content: center; transition: all .15s; }
+  .check-btn:hover { border-color: #a3a3a3; }
+  .check-btn.active-met { background: #16a34a; border-color: #16a34a; color: white; }
+  .check-btn.active-skip { background: #dc2626; border-color: #dc2626; color: white; }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;
+    display: inline-block; margin-left: 4px; vertical-align: middle; }
+  .sync-dot.syncing { background: #f59e0b; }
+  .sync-dot.synced  { background: #16a34a; }
+  .sync-dot.error   { background: #dc2626; }
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>DSIC Guided Tour: Explore Heat Pump Technology at Daikin</h1>
-    <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees</p>
+    <p>DC Climate Week · April 21, 2026 · Washington DC · 10 attendees &nbsp;<span class="sync-dot" id="syncDot" title="Supabase sync status"></span></p>
   </div>
 </header>
 <div class="toolbar">
@@ -84,27 +98,79 @@
   <select id="statusFilter"><option value="">All Statuses</option>
     <option>Verified</option><option>Unverified</option><option>N/A</option>
   </select>
+  <select id="metFilter"><option value="">All</option>
+    <option value="met">Met ✓</option>
+    <option value="skip">Skip ✗</option>
+  </select>
   <span class="count" id="countLabel"></span>
 </div>
 <div class="batch-btns" id="batchBtns"></div>
 <table>
   <thead>
     <tr>
-      <th class="photo-cell"></th>
-      <th class="li-cell">LI</th>
+      <th class="photo-cell no-sort"></th>
+      <th class="li-cell no-sort">LI</th>
       <th data-col="name">Name <span class="sort-arrow">↕</span></th>
       <th data-col="about">About <span class="sort-arrow">↕</span></th>
       <th data-col="status">LI Status <span class="sort-arrow">↕</span></th>
       <th data-col="type">Type <span class="sort-arrow">↕</span></th>
+      <th class="check-cell no-sort" title="Met in person">✓ Met</th>
+      <th class="check-cell no-sort" title="Not relevant — skip outreach">✗ Skip</th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
 </table>
 <script>
-const DATA = [{"name": "Sonam Velani", "slug": "sonamvelani", "linkedin": "https://linkedin.com/in/sonamvelani", "status": "Verified", "type": "VC", "about": "Co-Founder & Managing Partner at Streetlife Ventures, climate tech fund. Former Goldman Sachs, World Bank, NYC Mayor's Office, Zipline.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sonamvelani.jpg"}, {"name": "Ally Chen", "slug": "ally-chen-cfa-1058761a3", "linkedin": "https://linkedin.com/in/ally-chen-cfa-1058761a3", "status": "Verified", "type": "Impact Investor", "about": "Renewable energy portfolio management professional specializing in grid-connected assets.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/ally-chen-cfa-1058761a3.jpg"}, {"name": "Candice Fortin", "slug": "candice-f-375840128", "linkedin": "https://linkedin.com/in/candice-f-375840128", "status": "Verified", "type": "Unknown", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/candice-f-375840128.jpg"}, {"name": "Michele Heyward", "slug": "michelecheyward", "linkedin": "https://linkedin.com/in/michelecheyward", "status": "Verified", "type": "Consultant/Advisor", "about": "Founder of PH Balanced \u2014 workforce intelligence platform helping AEC firms strengthen engineer retention. 12 years in AEC as cost engineer and PM.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/michelecheyward.jpg"}, {"name": "Naurin Muzaffar Qureshy", "slug": "naurin-muzaffar-3582641a", "linkedin": "https://linkedin.com/in/naurin-muzaffar-3582641a", "status": "Verified", "type": "Consultant/Advisor", "about": "Founder of Innovatus, social compliance & labour rights consultancy across Pakistan, Bangladesh, India, Sri Lanka, EU. Former IFC, Gap Inc.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/naurin-muzaffar-3582641a.jpg"}, {"name": "Nic Savo", "slug": "nic-savo-3a365a173", "linkedin": "https://linkedin.com/in/nic-savo-3a365a173", "status": "Verified", "type": "Consultant/Advisor", "about": "Senior Account Executive at Silverline PR, specializing in energy and climate tech communications. Places clients in Bloomberg, Forbes, Reuters.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/nic-savo-3a365a173.jpg"}, {"name": "Rachel Malken", "slug": "rachelmalken", "linkedin": "https://linkedin.com/in/rachelmalken", "status": "Verified", "type": "Unknown", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rachelmalken.jpg"}, {"name": "Rose Stephens-Booker", "slug": "rose-stephens-booker", "linkedin": "https://linkedin.com/in/rose-stephens-booker", "status": "Verified", "type": "Policy/NGO", "about": "Managing Director at Building Decarbonization Coalition. Former Presidential Appointee at US DOE (IRA). Former EPA ENERGY STAR. $1B+ clean energy market impact.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rose-stephens-booker.jpg"}, {"name": "Sasha Shunko", "slug": "sashashunko", "linkedin": "https://linkedin.com/in/sashashunko", "status": "Verified", "type": "Founder/Operator", "about": "Working at Tradewater, sourcing refrigerants and supporting projects to reduce high-impact emissions from halocarbons in the USA.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sashashunko.jpg"}, {"name": "Saurabh Srivastava", "slug": "saurabh-srivastava-iitk", "linkedin": "https://linkedin.com/in/saurabh-srivastava-iitk", "status": "Verified", "type": "Founder/Operator", "about": "Founder of Sprih, AI-native sustainability management platform for automated ESG reporting and decarbonization. 20+ years in data analytics and risk management.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/saurabh-srivastava-iitk.jpg"}];
+const SUPABASE_URL = "https://euyooppsevhejnvwksgc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_G-Qi9JFQUuDSUoU8FvP-pQ_UBW2hmHF";
+const DATA = [{"name": "Sonam Velani", "slug": "sonamvelani", "linkedin": "https://linkedin.com/in/sonamvelani", "status": "Verified", "type": "VC", "person_id": "af438b3c-156f-4cfc-965a-54b78bd6c57c", "about": "Co-Founder & Managing Partner at Streetlife Ventures, climate tech fund. Former Goldman Sachs, World Bank, NYC Mayor's Office, Zipline.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sonamvelani.jpg"}, {"name": "Ally Chen", "slug": "ally-chen-cfa-1058761a3", "linkedin": "https://linkedin.com/in/ally-chen-cfa-1058761a3", "status": "Verified", "type": "Impact Investor", "person_id": "dbaafa6e-d405-4506-9d97-d456612d3c9f", "about": "Renewable energy portfolio management professional specializing in grid-connected assets.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/ally-chen-cfa-1058761a3.jpg"}, {"name": "Candice Fortin", "slug": "candice-f-375840128", "linkedin": "https://linkedin.com/in/candice-f-375840128", "status": "Verified", "type": "Unknown", "person_id": "5b807e06-c692-4060-a072-bca4fcb758a9", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/candice-f-375840128.jpg"}, {"name": "Michele Heyward", "slug": "michelecheyward", "linkedin": "https://linkedin.com/in/michelecheyward", "status": "Verified", "type": "Consultant/Advisor", "person_id": "3806afa2-4366-49ce-be02-84731f0795c6", "about": "Founder of PH Balanced \u2014 workforce intelligence platform helping AEC firms strengthen engineer retention. 12 years in AEC as cost engineer and PM.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/michelecheyward.jpg"}, {"name": "Naurin Muzaffar Qureshy", "slug": "naurin-muzaffar-3582641a", "linkedin": "https://linkedin.com/in/naurin-muzaffar-3582641a", "status": "Verified", "type": "Consultant/Advisor", "person_id": "f098cf00-f51c-4491-a5dc-e89a224b5912", "about": "Founder of Innovatus, social compliance & labour rights consultancy across Pakistan, Bangladesh, India, Sri Lanka, EU. Former IFC, Gap Inc.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/naurin-muzaffar-3582641a.jpg"}, {"name": "Nic Savo", "slug": "nic-savo-3a365a173", "linkedin": "https://linkedin.com/in/nic-savo-3a365a173", "status": "Verified", "type": "Consultant/Advisor", "person_id": "04bbe285-8937-4f3f-acb2-d8738aff0136", "about": "Senior Account Executive at Silverline PR, specializing in energy and climate tech communications. Places clients in Bloomberg, Forbes, Reuters.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/nic-savo-3a365a173.jpg"}, {"name": "Rachel Malken", "slug": "rachelmalken", "linkedin": "https://linkedin.com/in/rachelmalken", "status": "Verified", "type": "Unknown", "person_id": "5f04c17f-fc0e-4cbb-9e76-d28d37cee0f6", "about": null, "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rachelmalken.jpg"}, {"name": "Rose Stephens-Booker", "slug": "rose-stephens-booker", "linkedin": "https://linkedin.com/in/rose-stephens-booker", "status": "Verified", "type": "Policy/NGO", "person_id": "5f8d9f87-083a-402f-a455-e0ccc8f9397d", "about": "Managing Director at Building Decarbonization Coalition. Former Presidential Appointee at US DOE (IRA). Former EPA ENERGY STAR. $1B+ clean energy market impact.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/rose-stephens-booker.jpg"}, {"name": "Sasha Shunko", "slug": "sashashunko", "linkedin": "https://linkedin.com/in/sashashunko", "status": "Verified", "type": "Founder/Operator", "person_id": "29bd745f-0f51-49e8-bc97-494d12bddbe2", "about": "Working at Tradewater, sourcing refrigerants and supporting projects to reduce high-impact emissions from halocarbons in the USA.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/sashashunko.jpg"}, {"name": "Saurabh Srivastava", "slug": "saurabh-srivastava-iitk", "linkedin": "https://linkedin.com/in/saurabh-srivastava-iitk", "status": "Verified", "type": "Founder/Operator", "person_id": "aa832448-0119-4040-a6d8-d544915e760a", "about": "Founder of Sprih, AI-native sustainability management platform for automated ESG reporting and decarbonization. 20+ years in data analytics and risk management.", "photo_url": "https://sv-luma-events.vercel.app/events/DSIC-Guided-Tour/photos/saurabh-srivastava-iitk.jpg"}];
 
 const TYPE_ORDER = {'VC':0,'LP':1,'Impact Investor':2,'Investor':3,'Founder/Operator':4,'Policy/NGO':5,'Consultant/Advisor':6,'Academic/Research':7,'Unknown':8};
 const STATUS_ORDER = {'Verified':0,'Unverified':1,'N/A':2};
+
+// State: keyed by person_id
+const state = {};
+DATA.forEach(a => {
+  const stored = JSON.parse(localStorage.getItem('person_' + a.person_id) || 'null');
+  state[a.person_id] = stored || { met: false, not_relevant: false };
+});
+
+function setSyncDot(s) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot ' + s;
+}
+
+async function patchPerson(person_id, patch) {
+  setSyncDot('syncing');
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/people?id=eq.${person_id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(patch)
+    });
+    if (r.ok) { setSyncDot('synced'); setTimeout(() => setSyncDot(''), 2000); }
+    else { setSyncDot('error'); }
+  } catch(e) { setSyncDot('error'); }
+}
+
+function toggleMet(person_id) {
+  state[person_id].met = !state[person_id].met;
+  localStorage.setItem('person_' + person_id, JSON.stringify(state[person_id]));
+  patchPerson(person_id, { met: state[person_id].met });
+  render();
+}
+
+function toggleSkip(person_id) {
+  state[person_id].not_relevant = !state[person_id].not_relevant;
+  localStorage.setItem('person_' + person_id, JSON.stringify(state[person_id]));
+  patchPerson(person_id, { not_relevant: state[person_id].not_relevant });
+  render();
+}
 
 function mkSvg(name) {
   const parts = name.trim().split(/\s+/);
@@ -127,17 +193,19 @@ function statusPill(s) {
 }
 
 let sortCol = null, sortDir = 1;
-let filtered = [...DATA];
 
 function render() {
   const q = document.getElementById('search').value.toLowerCase();
   const tf = document.getElementById('typeFilter').value;
   const sf = document.getElementById('statusFilter').value;
+  const mf = document.getElementById('metFilter').value;
 
-  filtered = DATA.filter(a => {
+  let filtered = DATA.filter(a => {
     if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
     if (tf && a.type !== tf) return false;
     if (sf && a.status !== sf) return false;
+    if (mf === 'met' && !state[a.person_id].met) return false;
+    if (mf === 'skip' && !state[a.person_id].not_relevant) return false;
     return true;
   });
 
@@ -159,16 +227,22 @@ function render() {
     const photoSrc = `photos/${a.slug}.jpg`;
     const aboutShort = a.about ? (a.about.length > 100 ? a.about.slice(0,100)+'…' : a.about) : '<span style="color:#cbd5e1">—</span>';
     const hasMore = a.about && a.about.length > 100;
-    return `<tr>
+    const s = state[a.person_id];
+    const metCls = s.met ? 'active-met' : '';
+    const skipCls = s.not_relevant ? 'active-skip' : '';
+    const rowCls = s.not_relevant ? 'not-relevant-row' : '';
+    return `<tr class="${rowCls}">
       <td class="photo-cell"><img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'"></td>
       <td class="li-cell">${a.linkedin ? `<a href="${a.linkedin}" target="_blank" class="li-link">${liSvg}</a>` : `<span class="li-link dim">${liSvg}</span>`}</td>
       <td class="name-cell">${a.name}</td>
       <td class="about-cell">
-        <span class="about-short">${aboutShort}</span>
-        ${hasMore ? `<span class="about-more" onclick="this.previousElementSibling.textContent=DATA.find(x=>x.slug==='${a.slug}').about;this.remove()">Show more</span>` : ''}
+        ${aboutShort}
+        ${hasMore ? `<span class="about-more" onclick="this.previousSibling.textContent=DATA.find(x=>x.slug==='${a.slug}').about;this.remove()">Show more</span>` : ''}
       </td>
       <td>${statusPill(a.status)}</td>
       <td>${typePill(a.type)}</td>
+      <td class="check-cell"><button class="check-btn ${metCls}" onclick="toggleMet('${a.person_id}')" title="Toggle met">✓</button></td>
+      <td class="check-cell"><button class="check-btn ${skipCls}" onclick="toggleSkip('${a.person_id}')" title="Toggle not relevant">✗</button></td>
     </tr>`;
   }).join('');
 
@@ -195,6 +269,7 @@ function render() {
 document.getElementById('search').addEventListener('input', render);
 document.getElementById('typeFilter').addEventListener('change', render);
 document.getElementById('statusFilter').addEventListener('change', render);
+document.getElementById('metFilter').addEventListener('change', render);
 
 document.querySelectorAll('thead th[data-col]').forEach(th => {
   th.addEventListener('click', () => {
