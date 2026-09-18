@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallet Max Emerald Summit · Speakers</title>
+<style>
+  :root {
+    --forest:  #2c4a38;
+    --brand:   #3d7a55;
+    --bg:      #f3f2ec;
+    --card:    #ffffff;
+    --border:  #dce3da;
+    --text:    #1a2820;
+    --muted:   #5c6e60;
+    --met:     #2c6644;
+    --skip:    #b83030;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; }
+
+  header {
+    background: var(--forest); color: #e8f0eb; padding: 22px 36px;
+  }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  header p  { font-size: 12px; color: #9dbfaa; margin-top: 4px; }
+  .luma-link {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+    padding: 5px 11px; border-radius: 5px; border: 1px solid rgba(157,191,170,.4);
+    font-size: 11px; font-weight: 500; color: #c8dfd0; text-decoration: none;
+    transition: background .12s;
+  }
+  .luma-link:hover { background: rgba(255,255,255,.08); color: #e8f0eb; }
+
+  .toolbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 36px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    box-shadow: 0 1px 3px rgba(44,74,56,.04);
+  }
+  .toolbar input, .toolbar select {
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px;
+    font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+    font-family: inherit;
+  }
+  .toolbar input { width: 210px; }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--brand); }
+  .count { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .batch-btns { padding: 12px 36px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .batch-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 5px;
+    padding: 7px 14px; font-size: 12px; color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: all .12s;
+  }
+  .batch-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 760px; }
+  thead th {
+    background: var(--card); text-align: left; padding: 10px 14px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); border-bottom: 2px solid var(--border); cursor: pointer;
+    white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--text); }
+  thead th .sort-arrow { margin-left: 4px; opacity: .35; }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--brand); }
+  thead th.no-sort { cursor: default; }
+  thead th.no-sort:hover { color: var(--muted); }
+  tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr.main-row:hover { background: #eef1ed; }
+  tbody tr.skip-row { opacity: 0.35; }
+  td { padding: 12px 14px; }
+
+  .action-cell { width: 48px; text-align: center; padding: 12px 6px; vertical-align: middle; }
+  .action-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    background: transparent; cursor: pointer; font-size: 14px; display: inline-flex;
+    align-items: center; justify-content: center; transition: all .15s;
+    color: #b0bdb3; font-weight: 700;
+  }
+  .action-btn:hover { border-color: var(--muted); color: var(--muted); }
+  .action-btn.state-met  { background: var(--met);  border-color: var(--met);  color: #fff; }
+  .action-btn.state-skip { background: var(--skip); border-color: var(--skip); color: #fff; }
+
+  .identity-cell { width: 230px; vertical-align: middle; overflow: hidden; }
+  .identity-inner { display: flex; align-items: flex-start; gap: 10px; }
+  .photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+    background: #dde5db; display: block; flex-shrink: 0; margin-top: 2px; }
+  .identity-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .name-line { display: flex; align-items: center; gap: 5px; }
+  .person-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 185px; }
+  .company-line { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--brand); font-weight: 500; overflow: hidden; }
+  .company-line span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .company-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
+  .title-line { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 195px; }
+  .li-badge { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .li-badge svg { display: block; }
+  .li-link { text-decoration: none; }
+
+  .about-cell {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    cursor: pointer; padding-right: 20px;
+  }
+  .about-cell:hover .about-snippet { color: var(--text); }
+  .about-snippet {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color .12s;
+  }
+  .expand-hint {
+    display: inline-block; margin-top: 4px; font-size: 11px;
+    color: var(--brand); letter-spacing: .01em;
+  }
+  .about-full { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .notes-wrap { margin-top: 12px; }
+  .notes-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--muted); margin-bottom: 5px;
+  }
+  .notes-input {
+    width: 100%; min-height: 52px; resize: vertical;
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+    outline: none; line-height: 1.5; transition: border-color .12s;
+  }
+  .notes-input:focus { border-color: var(--brand); background: var(--card); }
+  .notes-input::placeholder { color: #b0bdb3; }
+
+  .pill {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; letter-spacing: .01em;
+    white-space: normal; text-align: center; line-height: 1.3; max-width: 100%;
+  }
+  .type-cell { width: 128px; vertical-align: middle; text-align: center; }
+  .status-cell { width: 80px; vertical-align: middle; text-align: center; }
+  .pill-vc         { background: #cce5d6; color: #1a4d2e; }
+  .pill-lp         { background: #d0e8de; color: #1e5235; }
+  .pill-founder    { background: #f5e6c8; color: #7a4a10; }
+  .pill-policy     { background: #d0e8e4; color: #0f4040; }
+  .pill-ngo        { background: #dbe8d0; color: #2e4d1a; }
+  .pill-consultant { background: #e6dff0; color: #4a2a70; }
+  .pill-academic   { background: #f0dde8; color: #6a1a40; }
+  .pill-other      { background: #ece6d8; color: #5a4a20; }
+  .pill-unknown    { background: #e8e8e2; color: #5a5a52; }
+  .pill-confirmed  { background: #cce5d6; color: #1a4d2e; }
+  .pill-guessed    { background: #f5e9c0; color: #7a5e10; }
+  .pill-na         { background: #e8e8e2; color: #5a5a52; }
+
+  .empty-state {
+    text-align: center; padding: 56px 32px; color: var(--muted); font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    header, .toolbar, .batch-btns { padding-left: 16px; padding-right: 16px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .toolbar input, .toolbar select { width: 100%; }
+    .count { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <h1>Wallet Max Emerald Summit: Sustainability &amp; AI for Business</h1>
+    <a class="luma-link" href="https://luma.com/EmeraldSummitWM26" target="_blank">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View on Luma
+    </a>
+  </div>
+  <p>Civic Hall, New York City · NYC Climate Week · Sustainability &amp; AI for Business · 27 speakers</p>
+</header>
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search name or about…">
+  <select id="typeFilter">
+    <option value="">All Types</option>
+    <option>VC</option><option>LP</option><option>Founder/Operator</option>
+    <option>Policy</option><option>NGO</option><option>Academic/Research</option>
+    <option>Consultant/Advisor</option><option>Other</option><option>Unknown</option>
+  </select>
+  <select id="statusFilter">
+    <option value="">All Status</option>
+    <option>Confirmed</option><option>Guessed</option><option>N/A</option>
+  </select>
+  <select id="metFilter">
+    <option value="">All</option>
+    <option value="met">Met ✓</option>
+    <option value="skip">Skip ✗</option>
+  </select>
+  <span class="count" id="countLabel"></span>
+</div>
+<div class="batch-btns" id="batchBtns"></div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="action-cell no-sort"></th>
+      <th class="identity-cell no-sort">Person</th>
+      <th class="type-cell" data-col="type">Type <span class="sort-arrow">↕</span></th>
+      <th data-col="about">About <span class="sort-arrow">↕</span></th>
+      <th class="status-cell" data-col="status">Status <span class="sort-arrow">↕</span></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+<script>
+const DATA = [{"slug": "alissa-miky-21a8673b", "name": "Alissa Miky", "linkedin": "https://www.linkedin.com/in/alissa-miky-21a8673b/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder & CEO", "company": "Aqua Theon", "company_domain": null, "about": "Alissa Miky is Founder and CEO of Aqua Theon, a California seaweed-tech company she started in 2019 built around a proprietary \"Seabiotics\" processing platform. Its brand OoMee launched in the U.S. in May 2025 as an agar-based functional beverage and has sold 100,000+ units across 700+ retail locations including Sprouts and Raley's, at a 70% repeat-purchase rate; the company also runs Misaky Tokyo, a seaweed crystal-candy brand with 1.4M TikTok followers. Aqua Theon closed a $13M seed round led by Sparx Asset Management with Beyond Next Ventures and World Innovation Lab, to scale both brands. Miky holds a law degree from Waseda University and previously founded Marine Plant Based. She is a Forbes JAPAN \"100 Women\" honoree (2019) and Business Insider Japan \"Game Changer,\" has publicly described starting the company after surviving cancer, and is based in the San Francisco Bay Area.", "photo": "photos/alissa-miky-21a8673b.jpg"}, {"slug": "bhuvashakti", "name": "Bhuva Shakti", "linkedin": "https://www.linkedin.com/in/bhuvashakti/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder & CEO", "company": "Wallet Max", "company_domain": "getwalletmax.com", "about": "Bhuva Shakti is Founder and CEO of Wallet Max, a platform under parent entity ParityFin PBC that connects executive women and venture investors to fund growth-stage sustainability and climate-fintech startups through its annual summit, Planet Positive Podcast, and a Fundraising Mastermind program. She also runs Bhuva's Impact Global and is USA Country Director for the World Business Angels Investment Forum. She holds an MBA from Columbia Business School and spent 30-plus years as a senior Wall Street executive leading financial portfolios, digital-transformation initiatives, and risk governance through major crises before founding Wallet Max. She is based in the NYC metro area and serves as a board director. As host of the Emerald Summit, she speaks in the Welcome Keynote, a Climate Fintech Fireside Chat, and the Closing Keynote.", "photo": "photos/bhuvashakti.jpg"}, {"slug": "eric-c-williams", "name": "Eric Williams", "linkedin": "https://www.linkedin.com/in/eric-c-williams/", "status": "Confirmed", "type": "NGO", "title": "Legal Director, Economic Equity Practice", "company": "Detroit Justice Center", "company_domain": "detroitjustice.org", "about": "Eric C. Williams is Legal Director of the Economic Equity Practice at the Detroit Justice Center, a Detroit nonprofit combining impact litigation, transactional legal services, and policy work to keep capital and community-controlled development in Detroiters' hands. A native Detroiter and transactional attorney, he also runs his own solo practice, Eric C. Williams, PLLC, on trademark and business law for entrepreneurs and nonprofits. He previously directed Wayne State University Law School's Business and Community Law Clinic, and practiced at Nixon Peabody and Winston & Strawn in New York. He holds a J.D. from Columbia Law School, an M.Phil. from Cambridge University, and a B.A. from the University of Michigan. He is a past BMe Fellow and sits on the boards of Ponyride and the ACLU of Michigan's Lawyers Committee, and moderates the summit's capital-flows panel.", "photo": "photos/eric-c-williams.jpg"}, {"slug": "martin-avidan-cfa", "name": "Martin Avidan, CFA", "linkedin": "https://www.linkedin.com/in/martin-avidan-cfa/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Financial Services Executive", "company": "Spruce Road Consulting", "company_domain": null, "about": "Martin Avidan, CFA, leads Spruce Road Consulting, advising on structured finance, climate risk, ABS/CLOs, credit, workout, and portfolio management; his public profile does not name specific clients or the firm's size. He brings 40-plus years in corporate and investment banking, most recently as Managing Director of Enterprise Risk Management at Natixis (Groupe BPCE) over an 18-plus-year tenure, building and leading the bank's Climate Risk Management program. Earlier he managed multi-billion-dollar structured finance portfolios spanning aviation, energy, infrastructure, and real estate at Citibank and Credit Lyonnais, and began his career at Fitch in 1993. He holds an MBA from Thunderbird and is a CFA charterholder, is based in New York, serves as Director and Secretary of the American University of Paris Foundation, and speaks on the summit's capital-flows panel.", "photo": "photos/martin-avidan-cfa.jpg"}, {"slug": "drnehaaroraphd", "name": "Neha Arora, PhD, SCR", "linkedin": "https://www.linkedin.com/in/drnehaaroraphd/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Founder, The Climate Chain Reaction", "company": "The Climate Chain Reaction", "company_domain": null, "about": "Neha Arora, PhD, is Founder of The Climate Chain Reaction; her public profile does not describe the organization's structure, size, or programs beyond naming her its founder. She currently works in Programme Review & Coordination at the United Nations Joint SDG Fund and describes herself as an AI, Finance, and Sustainability Strategist who has evaluated over $100M in deal flow across climate and renewable-energy sectors, with expertise in project finance, DCF valuation, and sustainability reporting standards. She holds a PhD in Finance from the Delhi School of Economics and an MS in Sustainability Management from Columbia University, and previously worked as a finance professor. She has been recognized as a LinkedIn Top Voice in Corporate Sustainability, is based in New York, and speaks on the summit's capital-flows panel.", "photo": "photos/drnehaaroraphd.jpg"}, {"slug": "parichatcha", "name": "Parichat Wrolstad", "linkedin": "https://www.linkedin.com/in/parichatcha/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "ESG & Sustainability Advisor", "company": "Independent", "company_domain": null, "about": "Parichat Wrolstad (Charoenkitnapa) is an ESG & Sustainability Advisor with 15-plus years advising corporations and investors on sustainability strategy, stakeholder trust, and turning ESG commitments into disclosure and long-term value. A recent LinkedIn post marks five years at her prior firm as complete, but her public profile does not name a new employer as of this research. She most recently spent five years as Senior Vice President at Edelman Smithfield, advising 30-plus public and PE-backed companies on ESG risk assessment and disclosure aligned with ISSB, GRI, TCFD, and CSRD. She also brings buy-side credit experience from a role at Thailand's Government Pension Fund and earlier stints at BNY Mellon and Total Access Communication. She holds a Certificate in Investor Relations from NYU, is based in New York, serves as WISE-NY Co-President, and speaks on the panel.", "photo": "photos/parichatcha.jpg"}, {"slug": "betsyfore", "name": "Betsy Fore", "linkedin": "https://www.linkedin.com/in/betsyfore/", "status": "Confirmed", "type": "VC", "title": "Founding Partner & Managing Director", "company": "Velveteen Ventures", "company_domain": null, "about": "Betsy Fore is Founding Partner and Managing Director of Velveteen Ventures, a Chicago-based, Native-led fund investing seed through Series A across healthcare, climate, consumer and community startups; reported checks run $500K-$4M, with the Bush Foundation among its LPs. She is a three-time founder, first building pet-wearable brand WonderWoof, which landed on Oprah's Favorite Things and earned her a Forbes 30 Under 30 spot, then co-founding Tiny Organics, an organic baby food company, becoming the first Native American woman to raise a Series A. She authored the USA Today bestseller \"Built on Purpose\" (HarperCollins Business). Based in Chicago, she founded nonprofit Natives Rising, the largest community of Indigenous technologists and founders across 100+ tribes, and has been named to Entrepreneur's 100 Women of Impact and BBC's 100 Most Inspiring Women lists.", "photo": "photos/betsyfore.jpg"}, {"slug": "blaircsmith", "name": "Blair Carl Smith", "linkedin": "https://www.linkedin.com/in/blaircsmith/", "status": "Confirmed", "type": "NGO", "title": "Founder, The Housing Summit", "company": "The Housing Summit", "company_domain": null, "about": "Blair Carl Smith spent years as Senior Director of the Center for Financial Markets at the Milken Institute, a nonprofit think tank, leading its Access to Capital and Inclusive Capitalism (ICAP) initiatives; his LinkedIn now lists him as \"Former\" in that role. He founded The Housing Summit, an annual New York convening of housing leaders and investors, previously founded consultancy Promethean AB Strategies for diverse-led asset managers, and served as CIO of the Upper Manhattan Empowerment Zone Development Corporation, a CDFI. He holds an MBA in Finance from Columbia Business School, where he has also been an adjunct professor, and a B.S. in Journalism from Morgan State University, an HBCU. Based in New York, he is an HBCU and financial-fluency advocate, writer and speaker; his current primary employer beyond his own advisory work is not confirmed publicly.", "photo": "photos/blaircsmith.jpg"}, {"slug": "elanamarguliessnyderman", "name": "Elana Margulies-Snyderman", "linkedin": "https://www.linkedin.com/in/elanamarguliessnyderman/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Director of Publications", "company": "EisnerAmper", "company_domain": "eisneramper.com", "about": "Elana Margulies-Snyderman is Director of Publications in the Marketing Group at EisnerAmper, a large advisory and accounting firm serving alternative investment managers, producing its Asset Management Intelligence publication and hosting its Engaging Alternatives Spotlight and Private Equity Dealbook podcasts on hedge funds, private equity and venture capital. She also founded EMS Network, per the summit's program a platform connecting founders outside traditional venture pipelines with supportive investors; further detail on its structure is not public. Earlier she was Chief Reporter at Hedge Fund Manager Week and began at Institutional Investor's Alternative Investment News. She holds a B.A. from Brandeis University and a master's from Columbia's Graduate School of Journalism. Based in New York, she was named to Worth's Worthy 100 and Top 100's Top 100 People in Finance in 2022.", "photo": "photos/elanamarguliessnyderman.jpg"}, {"slug": "sachaawwa", "name": "Sacha Awwa", "linkedin": "https://www.linkedin.com/in/sachaawwa/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder", "company": "SAMG Marketing Group", "company_domain": null, "about": "Sacha Awwa is founder of SAMG Marketing Group, a Miami-based marketing strategy firm, and co-founder of My Marketer Mentors, an online community offering marketing courses and weekly support for small business owners; she also hosts the Uncomplicated Marketing podcast. She has over two decades of marketing experience across enterprise and startup environments, with prior roles at Ayara, Forsys and Trellist Marketing and Technology, and began her career at The New York Times and the Army National Guard. She wrote \"Empower Your Marketing\" and is a contributing author to \"Marketing for Leaders\" (Indigo River Publishing with Simon & Schuster, 2026). She studied at American University and is based in Miami; public sources do not confirm a specific prior company exit despite her founder-facing branding.", "photo": "photos/sachaawwa.jpg"}, {"slug": "willhogan", "name": "Will Hogan", "linkedin": "https://www.linkedin.com/in/willhogan/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Managing Director", "company": "Umergence", "company_domain": null, "about": "Will Hogan is Managing Director at Umergence, a FINRA-registered independent broker-dealer that raises capital for impact ventures and funds through private placements, deal structuring, institutional capital placement and M&A advisory, drawing on a network of family offices and private equity and pension funds; his focus areas include climate tech, sustainable food and agriculture, and wellness. Earlier he drove business development at Amalgamated Bank, Aetos Capital, Morgan Stanley and Ernst & Young, and worked as a Project Finance Advisor at QPQ International. He holds an MBA from NYU Stern, an AB in Public Policy from the University of Chicago, and the Chartered Alternative Investment Analyst designation. Based in the NYC metro area, he describes his work as helping impact founders and green project developers raise capital.", "photo": "photos/willhogan.jpg"}, {"slug": "shameek-bose-m-p-a-19a39813", "name": "Shameek Bose", "linkedin": "https://www.linkedin.com/in/shameek-bose-m-p-a-19a39813/", "status": "Confirmed", "type": "Founder/Operator", "title": "Vice President of Global Impact", "company": "Okta", "company_domain": "okta.com", "about": "Shameek Bose became Vice President of Global Impact at Okta in April 2026, leading Okta for Good, which oversees the company's social impact, sustainability, responsible-tech and nonprofit-industry programs. He previously spent seven years at the World Economic Forum as a Global Leadership Fellow engaging North America's top CEOs on AI, climate and geopolitical disruption, then advised Fortune 500 boards at Accenture on governance and sustainability transformation. Most recently he was Global Lead for Responsible Business and Global Impact at FleishmanHillard, building a 72-person global practice; earlier he led partnership strategy at amfAR and founded Bose Consulting. He holds an M.P.A. from Columbia's School of International and Public Affairs and a B.A. in Economics from Rutgers. Based in New York, he serves on GLAAD's National Board of Directors.", "photo": "photos/shameek-bose-m-p-a-19a39813.jpg"}, {"slug": "eneskarakullukcu", "name": "Enes Karakullukcu", "linkedin": "https://www.linkedin.com/in/eneskarakullukcu/", "status": "Confirmed", "type": "VC", "title": "Founding Partner", "company": "Klaris Capital", "company_domain": null, "about": "Enes Karakullukcu is a Founding Partner of Klaris Capital, a New York merchant bank and family office giving principal investing and strategic advisory to US growth-stage tech companies; its venture arm, Klaris Ventures, backs AI, deep tech, defense, space, fintech and robotics, with PitchBook listing Anthropic, Replit and Together AI among its investments. The firm is anchored by a fourth-generation family office rooted in Turkish food and consumer brands, active in 20+ countries with 3,500+ employees, and Karakullukcu also serves as that office's CIO. He joined Klaris after a role at Investcorp, deploying capital into mid-market companies and real assets globally. He holds a BBA and an MSF in financial mathematics from Babson College. His public profile does not disclose Klaris Ventures' check sizes or fund size. He is based in the NYC Metro area.", "photo": "photos/eneskarakullukcu.jpg"}, {"slug": "katiepalencsar", "name": "Katie Palencsar", "linkedin": "https://www.linkedin.com/in/katiepalencsar/", "status": "Confirmed", "type": "Founder/Operator", "title": "Co-Founder and CEO", "company": "Starmoire", "company_domain": null, "about": "Katie Palencsar is Co-Founder and CEO of Starmoire, a wardrobe management subscription service and marketplace combining offsite storage, digitization, valuation and resale, powered by agentic AI and integrated logistics; it launched publicly in September 2026 with Stacy London as Chief Stylist, co-founded with venture veteran Ruth Foxe Blader. Her profile does not disclose Starmoire's funding or investors. Previously she was Managing Director and Global Head of Venture Studio at Anthemis Group, where she launched and led the Female Innovators Lab Fund, a fintech fund for female founders run with Barclays. Earlier, she founded and sold data-SaaS company Unbound Concepts (acquired by Certica Solutions in 2017, later folded into Instructure), and holds a USPTO patent for textual complexity machine learning. She co-founded Generation Guest Group and is based in the NYC Metro area.", "photo": "photos/katiepalencsar.jpg"}, {"slug": "scottwilliamryan", "name": "Scott Ryan", "linkedin": "https://www.linkedin.com/in/scottwilliamryan/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder and CEO", "company": "Investature", "company_domain": null, "about": "Scott W Ryan is Founder and CEO of Investature, a seed-stage B2B2E sustainable finance SaaS platform connecting financial supply-chain emissions data to employer retirement and investment plans, offering financed-emissions measurement, investment consulting and financial education; his public profile does not disclose funding amount or investors. Before founding Investature he held go-to-market leadership roles at Salesforce, Bank of America, Morgan Stanley and Accenture, and holds a BS from Johns Hopkins University. He serves on advisory boards for the Natural Resources Defense Council and the Environmental Defense Fund, and advises climate-tech startups. His LinkedIn headline also describes him as a public speaker and advocate for financial literacy, mental health and environmental causes, and he has appeared on the Climate Confident podcast. He is based in the NYC Metro area.", "photo": "photos/scottwilliamryan.jpg"}, {"slug": "sonamvelani", "name": "Sonam Velani", "linkedin": "https://www.linkedin.com/in/sonamvelani/", "status": "Confirmed", "type": "VC", "title": "Co-Founder & Managing Partner", "company": "Streetlife Ventures", "company_domain": "streetlifeventures.com", "about": "Sonam Velani is Co-Founder and Managing Partner of Streetlife Ventures, a pre-seed and seed-stage venture fund investing at the intersection of cities and climate, based in New York City. She previously financed more than $10 billion in transportation, energy, and water infrastructure at Goldman Sachs, worked on coastal resilience and water systems at the World Bank, launched drone-delivery operations in Africa at Zipline, and led development of New York City's Green New Deal at the Mayor's Office. She earned a BA with Honors in Government, Economics, and Visual and Environmental Studies from Harvard University, the first in her family to attend college. She co-founded Climate Tech Cities and serves on the boards of Women.NYC and Scale for Climate Tech. Named to Crain's New York Business 40 Under 40, she speaks on the summit's \"Finding The Right Mix Of Advisors For A Startup\" panel.", "photo": "photos/sonamvelani.jpg"}, {"slug": "tiya-gordon-itselectric", "name": "Tiya Gordon", "linkedin": "https://www.linkedin.com/in/tiya-gordon-itselectric/", "status": "Confirmed", "type": "Founder/Operator", "title": "Co-Founder and COO", "company": "it's electric", "company_domain": null, "about": "Tiya Gordon is Co-Founder and COO of it's electric, a curbside EV-charging startup powering street chargers off spare building capacity rather than costly utility interconnections; it operates in NYC, Boston and Detroit, partners with Hyundai and Uber, and recently won the contract to build NYC's permanent curbside charging network citywide. The company has raised roughly $11.8M total, including a 2024 $6.5M seed led by Failup Ventures and Uber, after an earlier $2.2M pre-seed led by Brooklyn Bridge Ventures. Gordon holds a BFA in Computer Software and Media Applications from Parsons School of Design and brings 20 years of design leadership before co-founding the firm in 2021 with Nathan King. Her honors include the National Design Award (Cooper Hewitt/Smithsonian), an SXSW Innovation Award, and a Cannes Gold Lion; she has twice made Inc.'s Female Founders list. She is based in Brooklyn.", "photo": "photos/tiya-gordon-itselectric.jpg"}, {"slug": "h4hcody", "name": "Cody Ley", "linkedin": "https://www.linkedin.com/in/h4hcody/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder", "company": "Hemp for Humanity", "company_domain": null, "about": "Cody Ley is the founder of Hemp for Humanity (also called Hemp 4 Humanity publicly), a Michigan venture building a vertically integrated hemp supply chain and prefabricated hempcrete building systems for affordable, carbon-negative housing; sources describe it inconsistently as both an LLC and a nonprofit, so its legal structure cannot be confirmed. He has worked to build Michigan's hemp farming and processing supply chain since founding the venture around 2020, with his interest in hemp beginning in 2018 while studying bio-based plastics as an undergraduate. He attended Lake Superior State University, studying environmental science with a business minor, combined with hands-on construction experience; his profile does not confirm a completed degree. He is an elected board member of the U.S. Hemp Building Association, a 2025 Young Leaders Award recipient, and is based in Jones, Michigan.", "photo": "photos/h4hcody.jpg"}, {"slug": "dachan", "name": "David Chan", "linkedin": "https://www.linkedin.com/in/dachan/", "status": "Confirmed", "type": "VC", "title": "Head of Investor Relations", "company": "Homestead Capital", "company_domain": null, "about": "David Chan is Head of Investor Relations at Homestead Capital, a farmland investment manager building a vertically integrated US farmland portfolio across row and permanent crops in the Mountain West, Pacific, Midwest and Delta regions; its thesis centers on farmland's inflation resistance, yield and low correlation to other assets. Fund III closed at $596M in 2020 (pushing AUM past $1B), Fund IV totals roughly $460M, and the firm has since launched an agriculture private credit fund and a $300M loan partnership with Barings. Chan brings a decade-plus of investment and operating experience in agtech, farmland and agribusiness, with prior roles at FarmTogether, AMERRA Capital Management, PGIM and Barclays Investment Bank. He holds an MBA from Harvard Business School (Toigo Fellow) and a BS from Cornell; event materials also describe him as trained as a meteorologist. He is based in New York.", "photo": "photos/dachan.jpg"}, {"slug": "david-lanning-0ba3735a", "name": "David Lanning", "linkedin": "https://www.linkedin.com/in/david-lanning-0ba3735a/", "status": "Confirmed", "type": "VC", "title": "Research Analyst", "company": "Water Asset Management, LLC", "company_domain": null, "about": "David Lanning is a Research Analyst at Water Asset Management (WAM), a New York-based investment firm founded in 2005 that invests exclusively in companies, assets, and water rights tied to global water scarcity and quality, spanning public equities, private equity, and agricultural water assets; third-party filings place its reported assets under management in the hundreds of millions of dollars. He focuses on water infrastructure research for the firm. Before joining WAM, Lanning spent 15 years at Arisaig Partners, an emerging-markets investment firm, leading an impact investment strategy across Singapore, Brazil, and the UK targeting developing markets. He holds a degree from the University of Oxford. His public profile lists him as based in the United States but does not name a specific city, and does not detail board seats or published writing.", "photo": "photos/david-lanning-0ba3735a.jpg"}, {"slug": "karen-l-gamba-04537089", "name": "Karen L. Gamba", "linkedin": "https://www.linkedin.com/in/karen-l-gamba-04537089/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder and CEO", "company": "ExV Agency", "company_domain": null, "about": "Karen L. Gamba is Founder and CEO of ExV Agency, an events and communications firm with offices in New York, Hong Kong, and Atlanta producing summits, branded narratives, and visibility campaigns across finance, sustainability, and impact investing. She also founded The Housing Summit, convening capital, policy, and community leaders around housing solutions with an emphasis on climate resilience, with co-founder Mark J. Bennett. Over a 16-year career spanning corporate PR and unscripted TV, she has produced or moderated 1,000-plus events globally, and won two Innovation in Business Awards (2023, 2024) plus First Runner-Up at the Women's Business Awards 2025. Born and raised in South Africa, she built her career in New York City and is now based in Hong Kong. She also co-founded Women Building Women, a nonprofit offering career mentorship to women in marginalized communities.", "photo": "photos/karen-l-gamba-04537089.jpg"}, {"slug": "richardkfreund", "name": "Richard Freund", "linkedin": "https://www.linkedin.com/in/richardkfreund/", "status": "Confirmed", "type": "NGO", "title": "Chief of Staff and Head of Growth Operations", "company": "CDP", "company_domain": "cdp.net", "about": "Richard Freund is Chief of Staff and Head of Growth Operations at CDP, the investor-backed global not-for-profit running the world's leading environmental disclosure system; in 2023 more than 18,700 companies and 1,100 cities and governments, representing roughly half of global market cap, reported climate, water, and forestry data through it. He coordinates strategic planning across CDP's 60-plus person team, aligning departments on KPIs, resourcing, and risk. He has 12 years of professional experience, eight in climate and sustainability, and previously held manager roles in CDP's Capital Markets and Cities, States and Regions programs, starting as a Fellow in 2017. He holds a graduate degree from The Fletcher School at Tufts University. He is based in the NYC metro area; his public profile lists no additional board seats or published writing.", "photo": "photos/richardkfreund.jpg"}, {"slug": "eddy-van-der-paardt-193a4", "name": "Eddy van der Paardt", "linkedin": "https://www.linkedin.com/in/eddy-van-der-paardt-193a4/", "status": "Confirmed", "type": "VC", "title": "Founder and Managing Partner", "company": "Virtu Capital Partners", "company_domain": null, "about": "Eddy van der Paardt is Founder and Managing Partner of Virtu Capital Partners, a boutique impact investment firm deploying VC and private equity for private investors and family offices into early-stage renewable energy, clean-tech, and ag-tech companies across North America and Europe; disclosed investments include Five Star Clean Fuels, Verde Clean Fuels, Tygrus, BioLumic, and Nacero. Since August 2024 he has also chaired Five Star Clean Fuels, developer of low-carbon gasoline facilities converting constrained natural gas into fuel. He has 25-plus years founding, building, and investing in growth companies, previously as Chief Investment Officer and Head of Strategy for a family office. He holds an MBA from Stanford GSB and an M.Sc. in Economics from Erasmus University Rotterdam. He is based in New York; fund size and vintage are not publicly disclosed.", "photo": "photos/eddy-van-der-paardt-193a4.jpg"}, {"slug": "jillianjfoster", "name": "Jillian J. Foster", "linkedin": "https://www.linkedin.com/in/jillianjfoster/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder and CEO", "company": "Global Insight", "company_domain": null, "about": "Jillian J. Foster is Founder and CEO of Global Insight, a market intelligence and data advisory firm running research and strategy projects for clients including the UN system, UK FCDO, the World Food Programme, USAID, and national governments, specializing in gender-sensitive, mixed-methods research in fragile contexts. She also serves as Chief Impact Officer at Satya Carbon. An economist-turned-political scientist with 19 years' experience building measurement systems, she is a PhD candidate (ABD) and holds an MPhil from Yale in Political Science, an MA in Data Science from NYU, and a gender studies degree from UCL. Her research on political violence and gender, peace and security has been backed by UN Women, CARE, UNHCR, and UNDP, informing policy at the UN's Department of Peace Operations and the International Rescue Committee. Her public profile does not state her city of residence.", "photo": "photos/jillianjfoster.jpg"}, {"slug": "kayla-urquhart-331163127", "name": "Kayla Urquhart", "linkedin": "https://www.linkedin.com/in/kayla-urquhart-331163127/", "status": "Confirmed", "type": "NGO", "title": "Energy Programs Coordinator", "company": "The Energy Co-op", "company_domain": null, "about": "Kayla Urquhart is Energy Programs Coordinator at The Energy Co-op, a member-owned nonprofit energy cooperative serving Southeastern Pennsylvania since 1979, supplying 100% local renewable electricity, renewable natural gas, and home heating oil, governed by member-customers. She also works as a Course Associate at Columbia University's School of Professional Studies, supporting the course \"Getting AI Right for Techno-Social Change,\" and is a 2026 Fellowship Coordinator after completing a 2025 fellowship with the Clean Energy Leadership Institute (CELI). Her work sits at the intersection of AI, clean energy, and sustainability, focused on climate justice and energy transitions. She holds an MSc in Environment, Politics and Development from SOAS University of London, and is based in New York. Her public profile does not list employers prior to her current roles.", "photo": "photos/kayla-urquhart-331163127.jpg"}, {"slug": "manailahmed", "name": "Manail Anis Ahmed", "linkedin": "https://www.linkedin.com/in/manailahmed/", "status": "Confirmed", "type": "Academic/Research", "title": "Lecturer / Adjunct Faculty", "company": "Columbia University", "company_domain": null, "about": "Manail Anis Ahmed is a lecturer at Columbia University's School of Professional Studies, teaching \"Getting AI Right for Techno-Social Change,\" and adjunct faculty at Johns Hopkins University developing curricula in biotech entrepreneurship, bioinformatics, and drug discovery. She has spent two decades building educational institutions and human capital strategy across the Middle East and South Asia, and previously led a research group at the Center for AI and Digital Policy in Washington, D.C. She holds a BA from Swarthmore College and an MA in Asian Studies from the University of Wisconsin-Madison. She is also co-founder and Chief Strategy Officer of iJuno, an AI-powered home and family management startup, and a Public Voices Fellow for Equality Now. She sits on the boards of Women in Tech Leadership and ZNotes, and is part of the World Economic Forum's AI Governance Alliance.", "photo": "photos/manailahmed.jpg"}, {"slug": "fusaroglobalchange", "name": "Peter Fusaro", "linkedin": "https://www.linkedin.com/in/fusaroglobalchange/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Chairman / Founder", "company": "Global Change Associates", "company_domain": null, "about": "Peter Fusaro is Chairman of Global Change Associates, a New York financial services advisory on the convergence of energy and environmental markets he founded in 1991, and Founder of the Wall Street Green Summit (plus Cap Intro and Digital), launched 2002 as a platform for sustainable finance and climate tech investment. He began his career at the U.S. Department of Energy, later created NYC's first energy efficiency programs, and worked with Toyota on the early Prius. He holds a BA from Carnegie Mellon and an MA from Tufts, and was formerly adjunct faculty at Columbia's School of International and Public Affairs teaching renewable energy project finance. He is the New York Times bestselling author of \"What Went Wrong at Enron\" and 16 other books, coined \"Green Trading,\" and gave a TEDx talk, \"How to End the Climate Crisis by 2050.\" He recently joined the Climate Health Society's board and is based in the NYC metro area.", "photo": "photos/fusaroglobalchange.jpg"}];
+
+const TYPE_ORDER = {'VC':0,'LP':1,'Founder/Operator':2,'Policy':3,'NGO':4,'Academic/Research':5,'Consultant/Advisor':6,'Other':7,'Unknown':8};
+const EVENT_PREFIX = 'emerald_';
+
+const state = {};
+DATA.forEach(a => {
+  const key = EVENT_PREFIX + a.slug;
+  const stored = JSON.parse(localStorage.getItem(key) || 'null');
+  state[a.slug] = stored || { met: false, skip: false, expanded: false, notes: '' };
+});
+
+function saveState(slug) { localStorage.setItem(EVENT_PREFIX + slug, JSON.stringify(state[slug])); }
+
+function cycleAction(slug) {
+  const s = state[slug];
+  if (!s.met && !s.skip)       { s.met = true; }
+  else if (s.met)              { s.met = false; s.skip = true; }
+  else                         { s.skip = false; }
+  saveState(slug);
+  render();
+}
+
+function toggleExpand(slug) {
+  state[slug].expanded = !state[slug].expanded;
+  saveState(slug);
+  render();
+}
+
+function saveNotes(slug) {
+  const el = document.getElementById('notes_' + slug);
+  if (el) { state[slug].notes = el.value; saveState(slug); }
+}
+
+function mkSvg(name) {
+  const parts = name.trim().split(/\s+/);
+  const ini = parts.length >= 2 ? (parts[0][0]+parts[parts.length-1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
+  const palette = ['#2c4a38','#3d5c46','#1e4d30','#5a7a4a','#2a5038','#3a6b48','#1a3d28','#4a6040','#2e5540','#224030'];
+  let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))|0;
+  const col = palette[Math.abs(h)%palette.length];
+  return "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><rect width='80' height='80' rx='40' fill='" + col + "'/><text x='40' y='52' text-anchor='middle' font-family='Arial,sans-serif' font-size='28' font-weight='600' fill='white'>" + ini + "</text></svg>";
+}
+
+const liSvg = (color) => `<svg width="15" height="15" viewBox="0 0 24 24" fill="${color}"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+function liIcon(linkedin, status) {
+  if (!linkedin) return `<span class="li-badge" style="opacity:.2">${liSvg('#9dbfaa')}</span>`;
+  const color = status === 'Confirmed' ? '#0a66c2' : '#9dbfaa';
+  return `<a href="${linkedin}" target="_blank" class="li-link li-badge">${liSvg(color)}</a>`;
+}
+
+function typePill(t) {
+  const cls = {'VC':'vc','LP':'lp','Founder/Operator':'founder','Policy':'policy','NGO':'ngo','Academic/Research':'academic','Consultant/Advisor':'consultant','Other':'other','Unknown':'unknown'}[t]||'unknown';
+  return `<span class="pill pill-${cls}">${t}</span>`;
+}
+
+function statusPill(s) {
+  const cls = {'Confirmed':'confirmed','Guessed':'guessed','N/A':'na'}[s]||'na';
+  return `<span class="pill pill-${cls}">${s}</span>`;
+}
+
+let sortCol = null, sortDir = 1;
+
+function render() {
+  const q  = document.getElementById('search').value.toLowerCase();
+  const tf = document.getElementById('typeFilter').value;
+  const sf = document.getElementById('statusFilter').value;
+  const mf = document.getElementById('metFilter').value;
+
+  let filtered = DATA.filter(a => {
+    if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
+    if (tf && a.type !== tf) return false;
+    if (sf && a.status !== sf) return false;
+    if (mf === 'met'  && !state[a.slug].met)  return false;
+    if (mf === 'skip' && !state[a.slug].skip) return false;
+    return true;
+  });
+
+  if (sortCol) {
+    filtered.sort((a,b) => {
+      let av = a[sortCol]||'', bv = b[sortCol]||'';
+      if (sortCol==='type') { av = TYPE_ORDER[av]??9; bv = TYPE_ORDER[bv]??9; return (av-bv)*sortDir; }
+      return String(av).localeCompare(String(bv))*sortDir;
+    });
+  } else {
+    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || a.name.localeCompare(b.name));
+  }
+
+  document.getElementById('countLabel').textContent = `${filtered.length} of ${DATA.length}`;
+
+  const tbody = document.getElementById('tbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No attendees match your filters.</td></tr>`;
+    document.getElementById('batchBtns').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(a => {
+    const photoSrc = a.photo || '';
+    const s = state[a.slug];
+    const rowCls    = s.skip ? 'skip-row' : '';
+    const actionCls = s.met ? 'state-met' : s.skip ? 'state-skip' : '';
+    const actionLbl = s.met ? '✓' : s.skip ? '✗' : '';
+
+    const hasAbout = !!a.about;
+
+    let aboutContent;
+    if (s.expanded) {
+      aboutContent = `
+        <div class="about-full">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        <div class="notes-wrap">
+          <div class="notes-label">Notes</div>
+          <textarea class="notes-input" id="notes_${a.slug}" placeholder="Add a note…"
+            oninput="saveNotes('${a.slug}')"
+            onclick="event.stopPropagation()">${s.notes||''}</textarea>
+        </div>`;
+    } else {
+      const longEnough = hasAbout && a.about.length > 180;
+      aboutContent = `
+        <div class="about-snippet">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        ${longEnough ? `<span class="expand-hint">↓ more</span>` : ''}`;
+    }
+
+    return `<tr class="main-row ${rowCls}">
+      <td class="action-cell">
+        <button class="action-btn ${actionCls}" onclick="cycleAction('${a.slug}')" title="Cycle: unset → met → skip">${actionLbl}</button>
+      </td>
+      <td class="identity-cell">
+        <div class="identity-inner">
+          <img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'">
+          <div class="identity-text">
+            <div class="name-line">
+              ${liIcon(a.linkedin, a.status)}
+              <span class="person-name">${a.name}</span>
+            </div>
+            ${a.company ? `<div class="company-line">${a.company_domain ? `<img class="company-logo" src="https://logo.clearbit.com/${a.company_domain}" onerror="this.style.display='none'">` : ''}<span>${a.company}</span></div>` : ''}
+            ${a.title ? `<div class="title-line">${a.title}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td class="type-cell">${typePill(a.type)}</td>
+      <td class="about-cell" onclick="toggleExpand('${a.slug}')">
+        ${aboutContent}
+      </td>
+      <td class="status-cell">${statusPill(a.status)}</td>
+    </tr>`;
+  }).join('');
+
+  const batchBtns = document.getElementById('batchBtns');
+  const liUrls = filtered.filter(a => a.linkedin).map(a => a.linkedin);
+  batchBtns.innerHTML = '';
+  for (let i = 0; i < liUrls.length; i += 10) {
+    const batch = liUrls.slice(i, i+10);
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `Open LinkedIn ${i+1}–${Math.min(i+10, liUrls.length)}`;
+    btn.onclick = (function(urls) {
+      return function() {
+        const script = urls.map(u => `window.open(${JSON.stringify(u)},'_blank');`).join('');
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs…</p></body></html>`;
+        window.open(URL.createObjectURL(new Blob([page],{type:'text/html'})),'_blank');
+      };
+    })(batch);
+    batchBtns.appendChild(btn);
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('typeFilter').addEventListener('change', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+document.getElementById('metFilter').addEventListener('change', render);
+
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
