@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investable Adaptation Cocktail Hour · NYCW</title>
+<style>
+  :root {
+    --forest:  #2c4a38;
+    --brand:   #3d7a55;
+    --bg:      #f3f2ec;
+    --card:    #ffffff;
+    --border:  #dce3da;
+    --text:    #1a2820;
+    --muted:   #5c6e60;
+    --met:     #2c6644;
+    --skip:    #b83030;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; }
+
+  header {
+    background: var(--forest); color: #e8f0eb; padding: 22px 36px;
+  }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  header p  { font-size: 12px; color: #9dbfaa; margin-top: 4px; }
+  .luma-link {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+    padding: 5px 11px; border-radius: 5px; border: 1px solid rgba(157,191,170,.4);
+    font-size: 11px; font-weight: 500; color: #c8dfd0; text-decoration: none;
+    transition: background .12s;
+  }
+  .luma-link:hover { background: rgba(255,255,255,.08); color: #e8f0eb; }
+
+  .toolbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 36px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    box-shadow: 0 1px 3px rgba(44,74,56,.04);
+  }
+  .toolbar input, .toolbar select {
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px;
+    font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+    font-family: inherit;
+  }
+  .toolbar input { width: 210px; }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--brand); }
+  .count { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .batch-btns { padding: 12px 36px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .batch-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 5px;
+    padding: 7px 14px; font-size: 12px; color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: all .12s;
+  }
+  .batch-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 760px; }
+  thead th {
+    background: var(--card); text-align: left; padding: 10px 14px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); border-bottom: 2px solid var(--border); cursor: pointer;
+    white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--text); }
+  thead th .sort-arrow { margin-left: 4px; opacity: .35; }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--brand); }
+  thead th.no-sort { cursor: default; }
+  thead th.no-sort:hover { color: var(--muted); }
+  tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr.main-row:hover { background: #eef1ed; }
+  tbody tr.skip-row { opacity: 0.35; }
+  td { padding: 12px 14px; }
+
+  .action-cell { width: 48px; text-align: center; padding: 12px 6px; vertical-align: middle; }
+  .action-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    background: transparent; cursor: pointer; font-size: 14px; display: inline-flex;
+    align-items: center; justify-content: center; transition: all .15s;
+    color: #b0bdb3; font-weight: 700;
+  }
+  .action-btn:hover { border-color: var(--muted); color: var(--muted); }
+  .action-btn.state-met  { background: var(--met);  border-color: var(--met);  color: #fff; }
+  .action-btn.state-skip { background: var(--skip); border-color: var(--skip); color: #fff; }
+
+  .identity-cell { width: 230px; vertical-align: middle; overflow: hidden; }
+  .identity-inner { display: flex; align-items: flex-start; gap: 10px; }
+  .photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+    background: #dde5db; display: block; flex-shrink: 0; margin-top: 2px; }
+  .identity-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .name-line { display: flex; align-items: center; gap: 5px; }
+  .person-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 185px; }
+  .company-line { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--brand); font-weight: 500; overflow: hidden; }
+  .company-line span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .company-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
+  .title-line { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 195px; }
+  .li-badge { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .li-badge svg { display: block; }
+  .li-link { text-decoration: none; }
+
+  .about-cell {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    cursor: pointer; padding-right: 20px;
+  }
+  .about-cell:hover .about-snippet { color: var(--text); }
+  .about-snippet {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color .12s;
+  }
+  .expand-hint {
+    display: inline-block; margin-top: 4px; font-size: 11px;
+    color: var(--brand); letter-spacing: .01em;
+  }
+  .about-full { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .notes-wrap { margin-top: 12px; }
+  .notes-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--muted); margin-bottom: 5px;
+  }
+  .notes-input {
+    width: 100%; min-height: 52px; resize: vertical;
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+    outline: none; line-height: 1.5; transition: border-color .12s;
+  }
+  .notes-input:focus { border-color: var(--brand); background: var(--card); }
+  .notes-input::placeholder { color: #b0bdb3; }
+
+  .pill {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; letter-spacing: .01em;
+    white-space: normal; text-align: center; line-height: 1.3; max-width: 100%;
+  }
+  .type-cell { width: 128px; vertical-align: middle; text-align: center; }
+  .status-cell { width: 80px; vertical-align: middle; text-align: center; }
+  .pill-vc         { background: #cce5d6; color: #1a4d2e; }
+  .pill-lp         { background: #d0e8de; color: #1e5235; }
+  .pill-founder    { background: #f5e6c8; color: #7a4a10; }
+  .pill-policy     { background: #d0e8e4; color: #0f4040; }
+  .pill-ngo        { background: #dbe8d0; color: #2e4d1a; }
+  .pill-consultant { background: #e6dff0; color: #4a2a70; }
+  .pill-academic   { background: #f0dde8; color: #6a1a40; }
+  .pill-other      { background: #ece6d8; color: #5a4a20; }
+  .pill-unknown    { background: #e8e8e2; color: #5a5a52; }
+  .pill-confirmed  { background: #cce5d6; color: #1a4d2e; }
+  .pill-guessed    { background: #f5e9c0; color: #7a5e10; }
+  .pill-na         { background: #e8e8e2; color: #5a5a52; }
+
+  .empty-state {
+    text-align: center; padding: 56px 32px; color: var(--muted); font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    header, .toolbar, .batch-btns { padding-left: 16px; padding-right: 16px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .toolbar input, .toolbar select { width: 100%; }
+    .count { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <h1>Investable Adaptation Cocktail Hour</h1>
+    <a class="luma-link" href="https://luma.com/ik5rg8a2" target="_blank">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View on Luma
+    </a>
+  </div>
+  <p>Park Slope, Brooklyn &middot; NYC Climate Week &middot; Hosted by Adapt [us] Capital &middot; 28 guests</p>
+</header>
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search name or about…">
+  <select id="typeFilter">
+    <option value="">All Types</option>
+    <option>VC</option><option>LP</option><option>Founder/Operator</option>
+    <option>Policy</option><option>NGO</option><option>Academic/Research</option>
+    <option>Consultant/Advisor</option><option>Other</option><option>Unknown</option>
+  </select>
+  <select id="statusFilter">
+    <option value="">All Status</option>
+    <option>Confirmed</option><option>Guessed</option><option>N/A</option>
+  </select>
+  <select id="metFilter">
+    <option value="">All</option>
+    <option value="met">Met ✓</option>
+    <option value="skip">Skip ✗</option>
+  </select>
+  <span class="count" id="countLabel"></span>
+</div>
+<div class="batch-btns" id="batchBtns"></div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="action-cell no-sort"></th>
+      <th class="identity-cell no-sort">Person</th>
+      <th class="type-cell" data-col="type">Type <span class="sort-arrow">↕</span></th>
+      <th data-col="about">About <span class="sort-arrow">↕</span></th>
+      <th class="status-cell" data-col="status">Status <span class="sort-arrow">↕</span></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+<script>
+const DATA = [{"slug": "sonamvelani", "name": "Sonam Velani", "linkedin": "https://www.linkedin.com/in/sonamvelani/", "status": "Confirmed", "type": "VC", "title": "Co-Founder & Managing Partner", "company": "Streetlife Ventures", "company_domain": "streetlifeventures.com", "about": "Sonam Velani is Co-Founder and Managing Partner of Streetlife Ventures, a pre-seed and seed-stage venture fund investing at the intersection of cities and climate, based in New York City. She previously financed more than $10 billion in transportation, energy, and water infrastructure at Goldman Sachs, worked on coastal resilience and water systems at the World Bank, launched drone-delivery operations in Africa at Zipline, and led development of New York City's Green New Deal at the Mayor's Office. She earned a BA with Honors in Government, Economics, and Visual and Environmental Studies from Harvard University on a full scholarship, the first in her family to attend college after immigrating from Mumbai to Chicago. She co-founded the Climate Tech Cities ecosystem of 20,000-plus members and serves on the boards of Women.NYC and Scale for Climate Tech. Named to Crain's New York Business 40 Under 40 in 2023, she is a frequent speaker on urban climate investing and adaptation.", "photo": "photos/sonamvelani.jpg"}, {"slug": "alvaro-simoes-de-oliveira-neto-49307458", "name": "Alvaro Simoes de Oliveira Neto", "linkedin": "https://www.linkedin.com/in/alvaro-simoes-de-oliveira-neto-49307458/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Director", "company": "Arboreal Capital", "company_domain": "arborealcap.com", "about": "Alvaro Simoes de Oliveira Neto is a Director at Arboreal Capital, a Delaware-based advisory that partners with early-stage ventures in real assets, infrastructure, and health finance, conducting due diligence and structuring merger, acquisition, and private-securities placements through registered representatives at Stonehaven, LLC. He focuses on sourcing and vetting new ventures for the firm's capital-raising pipeline. Before joining Arboreal, he worked in the Private Equity Group at Goldman Sachs, evaluating and executing investments across multiple sectors. He holds a Bachelor of Arts in Economics with Honors from Columbia University and holds FINRA Series 7 and 63 registrations. He is based in Switzerland.", "photo": "photos/alvaro-simoes-de-oliveira-neto-49307458.jpg"}, {"slug": "anna-berman-79156710b", "name": "Anna Maeve Berman", "linkedin": "https://www.linkedin.com/in/anna-berman-79156710b/", "status": "Confirmed", "type": "LP", "title": "Managing Partner", "company": "Berman Capital Holdings", "company_domain": null, "about": "Anna Maeve Berman is Managing Partner of Berman Capital Holdings, a New York-based capital vehicle; her public LinkedIn profile does not disclose the firm's investment thesis, sector focus, or assets under management beyond her title, and it is a distinct entity from the similarly named Berman Capital Advisors multi-family office. Given the \"Capital Holdings\" naming convention and her attendance at a gathering of investors and family offices focused on climate adaptation, the firm most plausibly functions as a personal or family investment vehicle, though this is not confirmed publicly. She is based in New York and holds a degree from New York University. Her public profile does not list prior professional history, board seats, or published writing.", "photo": "photos/anna-berman-79156710b.jpg"}, {"slug": "cdrye", "name": "Craig Rye", "linkedin": "https://www.linkedin.com/in/cdrye/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "VP, Climate & Sustainability Research", "company": "Barclays", "company_domain": "barclays.com", "about": "Craig Rye (Craig D. Rye) is Vice President of Climate & Sustainability Research at Barclays, leading coverage of physical climate risk, including extreme weather, water stress, and long-term climate shifts, across utilities, energy, agriculture, insurance, and municipal finance for institutional clients. His research was ranked #1 in Sustainability Research in the Institutional Investor (Extel) Global FICC Survey 2025, and his flagship series include Climate-101 and the Seasonal Climate Outlook. Before moving into finance, he spent roughly a decade developing global climate models at NASA, MIT, Columbia University, and the British Antarctic Survey. He holds a PhD in Ocean Physics from the University of Southampton. He is based in New York.", "photo": "photos/cdrye.jpg"}, {"slug": "djclif", "name": "Darren Clifford", "linkedin": "https://www.linkedin.com/in/djclif/", "status": "Confirmed", "type": "VC", "title": "Founder & Managing Partner", "company": "Adapt [us] Capital", "company_domain": "aucap.vc", "about": "Darren Clifford is Founder and Managing Partner of Adapt [us] Capital, a venture capital fund and venture builder investing in and building early-stage companies that profitably fulfill climate-driven demand in a 2.5°C+ world, spanning water access, cooling, food logistics, health, and resilient infrastructure, with offices in Toronto and Oslo. The firm pairs venture funding with embedded venture-building support, including post-investment strategy sprints for portfolio companies. He has more than 20 years of experience in venture building, finance, and strategy, including over a decade at McKinsey & Company leading its Green Business Building practice. He holds an MBA from Rice University's Jesse H. Jones Graduate School of Management. Based in the Greater Toronto Area, he is hosting tonight's cocktail hour with Adapt [us] Capital partner August Fern to kick off New York Climate Week.", "photo": "photos/djclif.jpg"}, {"slug": "doroteya-h-032bb016b", "name": "Doroteya H.", "linkedin": "https://www.linkedin.com/in/doroteya-h-032bb016b/", "status": "Confirmed", "type": "Other", "title": "Investment Director", "company": "SiteGround", "company_domain": "siteground.com", "about": "Doroteya H. holds the title Investment Director at SiteGround, the Bulgaria-founded global web-hosting company; her public profile does not confirm the scope of this investment function, whether it deploys the company's or founders' capital into external companies or funds, or its sector focus. SiteGround itself is a privately held, founder-led hosting business that has developed education and investment initiatives alongside its core business in Bulgaria. She is based in Bulgaria. Her public LinkedIn profile does not list prior professional history, board seats, or published writing beyond her current title, so her specific connection to climate-adaptation investing is not confirmed.", "photo": "photos/doroteya-h-032bb016b.jpg"}, {"slug": "farihaansari", "name": "Fariha Ansari Javed", "linkedin": "https://www.linkedin.com/in/farihaansari/", "status": "Confirmed", "type": "VC", "title": "Partner, GCC & Global Capital Formation", "company": "Stride Ventures", "company_domain": "strideventures.global", "about": "Fariha Ansari Javed is Partner, GCC and Global Head of Capital Formation at Stride Ventures, an Indian venture debt and equity firm expanding into the Gulf with a target of $500 million in assets under management; she oversees fundraising and global investor relations across the firm's INR and USD funds. She brings 21 years of experience across finance, insurance, and government in the US, Europe, and the Gulf, including as Chief Strategy Officer at Toffee Insurance, underwriting and property roles at Zurich Insurance and AIG, and as an advisor on India-Turkey FDI for the Republic of Turkey Prime Ministry. She also founded The Common Room, a platform supporting new entrepreneurs. She serves on the Harvard Business School Alumni Board and the HBS Club of India Board, and is based in Riyadh, Saudi Arabia.", "photo": "photos/farihaansari.jpg"}, {"slug": "jeffgitterman", "name": "Jeff Gitterman", "linkedin": "https://www.linkedin.com/in/jeffgitterman/", "status": "Confirmed", "type": "LP", "title": "Managing Director", "company": "Gitterman Asset Management", "company_domain": "gittermanasset.com", "about": "Jeff Gitterman is Managing Director at Gitterman Asset Management and Perigon Wealth Management, an SEC-registered investment advisory that allocates client capital, advising on more than $1 billion in assets, into sustainable, ESG, and climate-aware strategies for high-net-worth individuals, business owners, and the academic community. He created the firm's SMART (Sustainability Metrics Applied to Risk Tolerance)® Investing Solutions, a suite of global climate-aware allocation strategies used by financial advisory firms and individual investors. With more than 30 years as a financial advisor, he began realigning the firm toward sustainable investing in 2015 and launched the Gitterman Asset Management brand in 2020. He is co-host of TheIMPACT TV show, filmed at the New York Stock Exchange and airing on Fintech.tv, and has been featured in Barron's, Forbes, and The Wall Street Journal. He is based in New York.", "photo": "photos/jeffgitterman.jpg"}, {"slug": "kameshiyer", "name": "Kamesh Iyer", "linkedin": "https://www.linkedin.com/in/kameshiyer/", "status": "Guessed", "type": "Other", "title": "Business Development Director", "company": "STX Group", "company_domain": "stxgroup.com", "about": "Kamesh Iyer is Business Development Director at STX Group, an Amsterdam-based environmental commodities trading firm active in carbon credits, renewable energy certificates, and sustainability-linked instruments; he has represented the firm on decarbonization panels and moderated a roundtable on Pacific and Small Island resilience under Paris Agreement strategies. His public profile describes him as a Global Energy & Sustainability Executive focused on climate action, emerging technologies, and carbon markets. He is based in Germany's Ruhr Region and holds a degree from Imperial College London. His public profile does not list his employment history prior to STX Group or additional board affiliations.", "photo": "photos/kameshiyer.jpg"}, {"slug": "kari-chaudhry", "name": "Kari Chaudhry", "linkedin": "https://www.linkedin.com/in/kari-chaudhry/", "status": "Guessed", "type": "Consultant/Advisor", "title": "CEO & Founder", "company": "APEX Global Forum", "company_domain": null, "about": "Kari Chaudhry is CEO and Founder of APEX Global Forum, a private invitation-only community of roughly 300 wealth creators across 20-plus countries connecting family principals, UHNW investors, and founders around investment, philanthropy, and family-office strategy. She also leads Inside Capital & Culture, a media and events company at the intersection of capital, wealth, and culture. She works as a strategic partner and trusted connector to a select group of family principals and private investors across finance, real estate, and luxury sectors, splitting her time between London and New York. She is a University of Toronto Rotman School of Management alumna, and is recognized as an award-winning serial entrepreneur, investor, and business strategist.", "photo": "photos/kari-chaudhry.jpg"}, {"slug": "lisa-genasci", "name": "Lisa Genasci", "linkedin": "https://www.linkedin.com/in/lisa-genasci/", "status": "Confirmed", "type": "VC", "title": "Managing Director, Sustainable Finance", "company": "ADM Capital", "company_domain": "admcapital.com", "about": "Lisa Genasci is Managing Director, Sustainable Finance, at ADM Capital, a Hong Kong-headquartered private credit manager overseeing roughly $2 billion for a global institutional client base across six regional hubs including Singapore. She chairs the firm's ESG Committee, sits on its Investment Advisory Committee as an observer, and co-leads its first impact strategy, the Asia Climate Smart Landscape Fund, providing credit to agricultural SMEs in Indonesia against emissions, land-use, and livelihood targets. Before joining ADM Capital full time in 2021, she spent 15 years founding and leading the ADM Capital Foundation, a philanthropic vehicle supporting environmental research and conservation across Asia. She serves on the boards of Civic Exchange, ADM Capital Foundation, and Terratai, and advises the Ocean Foundation and the Tropical Forest Alliance Southeast Asia. She is based in Singapore.", "photo": "photos/lisa-genasci.jpg"}, {"slug": "mahsazeinali", "name": "Mahsa Zeinali", "linkedin": "https://www.linkedin.com/in/mahsazeinali/", "status": "Confirmed", "type": "VC", "title": "Co-Founder & Managing Partner", "company": "Deep Tech Fund Advisors", "company_domain": "dtfadvisors.com", "about": "Mahsa Zeinali is Co-Founder and Managing Partner of Deep Tech Fund Advisors (DTFA), a venture capital firm investing at the inflection point where technical risk is resolved and demand is visible, across space, defense, and dual-use technology companies. She brings prior experience from Reverence Capital Partners, 3L, Sunset Capital Partners, and Rosen Capital Advisors. She holds a degree from the Ivey Business School at Western University. She is based in Miami, Florida. Her public profile does not disclose DTFA's fund size, vintage, or typical check sizes.", "photo": "photos/mahsazeinali.jpg"}, {"slug": "msagar", "name": "Maneesh Sagar", "linkedin": "https://www.linkedin.com/in/msagar/", "status": "Confirmed", "type": "VC", "title": "Founder, Thynk Ventures; Chairman & CEO, RS Metrics", "company": "Thynk Ventures", "company_domain": "thynk.io", "about": "Maneesh Sagar is Founder of Thynk Ventures, a hands-on venture fund investing at the intersection of AI, data, space, and climate science, and Chairman and CEO of RS Metrics, which supplies asset-level environmental, climate, and physical-risk metrics derived from geospatial satellite imagery. He previously co-founded NeuVis, raising more than $80 million and growing it to over 350 employees before its acquisition by IBM Rational, and served as Managing Director at Connecticut Innovations investing in mobile, enterprise software, and IoT. He holds an MBA from Columbia Business School, where he is also an Innovation Fellow and Founding Career Coach teaching innovation and venture capital. He has been recognized by the World Economic Forum, TNFD, NASA, and ISRO for applying space-based data to climate risk. He is based in the New York City metropolitan area.", "photo": "photos/msagar.jpg"}, {"slug": "maribrossard", "name": "Mari Brossard", "linkedin": "https://www.linkedin.com/in/maribrossard/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Principal, Sustainability", "company": "Sagard", "company_domain": "sagard.com", "about": "Mari Brossard is Principal, Sustainability, at Sagard, a global private equity and alternative asset manager, where she leads the firm's responsible-investing activities and integration of ESG factors across its investor relations function; she joined in 2022. Before Sagard, she supported National Bank Investments' ESG initiatives as Senior Director, Sustainable Investments, and has contributed to industry panels and research on responsible finance. She holds Bachelor's and Master's degrees in law from the University of Sherbrooke and a certificate in sustainable agriculture from the University of Guelph, and is a member of the Quebec Bar and a CFA charterholder. She is based in Montreal, Canada.", "photo": "photos/maribrossard.jpg"}, {"slug": "michelbayan", "name": "Michel Bayan", "linkedin": "https://www.linkedin.com/in/michelbayan/", "status": "Guessed", "type": "Founder/Operator", "title": "Founder & CEO", "company": "DirecTech Labs", "company_domain": null, "about": "Michel Bayan is Founder and CEO of DirecTech Labs, a data-science company founded in 2016 whose AI product Distro helps direct-selling and social-selling companies extend customer and rep lifecycles and reduce churn; the platform is used by six of the top 100 direct-selling companies across 74 countries. He hosts the DirecTech Labs podcast, interviewing CEOs and executives in the direct and social-selling channel, and serves as an advisor and coach to companies, executives, and startups following multiple prior exits. His public profile describes broad interests spanning AI, social commerce, private capital placement, health, and regenerative homes and communities, though it does not name a specific current investment vehicle. He is based in the United States.", "photo": "photos/michelbayan.jpg"}, {"slug": "neelashishukla", "name": "Neelashi Shukla", "linkedin": "https://www.linkedin.com/in/neelashishukla/", "status": "Guessed", "type": "VC", "title": "Principal, Cleantech Equity Investments", "company": "Stride Ventures", "company_domain": "strideventures.global", "about": "Neelashi Shukla is Principal, Cleantech Equity Investments, and Head of Responsible Investment & Impact at Stride Ventures, where she leads equity investments through the firm's Circulus fund into startups across energy transition, industrial decarbonization, and the circular economy. She previously led investment facilitation in the consumer-goods sector and outreach for Europe under the Government of India's Make in India initiative at Invest India, and was a founding member of the Women Entrepreneurship Platform at NITI Aayog. She is an alumna of St. Stephen's College, Delhi, and holds an MSc in Economics from the London School of Economics. Outside of investing, she is a published poet, author of Sleepwalking and Tease. She is based in Delhi, India.", "photo": "photos/neelashishukla.jpg"}, {"slug": "nicholasvanosdol", "name": "Nick van Osdol", "linkedin": "https://www.linkedin.com/in/nicholasvanosdol/", "status": "Confirmed", "type": "VC", "title": "Investor", "company": "Climate Capital", "company_domain": null, "about": "Nick van Osdol is a first-check, seed-stage investor at Climate Capital, where he sits on two investment committees focused on category-creation opportunities such as weather modification, and leads editorial strategy, programs, and fundraising narrative at Advanced Research for Climate Emergencies (ARC). He is also founder of Keep Cool, a climate-tech newsletter read by nearly 20,000 subscribers tracking nonlinear climate-system risks and underpriced opportunities in sustainability and energy. He began his career as a management consultant before transitioning around 2020 to climate media and investing, and continues to write short fiction alongside his climate analysis. He is based in the United States. His public profile does not disclose Climate Capital's fund size or check sizes.", "photo": "photos/nicholasvanosdol.jpg"}, {"slug": "rahulmehendale", "name": "Rahul Mehendale", "linkedin": "https://www.linkedin.com/in/rahulmehendale/", "status": "Guessed", "type": "Founder/Operator", "title": "Chief Executive Officer", "company": "Live150.ai", "company_domain": "live150.ai", "about": "Rahul Mehendale (listed on Luma as \"Rah Meh\") is Chief Executive Officer of Live150.ai, an AI platform helping consumers correct and enhance their health outcomes. He previously served as Managing Director at Deloitte, leading the firm's Life Sciences and Healthcare practice, and was co-founder and CEO of mySkin Inc. for more than 11 years, credited with creating the $50 billion Quantified Skin category through AI-enabled personalized skincare measurement. He is a strategic advisor and mentor on AI-driven innovation across industries, and holds an MBA from Harvard Business School. His public profile lists him as based in the United States without naming a specific city.", "photo": "photos/rahulmehendale.jpg"}, {"slug": "rolando-morillo-0915sv", "name": "Rolando Morillo", "linkedin": "https://www.linkedin.com/in/rolando-morillo-0915sv/", "status": "Confirmed", "type": "VC", "title": "Managing Partner", "company": "Equilibrium Climate Capital", "company_domain": "equilibriumclimate.com", "about": "Rolando Morillo is Managing Partner at Equilibrium Climate Capital, a platform building a distributed network of locally anchored, growth-stage EPC and infrastructure companies delivering resilient infrastructure, water, and health solutions across Southeast Asia, the Middle East, and other climate-vulnerable markets, following a March 2026 appointment. He previously spent over 20 years at Rockefeller Capital Management as Senior Vice President and Portfolio Manager for its thematic equity strategies, including the Climate Solutions Strategy and the Credit Suisse Rockefeller Ocean Engagement Strategy, authoring reports on the sustainable blue economy and climate's impact on healthcare. He has advised ultra-high-net-worth individuals, family offices, and institutions on asset allocation across climate and environmental markets. He is based in the New York City metropolitan area.", "photo": "photos/rolando-morillo-0915sv.jpg"}, {"slug": "ryan-jones-75b50474", "name": "Ryan Jones", "linkedin": "https://www.linkedin.com/in/ryan-jones-75b50474/", "status": "Confirmed", "type": "LP", "title": "Climate Investments", "company": "Cisco Foundation", "company_domain": "cisco.com", "about": "Ryan Jones works in Cisco's Chief Sustainability Office, focused on climate investments for the Cisco Foundation, which is committing $100 million over ten years to nonprofit grants and impact investing in climate solutions through blended finance, including its Regenerative Future Fund supporting open climate data and AI applications. The Foundation's programs convene industry experts, founders, and investors, including through Climate Week events such as the AI + Climate Innovation Lab. His public profile does not disclose his specific title, prior employers, or educational background beyond his current role. He is based in Brooklyn, New York.", "photo": "photos/ryan-jones-75b50474.jpg"}, {"slug": "sebtorres", "name": "Sebastian Torres", "linkedin": "https://www.linkedin.com/in/sebtorres/", "status": "Confirmed", "type": "Founder/Operator", "title": "CEO", "company": "Priority Shift", "company_domain": null, "about": "Sebastian Torres is CEO of Priority Shift, a Miami Beach-based venture he describes as creating containers for transformation, focused on emotional and mental well-being alongside environmental stewardship. A Colombian engineer, he spent seven years at SpaceX before stepping back to focus on managing stress and promoting mental health, a shift he has spoken about publicly in Spanish-language media. He has also worked at Rima Experience and Plant Vision earlier in his career. He is based in Bogota, Colombia. His public profile does not disclose Priority Shift's business model, funding, or team size.", "photo": "photos/sebtorres.jpg"}, {"slug": "shan-bannirchelvam", "name": "Shanthakumar Bannirchelvam", "linkedin": "https://www.linkedin.com/in/shan-bannirchelvam/", "status": "Confirmed", "type": "VC", "title": "Sustainability-Focused Investor", "company": "SUN New Energy Capital", "company_domain": null, "about": "Shanthakumar Bannirchelvam is a sustainability-focused investor associated with SUN New Energy Capital and Executive Director at Global Impact Partners, an impact-investment advisory that mobilizes debt and equity capital and structures outcomes-based financing for governments, corporations, and nonprofits pursuing social and environmental impact. He holds an MBA from Columbia Business School and has contributed to the Global Steering Group on Impact Investment's work on widening and deepening the global impact-investment market. He brings prior experience from Nomura, Herbert Smith Freehills, and the United Nations. He is based in Singapore. His public profile does not clarify SUN New Energy Capital's specific investment focus or fund size.", "photo": "photos/shan-bannirchelvam.jpg"}, {"slug": "sharonacleary", "name": "Sharon Cleary", "linkedin": "https://www.linkedin.com/in/sharonacleary/", "status": "Confirmed", "type": "Consultant/Advisor", "title": "Managing Director, Strategy & Operations", "company": "Equilibrium Climate Capital", "company_domain": "equilibriumclimate.com", "about": "Sharon Cleary is Managing Director of Strategy & Operations at Equilibrium Climate Capital (ECC), a platform building a distributed network of locally anchored, growth-stage EPC and infrastructure companies delivering resilient infrastructure, water, and health solutions across Southeast Asia, the Middle East, and other climate-vulnerable markets. She designs ECC's governance, reporting, and decision-making systems, and stewards relationships with sovereign investors, mission-aligned capital, and public-private partners. Her approach blends operational rigor with strategic foresight, drawing on experience building high-performing teams and leading enterprise-wide transformations at prior institutions her public profile does not name. She is based across ASEAN, the Gulf, and North Africa, reflecting ECC's core markets.", "photo": "photos/sharonacleary.jpg"}, {"slug": "boydsteve", "name": "Stephen Boyd", "linkedin": "https://www.linkedin.com/in/boydsteve/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder & President", "company": "New City Energy", "company_domain": null, "about": "Stephen Boyd is Founder and President of New City Energy, based in the Washington, DC metro area, and has spent more than 25 years developing and managing enterprises in energy, transportation, economic development, and educational opportunity. He currently serves as a Senior Consultant to the US Department of Energy's Loan Programs Office, supporting financing decisions for clean energy, hard-tech, and infrastructure projects. He previously co-founded and served as CEO of Peloton Technology, a truck-platooning technology company. His public profile does not disclose his educational background. He is based in the Washington, DC metropolitan area.", "photo": "photos/boydsteve.jpg"}, {"slug": "tara-bansal", "name": "Tara Bansal", "linkedin": "https://www.linkedin.com/in/tara-bansal/", "status": "Confirmed", "type": "VC", "title": "Investment Principal & Company Builder", "company": "Breakthrough Energy Ventures", "company_domain": "breakthroughenergy.org", "about": "Tara Bansal describes her focus on LinkedIn as \"pricing climate into markets,\" and is publicly identified as an Investment Principal and Company Builder at Breakthrough Energy Ventures, the climate-technology fund co-founded by Bill Gates, where she has focused on electricity, transportation, agriculture, manufacturing, and buildings investments. She previously worked as a Consultant at McKinsey & Company and as a Research Lead at Jana Partners. She is an entrepreneur and investor focused on translating academic research into companies that advance a sustainable, healthy, and secure world. She is based in New York.", "photo": "photos/tara-bansal.jpg"}, {"slug": "trumansemans", "name": "Truman Semans", "linkedin": "https://www.linkedin.com/in/trumansemans/", "status": "Confirmed", "type": "Founder/Operator", "title": "Founder & CEO", "company": "OS-Climate", "company_domain": "os-climate.org", "about": "Truman Semans is Founder and CEO of OS-Climate, a co-op of financial institutions and technology companies building open data and analytics tools for climate-aligned finance and investing. He began his career as an International Economist at the US Treasury and as an Associate at McKinsey & Company, later co-founding the US Partnership for Renewable Energy Finance and serving as a Partner at GreenOrder/Cleantech Group, helping scale the firm. He was Director of the Business Environmental Leadership Council at the Pew Center on Global Climate Change, and founded and served as CEO of Element Strategies, providing ESG analytics and consulting to investors. He is based in the United States and speaks widely on climate adaptation, resilience, and transition risk.", "photo": "photos/trumansemans.jpg"}, {"slug": "christopher-hosking", "name": "Christopher Hosking", "linkedin": null, "status": "N/A", "type": "Unknown", "title": null, "company": null, "company_domain": null, "about": "Christopher Hosking's public identity could not be confirmed with confidence from available sources; several LinkedIn profiles share this name, and none could be matched definitively to an attendee of a climate-adaptation investor gathering. He is listed as a confirmed guest for the Investable Adaptation Cocktail Hour on Luma.", "photo": null}, {"slug": "gayatri-karnik", "name": "Gayatri Karnik", "linkedin": null, "status": "N/A", "type": "Unknown", "title": null, "company": null, "company_domain": null, "about": "Gayatri Karnik's public identity could not be confirmed with confidence; the closest LinkedIn matches, including a preschool branch manager in India and several similarly spelled names, do not plausibly correspond to an attendee of this climate-adaptation investor event. She is listed as a confirmed guest for the Investable Adaptation Cocktail Hour on Luma.", "photo": null}];
+
+const TYPE_ORDER = {'VC':0,'LP':1,'Founder/Operator':2,'Policy':3,'NGO':4,'Academic/Research':5,'Consultant/Advisor':6,'Other':7,'Unknown':8};
+const EVENT_PREFIX = 'iach_';
+
+const state = {};
+DATA.forEach(a => {
+  const key = EVENT_PREFIX + a.slug;
+  const stored = JSON.parse(localStorage.getItem(key) || 'null');
+  state[a.slug] = stored || { met: false, skip: false, expanded: false, notes: '' };
+});
+
+function saveState(slug) { localStorage.setItem(EVENT_PREFIX + slug, JSON.stringify(state[slug])); }
+
+function cycleAction(slug) {
+  const s = state[slug];
+  if (!s.met && !s.skip)       { s.met = true; }
+  else if (s.met)              { s.met = false; s.skip = true; }
+  else                         { s.skip = false; }
+  saveState(slug);
+  render();
+}
+
+function toggleExpand(slug) {
+  state[slug].expanded = !state[slug].expanded;
+  saveState(slug);
+  render();
+}
+
+function saveNotes(slug) {
+  const el = document.getElementById('notes_' + slug);
+  if (el) { state[slug].notes = el.value; saveState(slug); }
+}
+
+function mkSvg(name) {
+  const parts = name.trim().split(/\s+/);
+  const ini = parts.length >= 2 ? (parts[0][0]+parts[parts.length-1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
+  const palette = ['#2c4a38','#3d5c46','#1e4d30','#5a7a4a','#2a5038','#3a6b48','#1a3d28','#4a6040','#2e5540','#224030'];
+  let h = 0; for (const c of name) h = (h*31+c.charCodeAt(0))|0;
+  const col = palette[Math.abs(h)%palette.length];
+  return "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><rect width='80' height='80' rx='40' fill='" + col + "'/><text x='40' y='52' text-anchor='middle' font-family='Arial,sans-serif' font-size='28' font-weight='600' fill='white'>" + ini + "</text></svg>";
+}
+
+const liSvg = (color) => `<svg width="15" height="15" viewBox="0 0 24 24" fill="${color}"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+function liIcon(linkedin, status) {
+  if (!linkedin) return `<span class="li-badge" style="opacity:.2">${liSvg('#9dbfaa')}</span>`;
+  const color = status === 'Confirmed' ? '#0a66c2' : '#9dbfaa';
+  return `<a href="${linkedin}" target="_blank" class="li-link li-badge">${liSvg(color)}</a>`;
+}
+
+function typePill(t) {
+  const cls = {'VC':'vc','LP':'lp','Founder/Operator':'founder','Policy':'policy','NGO':'ngo','Academic/Research':'academic','Consultant/Advisor':'consultant','Other':'other','Unknown':'unknown'}[t]||'unknown';
+  return `<span class="pill pill-${cls}">${t}</span>`;
+}
+
+function statusPill(s) {
+  const cls = {'Confirmed':'confirmed','Guessed':'guessed','N/A':'na'}[s]||'na';
+  return `<span class="pill pill-${cls}">${s}</span>`;
+}
+
+let sortCol = null, sortDir = 1;
+
+function render() {
+  const q  = document.getElementById('search').value.toLowerCase();
+  const tf = document.getElementById('typeFilter').value;
+  const sf = document.getElementById('statusFilter').value;
+  const mf = document.getElementById('metFilter').value;
+
+  let filtered = DATA.filter(a => {
+    if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
+    if (tf && a.type !== tf) return false;
+    if (sf && a.status !== sf) return false;
+    if (mf === 'met'  && !state[a.slug].met)  return false;
+    if (mf === 'skip' && !state[a.slug].skip) return false;
+    return true;
+  });
+
+  if (sortCol) {
+    filtered.sort((a,b) => {
+      let av = a[sortCol]||'', bv = b[sortCol]||'';
+      if (sortCol==='type') { av = TYPE_ORDER[av]??9; bv = TYPE_ORDER[bv]??9; return (av-bv)*sortDir; }
+      return String(av).localeCompare(String(bv))*sortDir;
+    });
+  } else {
+    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || a.name.localeCompare(b.name));
+  }
+
+  document.getElementById('countLabel').textContent = `${filtered.length} of ${DATA.length}`;
+
+  const tbody = document.getElementById('tbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No attendees match your filters.</td></tr>`;
+    document.getElementById('batchBtns').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(a => {
+    const photoSrc = a.photo || '';
+    const s = state[a.slug];
+    const rowCls    = s.skip ? 'skip-row' : '';
+    const actionCls = s.met ? 'state-met' : s.skip ? 'state-skip' : '';
+    const actionLbl = s.met ? '✓' : s.skip ? '✗' : '';
+
+    const hasAbout = !!a.about;
+
+    let aboutContent;
+    if (s.expanded) {
+      aboutContent = `
+        <div class="about-full">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        <div class="notes-wrap">
+          <div class="notes-label">Notes</div>
+          <textarea class="notes-input" id="notes_${a.slug}" placeholder="Add a note…"
+            oninput="saveNotes('${a.slug}')"
+            onclick="event.stopPropagation()">${s.notes||''}</textarea>
+        </div>`;
+    } else {
+      const longEnough = hasAbout && a.about.length > 180;
+      aboutContent = `
+        <div class="about-snippet">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        ${longEnough ? `<span class="expand-hint">↓ more</span>` : ''}`;
+    }
+
+    return `<tr class="main-row ${rowCls}">
+      <td class="action-cell">
+        <button class="action-btn ${actionCls}" onclick="cycleAction('${a.slug}')" title="Cycle: unset → met → skip">${actionLbl}</button>
+      </td>
+      <td class="identity-cell">
+        <div class="identity-inner">
+          <img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg(a.name)}'">
+          <div class="identity-text">
+            <div class="name-line">
+              ${liIcon(a.linkedin, a.status)}
+              <span class="person-name">${a.name}</span>
+            </div>
+            ${a.company ? `<div class="company-line">${a.company_domain ? `<img class="company-logo" src="https://logo.clearbit.com/${a.company_domain}" onerror="this.style.display='none'">` : ''}<span>${a.company}</span></div>` : ''}
+            ${a.title ? `<div class="title-line">${a.title}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td class="type-cell">${typePill(a.type)}</td>
+      <td class="about-cell" onclick="toggleExpand('${a.slug}')">
+        ${aboutContent}
+      </td>
+      <td class="status-cell">${statusPill(a.status)}</td>
+    </tr>`;
+  }).join('');
+
+  const batchBtns = document.getElementById('batchBtns');
+  const liUrls = filtered.filter(a => a.linkedin).map(a => a.linkedin);
+  batchBtns.innerHTML = '';
+  for (let i = 0; i < liUrls.length; i += 10) {
+    const batch = liUrls.slice(i, i+10);
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `Open LinkedIn ${i+1}–${Math.min(i+10, liUrls.length)}`;
+    btn.onclick = (function(urls) {
+      return function() {
+        const script = urls.map(u => `window.open(${JSON.stringify(u)},'_blank');`).join('');
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs…</p></body></html>`;
+        window.open(URL.createObjectURL(new Blob([page],{type:'text/html'})),'_blank');
+      };
+    })(batch);
+    batchBtns.appendChild(btn);
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('typeFilter').addEventListener('change', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+document.getElementById('metFilter').addEventListener('change', render);
+
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
