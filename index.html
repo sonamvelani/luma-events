@@ -89,6 +89,36 @@
     border: 1px solid #e8e8e6;
   }
 
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #777;
+    margin: 0 0 14px;
+  }
+
+  .past-events { margin-top: 48px; }
+  .past-events summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #777;
+    padding: 14px 0;
+    border-top: 1px solid #e8e8e6;
+    border-bottom: 1px solid #e8e8e6;
+  }
+  .past-events summary::-webkit-details-marker { display: none; }
+  .past-events summary::after { content: '+'; font-size: 18px; font-weight: 300; letter-spacing: 0; }
+  .past-events[open] summary { margin-bottom: 14px; }
+  .past-events[open] summary::after { content: '−'; }
+
   /* ── Card ── */
   .card {
     background: #fff;
@@ -206,18 +236,26 @@
 </div>
 
 <div class="grid-container">
-  <div class="grid">
+  <section aria-labelledby="upcoming-events">
+    <h2 class="section-label" id="upcoming-events">Upcoming events</h2>
+    <div class="grid">
 
-    <a class="card" href="/events/climate-tech-demo-series/">
-      <div class="card-body">
-        <div class="card-tag">Climate · Demo Series</div>
-        <div class="card-title">Climate Tech Demo Series</div>
-      </div>
-      <div class="card-footer">
-        <span class="card-meta">329 Going attendees</span>
-        <span class="card-arrow">↗</span>
-      </div>
-    </a>
+      <a class="card" href="/events/climate-tech-demo-series/">
+        <div class="card-body">
+          <div class="card-tag">Mon, Sep 21 · 9:00 AM ET</div>
+          <div class="card-title">Climate Tech Demo Series</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-meta">329 Going attendees</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <details class="past-events">
+    <summary>Past events</summary>
+    <div class="grid">
 
     <a class="card" href="/events/gari-summit-nyc-2026/">
       <div class="card-body">
@@ -286,6 +324,7 @@
     </a>
 
   </div>
+  </details>
 </div>
 
 <footer>
