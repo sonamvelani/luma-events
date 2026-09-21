@@ -89,6 +89,7 @@
   <select id="type-filter" onchange="render()">
     <option value="">All Types</option>
     <option value="investor">Investor</option>
+    <option value="corporate">Corporate</option>
     <option value="founder">Founder</option>
     <option value="other">Other</option>
   </select>
@@ -190,7 +191,7 @@ const ATTENDEES = [
 ];
 
 // Type order for sorting
-const TYPE_ORDER = {investor:0, founder:1, other:2};
+const TYPE_ORDER = {investor:0, corporate:1, founder:2, other:3};
 const STATUS_ORDER = {Confirmed:0, Guessed:1, 'N/A':2};
 
 let sortKey = 'name', sortDir = 1;
