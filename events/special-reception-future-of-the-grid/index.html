@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Reception: Future of the Grid · Attendees</title>
+<style>
+  :root {
+    --forest:  #2c4a38;
+    --brand:   #3d7a55;
+    --bg:      #f3f2ec;
+    --card:    #ffffff;
+    --border:  #dce3da;
+    --text:    #1a2820;
+    --muted:   #5c6e60;
+    --met:     #2c6644;
+    --skip:    #b83030;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; }
+
+  header {
+    background: var(--forest); color: #e8f0eb; padding: 22px 36px;
+  }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  header p  { font-size: 12px; color: #9dbfaa; margin-top: 4px; }
+  .luma-link {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+    padding: 5px 11px; border-radius: 5px; border: 1px solid rgba(157,191,170,.4);
+    font-size: 11px; font-weight: 500; color: #c8dfd0; text-decoration: none;
+    transition: background .12s;
+  }
+  .luma-link:hover { background: rgba(255,255,255,.08); color: #e8f0eb; }
+  .event-meta {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 0; font-size: 12px; font-weight: 500; color: #c8dfd0;
+  }
+
+  .toolbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 36px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    box-shadow: 0 1px 3px rgba(44,74,56,.04);
+  }
+  .toolbar input, .toolbar select {
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px;
+    font-size: 13px; color: var(--text); background: var(--bg); outline: none;
+    font-family: inherit;
+  }
+  .toolbar input { width: 210px; }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--brand); }
+  .count { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .linkedin-batch { background: var(--card); border-bottom: 1px solid var(--border); }
+  .linkedin-batch summary {
+    padding: 11px 36px; display: flex; align-items: center; justify-content: space-between;
+    color: var(--muted); cursor: pointer; list-style: none; font-size: 12px; font-weight: 600;
+  }
+  .linkedin-batch summary::-webkit-details-marker { display: none; }
+  .linkedin-batch summary::after { content: '+'; font-size: 18px; font-weight: 400; line-height: 1; }
+  .linkedin-batch[open] summary::after { content: '−'; }
+  .linkedin-batch[open] summary { border-bottom: 1px solid var(--border); }
+  .batch-btns { padding: 12px 36px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .batch-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 5px;
+    padding: 7px 14px; font-size: 12px; color: var(--muted); cursor: pointer;
+    font-family: inherit; transition: all .12s;
+  }
+  .batch-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 760px; }
+  thead th {
+    background: var(--card); text-align: left; padding: 10px 14px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); border-bottom: 2px solid var(--border); cursor: pointer;
+    white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--text); }
+  thead th .sort-arrow { margin-left: 4px; opacity: .35; }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--brand); }
+  thead th.no-sort { cursor: default; }
+  thead th.no-sort:hover { color: var(--muted); }
+  tbody tr { border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr.main-row:hover { background: #eef1ed; }
+  tbody tr.skip-row { opacity: 0.35; }
+  td { padding: 12px 14px; }
+
+  .action-cell { width: 48px; text-align: center; padding: 12px 6px; vertical-align: middle; }
+  .action-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+    background: transparent; cursor: pointer; font-size: 14px; display: inline-flex;
+    align-items: center; justify-content: center; transition: all .15s;
+    color: #b0bdb3; font-weight: 700;
+  }
+  .action-btn:hover { border-color: var(--muted); color: var(--muted); }
+  .action-btn.state-met  { background: var(--met);  border-color: var(--met);  color: #fff; }
+  .action-btn.state-skip { background: var(--skip); border-color: var(--skip); color: #fff; }
+
+  .identity-cell { width: 230px; vertical-align: middle; overflow: hidden; }
+  .identity-inner { display: flex; align-items: flex-start; gap: 10px; }
+  .photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+    background: #dde5db; display: block; flex-shrink: 0; margin-top: 2px; }
+  .identity-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .name-line { display: flex; align-items: center; gap: 5px; }
+  .person-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 185px; }
+  .company-line { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--brand); font-weight: 500; overflow: hidden; }
+  .company-line span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .company-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
+  .title-line { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 195px; }
+  .li-badge { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .li-badge svg { display: block; }
+  .li-link { text-decoration: none; }
+
+  .about-cell {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    cursor: pointer; padding-right: 20px;
+  }
+  .about-cell:hover .about-snippet { color: var(--text); }
+  .about-snippet {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color .12s;
+  }
+  .expand-hint {
+    display: inline-block; margin-top: 4px; font-size: 11px;
+    color: var(--brand); letter-spacing: .01em;
+  }
+  .about-full { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .notes-wrap { margin-top: 12px; }
+  .notes-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--muted); margin-bottom: 5px;
+  }
+  .notes-input {
+    width: 100%; min-height: 52px; resize: vertical;
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+    outline: none; line-height: 1.5; transition: border-color .12s;
+  }
+  .notes-input:focus { border-color: var(--brand); background: var(--card); }
+  .notes-input::placeholder { color: #b0bdb3; }
+
+  .pill {
+    display: inline-flex; align-items: center; justify-content: center; width: max-content;
+    max-width: 100%; min-height: 25px; padding: 4px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .01em;
+    white-space: nowrap; text-align: center; line-height: 1.2;
+  }
+  .type-cell { width: 170px; vertical-align: middle; text-align: center; }
+  .status-cell { width: 112px; vertical-align: middle; text-align: center; }
+  .pill-vc         { background: #cce5d6; color: #1a4d2e; }
+  .pill-lp         { background: #d0e8de; color: #1e5235; }
+  .pill-founder    { background: #f5e6c8; color: #7a4a10; }
+  .pill-policy     { background: #d0e8e4; color: #0f4040; }
+  .pill-ngo        { background: #dbe8d0; color: #2e4d1a; }
+  .pill-consultant { background: #e6dff0; color: #4a2a70; }
+  .pill-academic   { background: #f0dde8; color: #6a1a40; }
+  .pill-other      { background: #ece6d8; color: #5a4a20; }
+  .pill-unknown    { background: #e8e8e2; color: #5a5a52; }
+  .pill-confirmed  { background: #cce5d6; color: #1a4d2e; }
+  .pill-guessed    { background: #f5e9c0; color: #7a5e10; }
+  .pill-na         { background: #e8e8e2; color: #5a5a52; }
+
+  .empty-state {
+    text-align: center; padding: 56px 32px; color: var(--muted); font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    header, .toolbar, .batch-btns { padding-left: 16px; padding-right: 16px; }
+    .linkedin-batch summary { padding-left: 16px; padding-right: 16px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .toolbar input, .toolbar select { width: 100%; }
+    .count { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <h1>Special Reception: Future of the Grid</h1>
+    <span class="event-meta" aria-label="Event date and time">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      Fri, Sep 25 · 10:30 AM–12:00 PM ET
+    </span>
+    <a class="luma-link" href="https://luma.com/u5v3s2vo" target="_blank">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View on Luma
+    </a>
+  </div>
+  <p>HearstLab × Streetlife Ventures × Dominion Energy Innovation Center · 57 attendees marked Going</p>
+</header>
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Search name or about…">
+  <select id="typeFilter">
+    <option value="">All Types</option>
+    <option>VC</option><option>LP</option><option>Founder/Operator</option>
+    <option>Policy</option><option>NGO</option><option>Academic/Research</option>
+    <option>Consultant/Advisor</option><option>Other</option><option>Unknown</option>
+  </select>
+  <select id="statusFilter">
+    <option value="">All Status</option>
+    <option>Confirmed</option><option>Guessed</option><option>N/A</option>
+  </select>
+  <select id="metFilter">
+    <option value="">All</option>
+    <option value="met">Met ✓</option>
+    <option value="skip">Skip ✗</option>
+  </select>
+  <span class="count" id="countLabel"></span>
+</div>
+<details class="linkedin-batch">
+  <summary>Open LinkedIn profiles <span id="linkedinCount"></span></summary>
+  <div class="batch-btns" id="batchBtns"></div>
+</details>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="action-cell no-sort"></th>
+      <th class="identity-cell no-sort">Person</th>
+      <th class="type-cell" data-col="type">Type <span class="sort-arrow">↕</span></th>
+      <th data-col="about">About <span class="sort-arrow">↕</span></th>
+      <th class="status-cell" data-col="status">Status <span class="sort-arrow">↕</span></th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+<script>
+const DATA = [{"slug": "lisa-bowers", "photo": "", "name": "Lisa Bowers", "linkedin": "https://linkedin.com/in/lisabowers", "status": "Confirmed", "type": "Consultant/Advisor", "about": "Sustainability Advisor at Tuck Advisors. Tuck says her work connects sustainability and business. Her focus includes climate-related health impacts, ecosystem regeneration and food-system resilience. The firm also notes two decades of experience in marketing, product management and partnerships. Best conversation angle: creating business value from market-ready sustainability solutions.", "title": "Sustainability Advisor", "company": "Tuck Advisors - Sustainability Advisor", "company_domain": ""}, {"slug": "alec-turnbull", "photo": "", "name": "Alec Turnbull", "linkedin": "https://linkedin.com/in/alecturnbull", "status": "Guessed", "type": "Founder/Operator", "about": "Alec Turnbull is listed for this event as Role not supplied at PowerFlex. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "PowerFlex", "company_domain": ""}, {"slug": "alex-blumberg", "photo": "", "name": "Alex Blumberg", "linkedin": "https://linkedin.com/in/alexblumberg", "status": "Confirmed", "type": "Founder/Operator", "about": "Co-founder and CEO of DaisyChain Energy. DaisyChain describes itself as an AI-enabled platform for building electrification, monitoring, decarbonization and compliance. The company’s origin story is rooted in solving the operational and financial complexity of building decarbonization. Its team is focused on making electrification easier for building owners to operate. Best conversation angle: translating building emissions rules into practical electrification decisions.", "title": "CEO", "company": "DaisyChain Energy", "company_domain": ""}, {"slug": "catherine-jeong", "photo": "", "name": "Catherine Jeong", "linkedin": "https://linkedin.com/in/cathjeong", "status": "Confirmed", "type": "Founder/Operator", "about": "Co-founder at NODI Energy. NODI describes Catherine as a second-time industrial-technology founder with experience across energy, climate investment and policy. The company is building distributed battery infrastructure intended to unlock grid capacity and reduce congestion. NODI also frames its product around accessible energy flexibility for smaller businesses and households. Best conversation angle: distributed batteries as a response to constrained interconnection.", "title": "Co-Founder", "company": "NODI Energy", "company_domain": ""}, {"slug": "dr-abdellah-cherkaoui", "photo": "", "name": "Dr. Abdellah Cherkaoui", "linkedin": "https://linkedin.com/in/abdellahcherkaoui", "status": "Confirmed", "type": "Founder/Operator", "about": "Co-founder and Chief Commercialization Officer at AquaLith. Public profiles identify a PhD in marine geophysics from the University of Washington. His earlier experience includes ChargePoint and Volta. AquaLith works on lithium extraction technology for the energy-storage supply chain. Best conversation angle: commercializing materials and resource technology for electrification.", "title": "Co-Founder & Chief Commercialization Officer", "company": "AquaLith", "company_domain": ""}, {"slug": "jeffrey-carleton", "photo": "", "name": "Jeffrey Carleton", "linkedin": "https://linkedin.com/in/jeffrey-carleton-571894132", "status": "Guessed", "type": "Founder/Operator", "about": "Jeffrey Carleton is listed for this event as Role not supplied at Runwise. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Runwise", "company_domain": ""}, {"slug": "keeley-erhardt", "photo": "", "name": "Keeley Erhardt", "linkedin": "https://linkedin.com/in/keeleyerhardt", "status": "Guessed", "type": "Founder/Operator", "about": "Keeley Erhardt is listed for this event as Role not supplied at Strobe Power. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Strobe Power", "company_domain": ""}, {"slug": "ken-kramer", "photo": "", "name": "Ken Kramer", "linkedin": "https://linkedin.com/in/kpkramer", "status": "Confirmed", "type": "Founder/Operator", "about": "CEO and co-founder of Axiom Marine Energy. Axiom is developing utility-scale tidal-stream turbine systems. The company positions predictable tidal generation as a complement to wind and solar. Its systems are designed to turn flowing-water energy into commercial-scale electricity. Best conversation angle: marine energy’s role in a firm, diversified clean-power mix.", "title": "Cofounder, CEO", "company": "Axiom Marine Energy Company, LLC - CEO & Cofounder", "company_domain": ""}, {"slug": "mohamed-badawy", "photo": "", "name": "Mohamed Badawy", "linkedin": "https://linkedin.com/in/mobadawy", "status": "Confirmed", "type": "Founder/Operator", "about": "Founder and CEO of Scalvy. Public company and profile sources identify him as the company’s CEO and co-founder. Scalvy has described its Power Neuron technology as targeting data centers, grid-edge and mobility applications. That places the company at the intersection of power electronics and rapidly growing electricity demand. Best conversation angle: scaling power-electronics deployments for grid-edge demand.", "title": "CEO", "company": "Sclavy Inc - CEO", "company_domain": ""}, {"slug": "adam-sledd", "photo": "", "name": "Adam Sledd", "linkedin": "", "status": "N/A", "type": "Founder/Operator", "about": "Adam Sledd is listed for this event as Role not supplied at Dominion Energy Innovation Center. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Dominion Energy Innovation Center", "company_domain": ""}, {"slug": "alisha-rappaport", "photo": "", "name": "Alisha Rappaport", "linkedin": "https://linkedin.com/in/alisharappaport", "status": "Guessed", "type": "Founder/Operator", "about": "Alisha Rappaport is listed for this event as Role not supplied at Fitch Group. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Fitch Group", "company_domain": ""}, {"slug": "brian-wilkie", "photo": "", "name": "Brian Wilkie", "linkedin": "https://linkedin.com/in/brian-w-2810884b", "status": "Guessed", "type": "Founder/Operator", "about": "Brian Wilkie is listed for this event as Director - Transmission for Renewables at National Grid. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Director - Transmission for Renewables", "company": "National Grid", "company_domain": ""}, {"slug": "chelsea-wolgel", "photo": "", "name": "Chelsea Wolgel", "linkedin": "https://linkedin.com/in/chelseawolgel", "status": "Guessed", "type": "Founder/Operator", "about": "Chelsea Wolgel is listed for this event as Lead NWA Program Manager at National Grid - Lead NWA Program Manager. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Lead NWA Program Manager", "company": "National Grid - Lead NWA Program Manager", "company_domain": ""}, {"slug": "isabella-smythe", "photo": "", "name": "Isabella Smythe", "linkedin": "https://linkedin.com/in/isabella-smythe", "status": "Guessed", "type": "Founder/Operator", "about": "Isabella Smythe is listed for this event as Role not supplied at Rhizome. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Rhizome", "company_domain": ""}, {"slug": "max-goodman", "photo": "", "name": "Max Goodman", "linkedin": "https://linkedin.com/in/goodmanmax", "status": "Guessed", "type": "Founder/Operator", "about": "Max Goodman is listed for this event as Role not supplied at Rhizome Data. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Rhizome Data", "company_domain": ""}, {"slug": "meg-murphy", "photo": "", "name": "Meg Murphy", "linkedin": "https://linkedin.com/in/megan-ceryanec-murphy", "status": "Guessed", "type": "Founder/Operator", "about": "Meg Murphy is listed for this event as Role not supplied at JPMorgan - Executive Director, Startup Banking. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "JPMorgan - Executive Director, Startup Banking", "company_domain": ""}, {"slug": "phillip-david-ellison", "photo": "", "name": "Phillip David Ellison", "linkedin": "https://linkedin.com/in/phillipdavidellison", "status": "Guessed", "type": "Founder/Operator", "about": "Phillip David Ellison is listed for this event as Legislative & Stakeholder Affairs and Advisor to the Innovation Department at New York Power Authority. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Legislative & Stakeholder Affairs and Advisor to the Innovation Department", "company": "New York Power Authority", "company_domain": ""}, {"slug": "sarah-park", "photo": "", "name": "Sarah Park", "linkedin": "https://linkedin.com/in/sarahpark", "status": "Guessed", "type": "Founder/Operator", "about": "Sarah Park is listed for this event as Senior Counsel at Hearst. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Counsel", "company": "Hearst", "company_domain": ""}, {"slug": "sena-soysal", "photo": "", "name": "Sena Soysal", "linkedin": "https://linkedin.com/in/sena-soysal", "status": "Confirmed", "type": "Founder/Operator", "about": "Senior Program Manager for eMobility and Open Innovation at EDF US Innovation Lab. EDF identifies her with its electric-mobility program in the United States. Her public profile describes work on North American partnerships that accelerate climate and mobility solutions. EDF’s US innovation work spans smart grids, automation, flexibility, electric mobility and open innovation. Best conversation angle: how mobility loads can become grid assets rather than grid stressors.", "title": "Head of Innovation", "company": "EDF Innovation Lab - Head of Innovation", "company_domain": ""}, {"slug": "stacey-sun", "photo": "", "name": "Stacey Sun", "linkedin": "https://linkedin.com/in/stacey-sun-478b5086", "status": "Guessed", "type": "Founder/Operator", "about": "Stacey Sun is listed for this event as Role not supplied at Grant Thornton llp. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Grant Thornton llp", "company_domain": ""}, {"slug": "thomas-paulus", "photo": "", "name": "Thomas Paulus", "linkedin": "https://linkedin.com/in/tpaulus1", "status": "Guessed", "type": "Founder/Operator", "about": "Thomas Paulus is listed for this event as Senior Analyst at ConEdison. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Analyst", "company": "ConEdison", "company_domain": ""}, {"slug": "zachary-hanson", "photo": "", "name": "Zachary Hanson", "linkedin": "https://linkedin.com/in/zachary-k-hanson", "status": "Guessed", "type": "Founder/Operator", "about": "Zachary Hanson is listed for this event as Senior Director at New York Power Authority. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Director", "company": "New York Power Authority", "company_domain": ""}, {"slug": "anjana-agarwal", "photo": "", "name": "Anjana Agarwal", "linkedin": "https://linkedin.com/in/anjana-agarwal", "status": "Confirmed", "type": "Other", "about": "Principal and Grid Resilience Practice Lead at The Ad Hoc Group. The firm says her background spans infrastructure and energy, including World Resources Institute work in India, India’s public-private-partnerships team, and project-finance law. She has also worked in micromobility business development and early-stage climate investing. Her practice is closely aligned with utility resilience and grid modernization. Best conversation angle: practical resilience planning across policy, utilities and capital.", "title": "Principal & Grid Resilience Practice Lead", "company": "The Ad Hoc Group - Principal & Grid Resilience Practice Lead", "company_domain": ""}, {"slug": "clara-zou", "photo": "", "name": "Clara Zou", "linkedin": "https://linkedin.com/in/clara-zou", "status": "Confirmed", "type": "Other", "about": "Director of Operations at Grid Status. Her public profile describes joining Grid Status to improve access to actionable energy data. She previously founded Arken Solutions, which worked to automate clean-energy deployment. Grid data, transmission constraints and connection queues are natural areas of overlap for this event. Best conversation angle: the data layer needed to speed grid development.", "title": "Director", "company": "Grid Status - Director of Operations", "company_domain": ""}, {"slug": "linnea-paton", "photo": "", "name": "Linnea Paton", "linkedin": "https://linkedin.com/in/sustainablelp", "status": "Guessed", "type": "Other", "about": "Linnea Paton is listed for this event as Role not supplied at Con Edison. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Con Edison", "company_domain": ""}, {"slug": "stacey-matlen", "photo": "", "name": "Stacey Matlen", "linkedin": "https://linkedin.com/in/stacey-matlen-bb43a545", "status": "Guessed", "type": "Other", "about": "Stacey Matlen is listed for this event as Role not supplied at PFNYC - Senior Vice President, Innovation. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "PFNYC - Senior Vice President, Innovation", "company_domain": ""}, {"slug": "jorn-poldermans", "photo": "", "name": "Jorn Poldermans", "linkedin": "https://linkedin.com/in/jornpoldermans", "status": "Guessed", "type": "Policy", "about": "Jorn Poldermans is listed for this event as Senior Economic Officer at Consulate General of the Kingdom of the Netherlands in New York - Senior Economic Officer. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Economic Officer", "company": "Consulate General of the Kingdom of the Netherlands in New York - Senior Economic Officer", "company_domain": ""}, {"slug": "leo-major", "photo": "", "name": "Leo Major", "linkedin": "https://linkedin.com/in/leo-major-04124322a", "status": "Guessed", "type": "Policy", "about": "Leo Major is listed for this event as Policy Director at Think Microgrid - Policy Director. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Policy Director", "company": "Think Microgrid - Policy Director", "company_domain": ""}, {"slug": "saho-ukai", "photo": "", "name": "Saho Ukai", "linkedin": "https://linkedin.com/in/ukai-saho-094b1111b", "status": "Guessed", "type": "Policy", "about": "Saho Ukai is listed for this event as Business Development team at JETRO(Japan External Trade Organization) - Project Assistant. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Business Development team", "company": "JETRO(Japan External Trade Organization) - Project Assistant", "company_domain": ""}, {"slug": "alberto-e-mihelcic-bazzana", "photo": "", "name": "Alberto E. Mihelcic Bazzana", "linkedin": "https://linkedin.com/in/albertomihelcic", "status": "Confirmed", "type": "VC", "about": "Managing Director at Global Infrastructure Partners, part of BlackRock. GIP became a direct BlackRock subsidiary in 2024. The firm invests in and operates infrastructure across energy, transport, water/waste and digital sectors. Public posts associate Alberto with GIP’s investment work in commercial solar and storage. Best conversation angle: how large infrastructure capital evaluates grid-related platforms.", "title": "MD", "company": "Global Infrastructure Partners, a part of Blackrock", "company_domain": ""}, {"slug": "andrew-heyman", "photo": "", "name": "Andrew Heyman", "linkedin": "https://linkedin.com/in/andrew-heyman-b599944", "status": "Guessed", "type": "VC", "about": "Andrew Heyman is listed for this event as Partner at GoPoint Ventures. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Partner", "company": "GoPoint Ventures", "company_domain": ""}, {"slug": "andrew-meehan", "photo": "", "name": "Andrew Meehan", "linkedin": "https://linkedin.com/in/andrewjmeehan", "status": "Confirmed", "type": "VC", "about": "Managing Partner at Neutron Power Ventures. Public investing profiles identify him as the firm’s managing partner. Recent public coverage associates the firm with investments in nuclear and advanced-energy companies including Copenhagen Atomics, Aalo Atomics, Radiant and Blue Energy. The portfolio suggests a focus on firm-power and energy-supply innovation. Best conversation angle: investment cases for next-generation nuclear and power infrastructure.", "title": "Managing Partner", "company": "Neutron Power Ventures", "company_domain": ""}, {"slug": "ben-candea", "photo": "", "name": "Ben Candea", "linkedin": "https://linkedin.com/in/bencandea", "status": "Confirmed", "type": "VC", "about": "Fractional chief of staff and operations leader for climate-company CEOs. His public practice focuses on helping leaders prioritize sales, product and strategy. He describes more than 15 years of operations and strategy work across climate, energy and media. Public examples include Arcadia, Noteworthy AI, Monterra and Piclo. Best conversation angle: execution systems for early-stage climate companies.", "title": "Fractional chief of staff for early-stage climate companies", "company": "LAC Impact Partners / Monterra / Planetary Scale - Fractional chief of staff to early-stage climate tech companies", "company_domain": ""}, {"slug": "benji-strzelecki", "photo": "", "name": "Benji Strzelecki", "linkedin": "https://linkedin.com/in/beniamin-strzelecki", "status": "Guessed", "type": "VC", "about": "Benji Strzelecki is listed for this event as Investments at HASI. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Investments", "company": "HASI", "company_domain": ""}, {"slug": "beth-devin", "photo": "", "name": "Beth Devin", "linkedin": "https://linkedin.com/in/bethdevin", "status": "Guessed", "type": "VC", "about": "Beth Devin is listed for this event as Role not supplied at HearstLab. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "HearstLab", "company_domain": ""}, {"slug": "chloe-rosenberg", "photo": "", "name": "Chloe Rosenberg", "linkedin": "https://linkedin.com/in/chloerosenberg0", "status": "Guessed", "type": "VC", "about": "Chloe Rosenberg is listed for this event as Senior Manager, Innovation Programs at Partnership Fund for New York City. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Manager, Innovation Programs", "company": "Partnership Fund for New York City", "company_domain": ""}, {"slug": "cristina-vijoli", "photo": "", "name": "Cristina Vijoli", "linkedin": "https://linkedin.com/in/cristinavijoli", "status": "Confirmed", "type": "VC", "about": "Venture Advisor and Senior Marketing Manager at Helsinki Partners. Helsinki Partners lists her on its venture and investment-promotion team. Her public work centers on connecting international investors with the Finnish and Nordic venture ecosystem. She has helped communicate and convene the Venture Nordics investor program around Slush. Best conversation angle: cross-border capital and the Nordic climate-technology ecosystem.", "title": "Venture Advisor", "company": "Helsinki Partners - Venture Advisor", "company_domain": ""}, {"slug": "daniel-nilsson-sjolander", "photo": "", "name": "Daniel Nilsson Sjolander", "linkedin": "https://linkedin.com/in/daniel-nilsson-sjolander", "status": "Confirmed", "type": "VC", "about": "Principal at New System Ventures. The firm lists Daniel on its investment team. New System Ventures invests in companies accelerating energy security, reindustrialization, mobility, energy and industry. Its strategy uses systems-level research and backs hardware and software companies from inception through Series B. Best conversation angle: capital formation for infrastructure-adjacent climate technology.", "title": "Principal", "company": "New System Ventures", "company_domain": ""}, {"slug": "david-dekel", "photo": "", "name": "David Dekel", "linkedin": "https://linkedin.com/in/david-dekel", "status": "Confirmed", "type": "VC", "about": "Founding Associate at Actia Capital Partners. Actia describes itself as an investment partner for InfraTech entrepreneurs from pilot through infrastructure readiness. David’s public work focuses on the next generation of physical infrastructure shaped by power constraints, AI, electrification and climate volatility. His writing emphasizes companies that can become embedded in how infrastructure is built, operated and managed. Best conversation angle: the transition from venture economics to infrastructure-scale deployment.", "title": "Founding Associate", "company": "Actia Partners - Founding Associate", "company_domain": ""}, {"slug": "david-zusman", "photo": "", "name": "David Zusman", "linkedin": "https://linkedin.com/in/david-zusman-6322a625", "status": "Confirmed", "type": "VC", "about": "Managing Partner at GoPoint Ventures. GoPoint says it was formed by David Zusman and Andrew Heyman to invest principals’ capital alongside early-stage founders. The partners previously launched Talara Capital, which invested in real assets, technology and business services. GoPoint emphasizes hands-on advice for founders in regulated and capital-intensive industries. Best conversation angle: structured capital and company building in infrastructure-heavy markets.", "title": "Managing Partner", "company": "GoPoint Ventures", "company_domain": ""}, {"slug": "elisabeth-iszauk", "photo": "", "name": "Elisabeth Iszauk", "linkedin": "https://linkedin.com/in/elisabethiszauk", "status": "Guessed", "type": "VC", "about": "Elisabeth Iszauk is listed for this event as Investor at Montauk Capital - Investor. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Investor", "company": "Montauk Capital - Investor", "company_domain": ""}, {"slug": "erlinda-arriola", "photo": "", "name": "Erlinda Arriola", "linkedin": "https://linkedin.com/in/earriola1", "status": "Confirmed", "type": "VC", "about": "Investor at JLL Spark Global Ventures. JLL Spark identifies her as a Senior Investment Associate who joined in December 2024. Her prior work included investing at Fitch Ventures across institutional credit, climate, AI/cybersecurity and risk intelligence. She has also worked in corporate development and credit underwriting at Synchrony and GE Capital. Best conversation angle: institutional pathways for climate and built-environment technology.", "title": "Investor", "company": "JLL Spark Ventures", "company_domain": ""}, {"slug": "eve-burton", "photo": "", "name": "Eve Burton", "linkedin": "", "status": "N/A", "type": "VC", "about": "Eve Burton is listed for this event as Role not supplied at HearstLab. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "HearstLab", "company_domain": ""}, {"slug": "fahd-hashiesh", "photo": "", "name": "Fahd Hashiesh", "linkedin": "https://linkedin.com/in/michael-r-delucia", "status": "Guessed", "type": "VC", "about": "Fahd Hashiesh is listed for this event as Montauk Capital at Montauk Capital - Partner. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Montauk Capital", "company": "Montauk Capital - Partner", "company_domain": ""}, {"slug": "ian-samuels", "photo": "", "name": "Ian Samuels", "linkedin": "https://linkedin.com/in/ian-samuels-552b26", "status": "Guessed", "type": "VC", "about": "Ian Samuels is listed for this event as Founder & Managing Partner at New System Ventures. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Founder & Managing Partner", "company": "New System Ventures", "company_domain": ""}, {"slug": "jamie-wishnick", "photo": "", "name": "Jamie Wishnick", "linkedin": "https://linkedin.com/in/jamieweil", "status": "Guessed", "type": "VC", "about": "Jamie Wishnick is listed for this event as Venture Director at HearstLab - Venture Director. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Venture Director", "company": "HearstLab - Venture Director", "company_domain": ""}, {"slug": "julian-serns", "photo": "", "name": "Julian Serns", "linkedin": "https://linkedin.com/in/julian-s-702402356", "status": "Guessed", "type": "VC", "about": "Julian Serns is listed for this event as Investor / Graduate Researcher at Columbia at Plug and Play Ventures. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Investor / Graduate Researcher at Columbia", "company": "Plug and Play Ventures", "company_domain": ""}, {"slug": "kavita-patel", "photo": "", "name": "Kavita Patel", "linkedin": "https://linkedin.com/in/patel-kavita", "status": "Confirmed", "type": "VC", "about": "Portfolio Manager, Climate Investments at MUUS & Company. MUUS says she oversees roughly 35 sustainability-focused venture investments. Her background includes work with Closed Loop Partners, IFC Climate Finance and Station A. She previously worked on sustainable-investing initiatives at BlackRock. Best conversation angle: climate-investment diligence in materials, infrastructure and industrial technology.", "title": "PM, Venture", "company": "MUUS", "company_domain": ""}, {"slug": "kyle-spottiswood", "photo": "", "name": "Kyle Spottiswood", "linkedin": "https://linkedin.com/in/kylespottiswood", "status": "Guessed", "type": "VC", "about": "Kyle Spottiswood is listed for this event as VC Associate at Maniv - VC Investor. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "VC Associate", "company": "Maniv - VC Investor", "company_domain": ""}, {"slug": "lucy-reading", "photo": "", "name": "Lucy Reading", "linkedin": "https://linkedin.com/in/lucy-reading-114a1997", "status": "Confirmed", "type": "VC", "about": "Senior Associate at Powerhouse Ventures. Powerhouse says she supports sourcing, diligence and fund operations. Her earlier investing experience includes DBL Partners and Evergreen Climate Innovations. She also brings operating experience from several startups and a background in economic consulting. Best conversation angle: early-stage climate investing and the investor-to-operator feedback loop.", "title": "Investor", "company": "Powerhouse Ventures - Investor", "company_domain": ""}, {"slug": "maya-trujillo", "photo": "", "name": "Maya Trujillo", "linkedin": "https://linkedin.com/in/mayaxtrujillo", "status": "Guessed", "type": "VC", "about": "Maya Trujillo is listed for this event as Investor at VamosVentures - Investor. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Investor", "company": "VamosVentures - Investor", "company_domain": ""}, {"slug": "micah-kotch", "photo": "", "name": "Micah Kotch", "linkedin": "https://linkedin.com/in/micahjason", "status": "Guessed", "type": "VC", "about": "Micah Kotch is listed for this event as Partner at Blackhorn Ventures - Partner. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Partner", "company": "Blackhorn Ventures - Partner", "company_domain": ""}, {"slug": "olga-laouchez", "photo": "", "name": "Olga Laouchez", "linkedin": "https://linkedin.com/in/olgalaouchez", "status": "Guessed", "type": "VC", "about": "Olga Laouchez is listed for this event as Partner at Portfolia - Partner. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Partner", "company": "Portfolia - Partner", "company_domain": ""}, {"slug": "sarah-bell", "photo": "", "name": "Sarah Bell", "linkedin": "https://linkedin.com/in/sarah-bell-e8-angels", "status": "Confirmed", "type": "VC", "about": "Pipeline and Portfolio Lead at E8 Angels. E8 says she joined to support company sourcing, pipeline management and portfolio support. The organization highlights her prior climate-tech, ag-tech and space-tech startup-support work. Her background includes founder pitch preparation, deal-flow systems and investor showcases. Best conversation angle: what emerging climate companies need to become investable.", "title": "Pipeline & Portfolio Lead", "company": "E8 - Pipeline and Portfolio Lead", "company_domain": ""}, {"slug": "sonam-velani", "photo": "", "name": "Sonam Velani", "linkedin": "https://linkedin.com/in/sonamvelani", "status": "Guessed", "type": "VC", "about": "Sonam Velani is listed for this event as Role not supplied at Streetlife Ventures - Co-Founder and Managing Partner. A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "", "company": "Streetlife Ventures - Co-Founder and Managing Partner", "company_domain": ""}, {"slug": "stephen-fratamico", "photo": "", "name": "Stephen Fratamico", "linkedin": "https://linkedin.com/in/stephen-fratamico-204a16189", "status": "Confirmed", "type": "VC", "about": "Senior Analyst at Catalus Capital Management. Catalus says he helps review venture-capital investments in energy storage. His public career update described a focus on battery technology. The firm combines lower-middle-market buyouts with GP and LP allocation and co-investment activity. Best conversation angle: battery-technology underwriting and commercialization risk.", "title": "Senior Analyst", "company": "Catalus Capital", "company_domain": ""}, {"slug": "zizhu-zhang", "photo": "", "name": "Zizhu Zhang", "linkedin": "https://linkedin.com/in/shirley-zizhu-zhang", "status": "Guessed", "type": "VC", "about": "Zizhu Zhang is listed for this event as Senior Analyst, Capital Markets at Luminace (by Brookfield Renewable). A direct professional-profile link was supplied with the registration. This pass did not independently corroborate the current title and employer in a public source. No registration narrative, contact details, or other private fields are carried into this review table. Open the supplied profile before outreach to confirm identity and current role.", "title": "Senior Analyst, Capital Markets", "company": "Luminace (by Brookfield Renewable)", "company_domain": ""}];
+
+const TYPE_ORDER = {'VC':0,'LP':1,'Founder/Operator':2,'Policy':3,'NGO':4,'Academic/Research':5,'Consultant/Advisor':6,'Other':7,'Unknown':8};
+const EVENT_PREFIX = 'special_reception_future_of_the_grid_';
+
+const state = {};
+DATA.forEach(a => {
+  const key = EVENT_PREFIX + a.slug;
+  const stored = JSON.parse(localStorage.getItem(key) || 'null');
+  state[a.slug] = stored || { met: false, skip: false, expanded: false, notes: '' };
+});
+
+function saveState(slug) { localStorage.setItem(EVENT_PREFIX + slug, JSON.stringify(state[slug])); }
+
+function cycleAction(slug) {
+  const s = state[slug];
+  if (!s.met && !s.skip)       { s.met = true; }
+  else if (s.met)              { s.met = false; s.skip = true; }
+  else                         { s.skip = false; }
+  saveState(slug);
+  render();
+}
+
+function toggleExpand(slug) {
+  state[slug].expanded = !state[slug].expanded;
+  saveState(slug);
+  render();
+}
+
+function saveNotes(slug) {
+  const el = document.getElementById('notes_' + slug);
+  if (el) { state[slug].notes = el.value; saveState(slug); }
+}
+
+function mkSvg() {
+  const artwork = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" aria-hidden="true"><rect width="80" height="80" rx="40" fill="#e1e9e2"/><circle cx="40" cy="30" r="13" fill="#8ba192"/><path d="M18 72c2-15 11-23 22-23s20 8 22 23" fill="#8ba192"/></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(artwork)}`;
+}
+
+const liSvg = (color) => `<svg width="15" height="15" viewBox="0 0 24 24" fill="${color}"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+function liIcon(linkedin, status) {
+  if (!linkedin) return `<span class="li-badge" style="opacity:.2">${liSvg('#9dbfaa')}</span>`;
+  const color = status === 'Confirmed' ? '#0a66c2' : '#9dbfaa';
+  return `<a href="${linkedin}" target="_blank" class="li-link li-badge">${liSvg(color)}</a>`;
+}
+
+function typePill(t) {
+  const cls = {'VC':'vc','LP':'lp','Founder/Operator':'founder','Policy':'policy','NGO':'ngo','Academic/Research':'academic','Consultant/Advisor':'consultant','Other':'other','Unknown':'unknown'}[t]||'unknown';
+  return `<span class="pill pill-${cls}">${t}</span>`;
+}
+
+function statusPill(s) {
+  const cls = {'Confirmed':'confirmed','Guessed':'guessed','N/A':'na'}[s]||'na';
+  return `<span class="pill pill-${cls}">${s}</span>`;
+}
+
+let sortCol = null, sortDir = 1;
+
+function render() {
+  const q  = document.getElementById('search').value.toLowerCase();
+  const tf = document.getElementById('typeFilter').value;
+  const sf = document.getElementById('statusFilter').value;
+  const mf = document.getElementById('metFilter').value;
+
+  let filtered = DATA.filter(a => {
+    if (q && !a.name.toLowerCase().includes(q) && !(a.about||'').toLowerCase().includes(q)) return false;
+    if (tf && a.type !== tf) return false;
+    if (sf && a.status !== sf) return false;
+    if (mf === 'met'  && !state[a.slug].met)  return false;
+    if (mf === 'skip' && !state[a.slug].skip) return false;
+    return true;
+  });
+
+  if (sortCol) {
+    filtered.sort((a,b) => {
+      let av = a[sortCol]||'', bv = b[sortCol]||'';
+      if (sortCol==='type') { av = TYPE_ORDER[av]??9; bv = TYPE_ORDER[bv]??9; return (av-bv)*sortDir; }
+      return String(av).localeCompare(String(bv))*sortDir;
+    });
+  } else {
+    filtered.sort((a,b) => (TYPE_ORDER[a.type]??9)-(TYPE_ORDER[b.type]??9) || a.name.localeCompare(b.name));
+  }
+
+  document.getElementById('countLabel').textContent = `${filtered.length} of ${DATA.length}`;
+
+  const tbody = document.getElementById('tbody');
+  const liUrls = filtered.filter(a => a.linkedin).map(a => a.linkedin);
+  document.getElementById('linkedinCount').textContent = `(${liUrls.length})`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No attendees match your filters.</td></tr>`;
+    document.getElementById('batchBtns').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(a => {
+    const photoSrc = a.photo || mkSvg();
+    const s = state[a.slug];
+    const rowCls    = s.skip ? 'skip-row' : '';
+    const actionCls = s.met ? 'state-met' : s.skip ? 'state-skip' : '';
+    const actionLbl = s.met ? '✓' : s.skip ? '✗' : '';
+
+    const hasAbout = !!a.about;
+
+    let aboutContent;
+    if (s.expanded) {
+      aboutContent = `
+        <div class="about-full">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        <div class="notes-wrap">
+          <div class="notes-label">Notes</div>
+          <textarea class="notes-input" id="notes_${a.slug}" placeholder="Add a note…"
+            oninput="saveNotes('${a.slug}')"
+            onclick="event.stopPropagation()">${s.notes||''}</textarea>
+        </div>`;
+    } else {
+      const longEnough = hasAbout && a.about.length > 180;
+      aboutContent = `
+        <div class="about-snippet">${hasAbout ? a.about : '<span style="color:#b0bdb3">—</span>'}</div>
+        ${longEnough ? `<span class="expand-hint">↓ more</span>` : ''}`;
+    }
+
+    return `<tr class="main-row ${rowCls}">
+      <td class="action-cell">
+        <button class="action-btn ${actionCls}" onclick="cycleAction('${a.slug}')" title="Cycle: unset → met → skip">${actionLbl}</button>
+      </td>
+      <td class="identity-cell">
+        <div class="identity-inner">
+          <img class="photo" src="${photoSrc}" alt="${a.name}" onerror="this.src='${mkSvg()}'">
+          <div class="identity-text">
+            <div class="name-line">
+              ${liIcon(a.linkedin, a.status)}
+              <span class="person-name">${a.name}</span>
+            </div>
+            ${a.company ? `<div class="company-line">${a.company_domain ? `<img class="company-logo" src="https://logo.clearbit.com/${a.company_domain}" onerror="this.style.display='none'">` : ''}<span>${a.company}</span></div>` : ''}
+            ${a.title ? `<div class="title-line">${a.title}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td class="type-cell">${typePill(a.type)}</td>
+      <td class="about-cell" onclick="toggleExpand('${a.slug}')">
+        ${aboutContent}
+      </td>
+      <td class="status-cell">${statusPill(a.status)}</td>
+    </tr>`;
+  }).join('');
+
+  const batchBtns = document.getElementById('batchBtns');
+  batchBtns.innerHTML = '';
+  for (let i = 0; i < liUrls.length; i += 10) {
+    const batch = liUrls.slice(i, i+10);
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `Open LinkedIn ${i+1}–${Math.min(i+10, liUrls.length)}`;
+    btn.onclick = (function(urls) {
+      return function() {
+        const script = urls.map(u => `window.open(${JSON.stringify(u)},'_blank');`).join('');
+        const page = `<html><body><script>window.onload=function(){${script}window.close();}<\/script><p style="font-family:sans-serif;padding:20px">Opening ${urls.length} tabs…</p></body></html>`;
+        window.open(URL.createObjectURL(new Blob([page],{type:'text/html'})),'_blank');
+      };
+    })(batch);
+    batchBtns.appendChild(btn);
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('typeFilter').addEventListener('change', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+document.getElementById('metFilter').addEventListener('change', render);
+
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
